@@ -27,8 +27,10 @@ server/
   app.ts                 Ryan       Hono routes under /api
   db/schema.ts           Ryan       Drizzle schema: the only place the schema changes
   db/index.ts            Ryan       database client
-  agent/                 Ryan       model.ts, prompts, tools (Zod)
+  agent/                 Ryan       model.ts (the only place with model IDs), prompts, tools
   auth.ts                Ryan       Better Auth config
+shared/contract.ts       Ryan       Zod schemas for every API route, agent card and live-update message
+docs/chat.md             Ryan       how the chat streams end to end (server + useChat in react/)
 functions/               Ryan       Neon Functions (live updates)
 drizzle/                 Ryan       generated SQL migrations and their journal
 seed/                    Ryan       generator, people.json, match-cases.json, reset
@@ -67,8 +69,10 @@ Only edit folders your person owns. If you need a change in someone else's folde
 Change these only with the owner's agreement.
 
 - **Database schema:** `server/db/schema.ts` and the migrations in `drizzle/`.
-- **API:** the routes in `server/app.ts` and their Zod request and response schemas. The web app calls only these.
-- **Tool results and cards:** Zod schemas in `server/agent/`, including the evidence fields. The chat renders each tool result as a component chosen by tool name (`PersonCard`, `TeamCard`, `MentorCard`, `DraftCard`, `HelpRequestCard`).
+- **API:** every route, with its Zod request and response schemas, is listed in `shared/contract.ts`. `server/app.ts` implements them; the web app calls only these.
+- **Chat:** `POST /api/chat` takes `{ eventSlug, message }` (only the newest message; the server loads history itself) and streams an AI SDK UI message stream. `docs/chat.md` explains the server side and `useChat` in the web app.
+- **Tool results and cards:** Zod schemas in `shared/contract.ts`, including the evidence fields. The chat renders each tool result as a component chosen by tool name (`PersonCard`, `TeamCard`, `MentorCard`, `DraftCard`, `HelpRequestCard`).
+- **Live-update messages:** the payload schemas in `shared/contract.ts`.
 - **Launch ticket:** the fields a hackathon signs, defined with the launch route.
 - **Matching:** the definitions in the plan's Matching section, checked by `seed/match-cases.json`.
 - **Event theme:** `events.theme` (JSON). The web app turns it into CSS variables.
@@ -100,8 +104,10 @@ Change these only with the owner's agreement.
 - The agent drafts and the user sends. This includes help requests: they reach mentors only when the user taps "Request help". No agent tool may send, accept, block, claim or change roles.
 - Match reasons are written only from the evidence fields the search returned. If nothing fits, say so.
 - One request per person per event. If two people request each other, both are accepted and one DM opens. Accepting twice returns the same conversation. Only the recipient can accept.
-- "Not now" hides a request for the recipient only. Blocking uses the `blocks` table and applies everywhere, in both directions.
-- "Contact team" sends a request to the team's owner. Joining teams and team chats are not built.
+- "Not now" sets `connections.hidden_at`. The API shows it only to the recipient; the sender keeps seeing "pending". Blocking uses the `blocks` table and applies everywhere, in both directions.
+- Open teams appear in search as team cards. "Contact team" sends a request (with `team_id`) to the team's owner. Joining teams and team chats are not built.
+- Onboarding: the form's answers (including the six motivations) fill the member profile, its last step customizes the Hacky avatar, and the agent only asks for what's still missing.
+- Event schedule, sponsor info and reminders stay static in the web app. There are no read receipts; unread badges come from `last_read_at`. Resolving a help request posts a system message in the mentor chat.
 - Mentor queue: shared, sorted by fit for each mentor. A claim succeeds only while the request is still open.
 
 ## Live updates and chat rules

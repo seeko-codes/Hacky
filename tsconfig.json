@@ -10,5 +10,5 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["api", "server", "functions", "neon.ts", "drizzle.config.ts"]
+  "include": ["api", "server", "functions", "shared", "seed", "neon.ts", "drizzle.config.ts"]
 }

@@ -22,6 +22,20 @@
       "when": 1791640039317,
       "tag": "0002_search_triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791648865183,
+      "tag": "0003_teams_motivations_hides",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791648872376,
+      "tag": "0004_teams_search_trigger",
+      "breakpoints": true
     }
   ]
 }

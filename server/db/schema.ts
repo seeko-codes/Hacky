@@ -12,6 +12,7 @@ import {
   customType,
   foreignKey,
   index,
+  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -208,6 +209,9 @@ export const memberProfiles = pgTable(
     idea: text("idea"),
     summary: text("summary"),
     complete: boolean("complete").notNull().default(false),
+    // Why they came (onboarding step 1). Allowed ids are checked below and
+    // mirror Motivation in shared/contract.ts.
+    motivations: text("motivations").array().notNull().default(sql`'{}'::text[]`),
     searchTsv: tsvector("search_tsv"),
     updatedAt: updatedAt(),
   },
@@ -220,10 +224,64 @@ export const memberProfiles = pgTable(
     index("member_profiles_search_idx").using("gin", t.searchTsv),
     check("member_profiles_idea_length", sql`char_length(${t.idea}) <= 1000`),
     check("member_profiles_summary_length", sql`char_length(${t.summary}) <= 1000`),
+    check(
+      "member_profiles_motivations_allowed",
+      sql`${t.motivations} <@ array['build', 'learn', 'meet', 'career', 'compete', 'fun']::text[]`,
+    ),
   ],
 );
 
-// Server-only. owner_id is a user id for members (and a team id later).
+// Open teams appear in search. "Contact team" sends a request to the owner.
+// Joining teams is not built. search_tsv is kept by a trigger (see the custom
+// migration). Embeddings use owner_kind 'team' with owner_id = id as text.
+export const teams = pgTable(
+  "teams",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    ownerId: text("owner_id").notNull(),
+    name: text("name").notNull(),
+    idea: text("idea"),
+    track: text("track"),
+    wantedSkills: text("wanted_skills").array().notNull().default(sql`'{}'::text[]`),
+    maxSize: integer("max_size").notNull().default(4),
+    searchTsv: tsvector("search_tsv"),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    foreignKey({
+      columns: [t.eventId, t.ownerId],
+      foreignColumns: [eventMembers.eventId, eventMembers.userId],
+    }).onDelete("cascade"),
+    check("teams_name_length", sql`char_length(${t.name}) between 1 and 80`),
+    check("teams_idea_length", sql`char_length(${t.idea}) <= 1000`),
+    check("teams_max_size_range", sql`${t.maxSize} between 1 and 8`),
+    index("teams_event_idx").on(t.eventId),
+    index("teams_search_idx").using("gin", t.searchTsv),
+    index("teams_owner_idx").on(t.ownerId),
+  ],
+);
+
+export const teamMembers = pgTable(
+  "team_members",
+  {
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => profiles.userId, { onDelete: "cascade" }),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.teamId, t.userId] }),
+    index("team_members_user_idx").on(t.userId),
+  ],
+);
+
+// Server-only. owner_id is a user id for members and a team id (as text) for teams.
 export const embeddings = pgTable(
   "embeddings",
   {
@@ -245,7 +303,9 @@ export const embeddings = pgTable(
 // Requests and blocks
 // ---------------------------------------------------------------------------
 
-// One request per person per event.
+// One request per person per event. hidden_at: the recipient tapped "Not now"
+// (never shown to the sender). team_id: sent with "Contact team"; to_user is
+// that team's owner.
 export const connections = pgTable(
   "connections",
   {
@@ -262,8 +322,10 @@ export const connections = pgTable(
     status: connectionStatus("status").notNull().default("pending"),
     intro: text("intro").notNull(),
     source: connectionSource("source").notNull().default("agent"),
+    teamId: uuid("team_id").references(() => teams.id, { onDelete: "set null" }),
     createdAt: createdAt(),
     respondedAt: timestamp("responded_at", { withTimezone: true }),
+    hiddenAt: timestamp("hidden_at", { withTimezone: true }),
   },
   (t) => [
     unique("connections_one_per_pair").on(t.eventId, t.fromUser, t.toUser),
