@@ -1,0 +1,104 @@
+{
+  "project": "Hacky",
+  "date": "2026-10-09",
+  "assets": [
+    {
+      "path": "original-png/hacky-classic.png",
+      "bytes": 990592,
+      "sha256": "6a157624c276d0a634de046b2b47b511317bd47746eeced1504980b5fce2ab46",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-classic.webp",
+      "bytes": 734754,
+      "sha256": "5900b23f7d4d2c7cbb7501b11bc22d08be703497f7b7579e244927f4e9480e83"
+    },
+    {
+      "path": "original-png/hacky-mochi.png",
+      "bytes": 1122558,
+      "sha256": "e5b71014abe83e378821e59476a44fb6e7eaa25fab26999aaf60a962fc79a2d9",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-mochi.webp",
+      "bytes": 805254,
+      "sha256": "08320f4f52613dd4d34c014d7a57e116502091c0f9d297ea964466f3bc15f2a2"
+    },
+    {
+      "path": "original-png/hacky-cat.png",
+      "bytes": 1228585,
+      "sha256": "35fc34d6737eb8683279ff2a900b1fca30c60440bf8f25457d2e26aebc87b256",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-cat.webp",
+      "bytes": 890196,
+      "sha256": "9c771869e7df16603170a01e0dc92aca7027ceb678cdddb023802b8ff665be72"
+    },
+    {
+      "path": "original-png/hacky-dragon.png",
+      "bytes": 1121427,
+      "sha256": "03d20ec502072c40b0a1b3ac711f18b09578cb1e3fbefa46bcf4a9aeba93f8a3",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-dragon.webp",
+      "bytes": 825126,
+      "sha256": "d4bab8e2f58024093417ab3eda515f9d153b12ffcd1ff6d070cc82590fcc98bb"
+    },
+    {
+      "path": "original-png/hacky-star.png",
+      "bytes": 892641,
+      "sha256": "503fd2cdbaacadb3d7828640712d92f0b0f48346983a3a50b225d8c1430eaf14",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-star.webp",
+      "bytes": 639308,
+      "sha256": "9f7cc5dd24f00385c449d18204e950ec089264217b965ba27051b9b56538c953"
+    },
+    {
+      "path": "original-png/hacky-pixel.png",
+      "bytes": 862123,
+      "sha256": "0c9f3686bbcd093a6a7a029a9a10063bf9f7de0035649955a90ae06123e2f31b",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-pixel.webp",
+      "bytes": 676412,
+      "sha256": "5412986f465896bc33ab7f8a49c8bc5418bfdedf8282809fcd0e34be0aea471c"
+    },
+    {
+      "path": "original-png/hacky-mascot.png",
+      "bytes": 1106729,
+      "sha256": "58fd663558196793d017183e99782646473aeb89efa411acf65dcef8e85efc5d",
+      "width": 1222,
+      "height": 1287,
+      "alpha": true
+    },
+    {
+      "path": "lossless-webp/hacky-mascot.webp",
+      "bytes": 763132,
+      "sha256": "52781d0a9ee23b8a6c7f70abefc395e1d406167b27ea1edae5b40952ed4e368e"
+    }
+  ],
+  "source_format": "AI-generated raster PNG artwork, not vector SVG or layered source",
+  "pose_order": [
+    "top-left: standing/idle",
+    "top-right: dance pose A",
+    "bottom-left: dance pose B",
+    "bottom-right: celebration"
+  ]
+}

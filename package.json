@@ -1,0 +1,12 @@
+{
+  "name": "hacky",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phone-first hackathon networking prototype",
+  "scripts": {
+    "preview": "python3 -m http.server 4173 --bind 127.0.0.1"
+  },
+  "devDependencies": {
+    "@playwright/cli": "^0.1.22"
+  }
+}

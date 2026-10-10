@@ -1,0 +1,157 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fffefb"><title>Hacky · Find your people</title><script>(()=>{let theme;try{theme=localStorage.getItem('hacky-theme');}catch{}document.documentElement.dataset.theme=theme==='light'||theme==='dark'?theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';})();</script>
+<link rel="stylesheet" href="app/hacky.css"><link rel="stylesheet" href="app/hacky-customizer.css"></head><body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol><symbol id="moon" viewBox="0 0 24 24"><path d="M20.8 13A9 9 0 0 1 11 3.2 9 9 0 1 0 20.8 13Z"/></symbol><symbol id="face" viewBox="0 0 32 32"><path d="m7 13 3-7 6 4 5-4 4 7v9c0 5-18 5-18 0Z"/><path d="M11 17v2m10-2v2m-7 3h4"/></symbol><symbol id="arrow" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol><symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol><symbol id="back" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol><symbol id="chat" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 3V6a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></symbol><symbol id="bolt" viewBox="0 0 24 24"><path d="m13 2-8 12h6l-1 8 9-12h-6Z"/></symbol><symbol id="people" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m20 0v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/><path d="M16 3a4 4 0 0 1 0 8"/></symbol><symbol id="star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/></symbol><symbol id="music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="3"/><ellipse cx="18" cy="16" rx="3" ry="3"/></symbol><symbol id="heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol><symbol id="shuffle" viewBox="0 0 24 24"><path d="m18 3 3 3-3 3M3 6h3c5 0 7 12 12 12h3m-3-3 3 3-3 3M3 18h3c2 0 4-3 6-6s4-6 6-6h3"/></symbol><symbol id="smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 9h.01M16 9h.01M8 14c2 3 6 3 8 0"/></symbol><symbol id="up" viewBox="0 0 24 24"><path d="M12 20V4m-5 5 5-5 5 5"/></symbol><symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol><symbol id="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/></symbol></defs></svg>
+<div id="app" class="app"><aside id="sidebar" class="sidebar" aria-label="Team and direct messages"><div class="side-inner"><header class="side-header"><div class="brand">Chats</div><button id="close-sidebar" class="icon" aria-label="Return to finder"><svg><use href="#close"/></svg></button></header>
+<div class="list"><div class="event"><img class="mlh-logo" src="assets/brand/mlh-logo-color.svg" alt="Major League Hacking"><span class="event-divider"></span><span>Knight Hacks<br><small>Hackathon demo</small></span></div><div class="contacts"><h2 class="label">Your team</h2><button id="team" class="contact team"><span class="avatar team"><svg aria-hidden="true"><use href="#people"/></svg></span><span class="info"><span class="name">Midnight builders</span><div class="preview" id="team-preview">Kai: Who's finding our fourth?</div></span></button><h2 class="label people">People</h2><div id="contacts"></div></div><div class="foot">Fictional people · demo conversations</div></div>
+<section class="dm" aria-label="Selected conversation"><header class="dm-header"><button id="back-list" class="icon" aria-label="Back to chats"><svg><use href="#back"/></svg></button><div id="dm-avatar"></div><button id="dm-identity" class="dm-identity" type="button"><span class="name" id="dm-title"></span><span class="role" id="dm-role"></span></button></header><div id="dm-profile" class="dm-profile" hidden></div><div id="dm-feed" class="dm-feed" role="log" aria-live="polite" aria-label="Messages"></div><button id="new-reply" class="new-reply" hidden>New reply <svg aria-hidden="true"><use href="#arrow"/></svg></button><form id="dm-form" class="dm-compose"><div class="composer"><textarea id="dm-input" aria-label="Message selected conversation" placeholder="Write a message…" rows="1" enterkeyhint="send"></textarea><button id="dm-send" class="send" aria-label="Send demo message" disabled><svg><use href="#arrow"/></svg></button></div></form><div class="foot">Sample replies · no messages are sent</div></section></div></aside><button id="backdrop" class="backdrop" aria-label="Return to finder" tabindex="-1"></button>
+<main id="main" class="main"><header class="header"><button id="toggle" class="toggle" aria-expanded="false" aria-controls="sidebar"><svg><use href="#chat"/></svg>Chats</button><div class="title"><span class="title-name">Hacky</span><span class="header-event">Knight Hacks</span></div><button id="theme-toggle" class="icon theme-toggle" aria-label="Switch to dark mode"><svg aria-hidden="true"><use href="#moon"/></svg></button></header><div class="feed" id="feed"><div class="welcome"><div class="intro"><div class="intro-copy"><h1><span class="heading-line">Who do you</span><span class="heading-line">want <span class="heading-mark">to meet?</span></span></h1><div class="intro-note">Your next teammate, mentor, or new friend.<br>Tell me what you have in mind.</div></div><div class="mascot-stage"><img src="assets/mascots/webp/hacky-mascot.webp" alt="Hacky, your little hackathon companion" width="144" height="144"></div></div><div class="suggestions" aria-label="Try a request"><button class="suggestion" data-prompt="Find me a full-stack teammate"><svg aria-hidden="true"><use href="#people"/></svg>Find a teammate</button><button class="suggestion" data-prompt="Find a security mentor to review our app"><svg aria-hidden="true"><use href="#star"/></svg>Meet a mentor</button><button class="suggestion" data-prompt="Meet people at Knight Hacks"><svg aria-hidden="true"><use href="#chat"/></svg>Meet people</button><button class="suggestion" data-prompt="Find a sponsor who can help with our API"><svg aria-hidden="true"><use href="#bolt"/></svg>Talk to a sponsor</button></div></div><div id="thread" class="thread" role="log" aria-live="polite" aria-label="Conversation with Hacky"></div></div><div class="compose-wrap"><form id="finder-form" class="composer"><textarea id="finder-input" aria-label="Tell Hacky who you want to meet" placeholder="Who do you want to meet?" rows="1" enterkeyhint="send"></textarea><button id="finder-send" class="send" aria-label="Find people" disabled><svg><use href="#arrow"/></svg></button></form><p class="demo-note">Fictional profiles · No messages are sent</p></div></main></div>
+<dialog id="person-dialog" class="person-dialog" aria-labelledby="person-title"><div class="person-sheet"><header class="person-toolbar"><button id="close-person" class="toggle"><svg aria-hidden="true"><use href="#back"/></svg>Back</button><span class="demo">Demo profile</span></header><div id="person-content" class="person-content"></div><footer class="person-footer"><button id="person-message" class="profile-message">Message</button><p>Fictional person · no messages are sent</p></footer></div></dialog>
+
+<script>
+const $=id=>document.getElementById(id),mobile=matchMedia('(max-width:700px)');
+const systemTheme=matchMedia('(prefers-color-scheme:dark)');let manualTheme=false;
+try{manualTheme=['light','dark'].includes(localStorage.getItem('hacky-theme'));}catch{}
+function applyTheme(theme){document.documentElement.dataset.theme=theme;$('theme-toggle').setAttribute('aria-label','Switch to '+(theme==='dark'?'light':'dark')+' mode');$('theme-toggle').querySelector('use').setAttribute('href',theme==='dark'?'#sun':'#moon');document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#211e27':'#faf8fb';}
+$('theme-toggle').onclick=()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';manualTheme=true;applyTheme(theme);try{localStorage.setItem('hacky-theme',theme);}catch{}};
+systemTheme.addEventListener('change',e=>{if(!manualTheme)applyTheme(e.matches?'dark':'light');});applyTheme(document.documentElement.dataset.theme);
+
+const people={mika:{name:'Mika Chen',role:'Full-stack · React / Node',reason:'Ships end to end with React, Node, and Postgres. Looking for a team, and very ready to talk anime.',tags:['Full-stack','Anime fan'],reply:'Hey! I’m looking for a team too. What are you building?'},ren:{name:'Ren Okada',role:'Full-stack · Next.js / Python',reason:'Built two hackathon projects from UI to API. Loves fast prototypes, clean code, and Studio Ghibli.',tags:['Full-stack','Ghibli fan'],reply:'Hey! I’d love to hear the idea. What’s your team building?'},aya:{name:'Aya Patel',role:'Security · AppSec / CTFs',reason:'Enjoys CTFs and finding auth bugs. Can help your team build a safer app from the start.',tags:['App security','CTFs'],reply:'Hey! Happy to help with security. What does your app do?'},jules:{name:'Jules Park',role:'Product design · Frontend',reason:'Turns rough ideas into polished interfaces. Comfortable with Figma, CSS, and building alongside engineers.',tags:['Design','Frontend'],reply:'Hi! I’m up for a design sprint. What’s the project?'}};
+Object.assign(people.mika,{kind:'Hacker',bio:'Looking for a team. Enjoys anime and building through the night.',github:null,linkedin:null,reason:'Can build your UI and API with React and Node, and is looking for a team.'});
+Object.assign(people.ren,{kind:'Hacker',bio:'Two hackathons completed. Studio Ghibli fan.',github:null,linkedin:null,reason:'Has shipped complete hackathon projects and is ready to build across the stack.'});
+Object.assign(people.aya,{kind:'Mentor',bio:'Helps teams review authentication and threat models. CTF enthusiast.',github:null,linkedin:null,reason:'Can review your security approach and help catch auth issues before your demo.'});
+Object.assign(people.jules,{kind:'Hacker',bio:'Designs in Figma and builds accessible interfaces.',github:null,linkedin:null,reason:'A strong fit if your team needs someone to turn an idea into a polished interface.'});
+people.sasha={name:'Sasha Rivera',kind:'Sponsor',role:'Developer relations · APIs',bio:'Helps builders explore API integrations and developer tools.',reason:'Can talk through API choices and help troubleshoot an integration.',github:null,linkedin:null,reply:'Hi! Which API are you working with, and what are you trying to build?'};
+Object.assign(people.mika,{specialty:'Full-stack',stack:'React · Node.js · Postgres',skills:'Building interfaces and APIs, and shipping an end-to-end project.'});
+Object.assign(people.ren,{specialty:'Full-stack',stack:'Next.js · Python',skills:'Rapid prototyping and connecting the UI to a working backend.'});
+Object.assign(people.jules,{specialty:'Design & frontend',stack:'Figma · CSS · Frontend',skills:'Interface design, accessibility, and turning concepts into usable screens.'});
+Object.assign(people.sasha,{specialty:'Developer tools',stack:'APIs · Developer tools',skills:'Choosing APIs and troubleshooting integrations.'});
+Object.assign(people.aya,{specialty:'App security',stack:'AppSec · Authentication · CTFs',skills:'Authentication reviews, threat modeling, and security checks.'});
+const demoMentors={
+  noah:{name:'Noah Kim',specialty:'Backend & APIs',stack:'Node.js · Postgres · REST APIs',skills:'API design, database structure, and debugging integrations.',bio:'Helps teams turn a rough backend into a working demo.',reason:'Can help plan an API and untangle backend issues.'},
+  iris:{name:'Iris Morgan',specialty:'Frontend',stack:'React · TypeScript · CSS',skills:'Component design, accessibility, and responsive interfaces.',bio:'Helps builders make interfaces that are clear and easy to use.',reason:'Can review your frontend and help make the core flow work well.'},
+  theo:{name:'Theo Brooks',specialty:'AI & data',stack:'Python · PyTorch · Data pipelines',skills:'Model prototyping, data preparation, and evaluation.',bio:'Helps teams scope and prototype projects that use machine learning.',reason:'Can help turn an AI idea into a testable prototype.'},
+  sam:{name:'Sam Ellis',specialty:'Product & demos',stack:'Figma · Prototyping · Product strategy',skills:'Project scoping, user flows, and presenting a clear demo.',bio:'Helps teams choose what to build and explain why it matters.',reason:'Can help narrow your scope and shape a focused demo.'}
+};
+for(const [id,p] of Object.entries(demoMentors))people[id]={...p,kind:'Mentor',role:p.specialty,github:null,linkedin:null,reply:'Hi! Happy to help. What are you building, and where are you stuck?'};
+const socialIcons={github:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1-4-2-6-2m12 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-1.5-.5-3-1.5-4 .2-1 0-2-.5-3-2 0-3 1-4 1a15 15 0 0 0-6 0c-1 0-2-1-4-1-.5 1-.7 2-.5 3C3.5 7 3 8.5 3 10c0 4 3 5.5 7 6-.7.5-1 1.5-1 2v4"/></svg>',linkedin:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7m0-10v.1m5 9.9v-7m0 3c0-4 5-4 5 0v4"/></svg>'};
+function socials(id){
+  const p=people[id], platforms=['github','linkedin'];
+  return '<div class="socials">'+platforms.map(platform=>'<button class="social-link" data-person="'+id+'" data-platform="'+platform+'" '+(!p[platform]?'disabled ':'')+'aria-label="'+(platform==='github'?'GitHub':'LinkedIn')+' profile for '+p.name+(!p[platform]?' unavailable':'')+'">'+socialIcons[platform]+(platform==='github'?'GitHub':'LinkedIn')+'</button>').join('')+(platforms.every(platform=>!p[platform])?'<p class="social-notice">Demo links unavailable · no accounts connected</p>':'')+'</div>';
+}
+document.addEventListener('click',e=>{const button=e.target.closest('[data-platform]');if(!button)return;const person=people[button.dataset.person],platform=button.dataset.platform;if(person[platform]){window.open(person[platform],'_blank','noopener,noreferrer');return;}let notice=button.parentElement.querySelector('.social-notice');if(!notice){notice=document.createElement('p');notice.className='social-notice';notice.setAttribute('role','status');button.parentElement.append(notice);}notice.textContent='Demo profile · No '+(platform==='github'?'GitHub':'LinkedIn')+' account connected.';});
+const histories={team:[{sender:'Kai',text:"Who's finding our fourth? We could use someone who can own the full stack."},{sender:'Lena',text:'I’m on the interface. Let’s find someone excited about the idea.'}]},discovered=['mika','ren'];let current=null,busy=false,opened=!mobile.matches;
+const portraitBase=new URL('assets/mascots/webp/',document.baseURI).href;
+const companionPortraits={
+  mika:{look:'cat',tint:'none',paper:'#ede7f6'},
+  ren:{look:'dragon',tint:'none',paper:'#e4f1e9'},
+  aya:{look:'pixel',tint:'none',paper:'#e4edf7'},
+  jules:{look:'mochi',tint:'hue-rotate(65deg)',paper:'#f1e7f3'},
+  sasha:{look:'star',tint:'none',paper:'#faecdf'},
+  noah:{look:'dragon',tint:'hue-rotate(65deg)',paper:'#eee8f5'},
+  iris:{look:'cat',tint:'hue-rotate(290deg)',paper:'#e6f1ed'},
+  theo:{look:'classic',tint:'hue-rotate(110deg)',paper:'#f5e6ef'},
+  sam:{look:'star',tint:'hue-rotate(290deg)',paper:'#e9eef7'},
+  kai:{look:'classic',tint:'none',paper:'#e3edf7'},
+  lena:{look:'cat',tint:'hue-rotate(165deg)',paper:'#f5e8e0'},
+  self:{look:'classic',tint:'none',paper:'#e8edf3'}
+};
+function avatar(id){
+  if(id==='team')return '<span class="avatar team-portraits" aria-hidden="true">'+avatar('kai')+avatar('lena')+'</span>';
+  const p=companionPortraits[id];
+  return '<span class="avatar portrait '+(id==='self'?'self-portrait':'')+'" data-look="'+p.look+'" aria-hidden="true" style="--portrait-url:url(&quot;'+portraitBase+'hacky-'+p.look+'.webp&quot;);--portrait-filter:'+p.tint+';--portrait-paper:'+p.paper+'"><span class="portrait-sprite"></span></span>';
+}
+$('team').querySelector('.avatar').outerHTML=avatar('team');
+const categoryStyles={Hacker:'hacker',Mentor:'mentor',Sponsor:'sponsor'};
+function kindLabel(kind){
+  const badge=document.createElement('span');badge.className='person-kind';
+  badge.dataset.kind=categoryStyles[kind]||'other';badge.textContent=kind;
+  return badge.outerHTML;
+}
+function categoryLabels(person){return (person.categories?.length?person.categories:[person.kind]).filter(Boolean).map(kindLabel).join('');}
+function setOpen(value,focus=false){if(!value&&typeof rememberConversation==='function')rememberConversation();opened=value;$('app').classList.toggle('open',value);$('sidebar').inert=!value;$('main').inert=value&&mobile.matches;$('toggle').setAttribute('aria-expanded',String(value));if(focus)(value?($('sidebar').classList.contains('in-thread')?$('back-list'):$('close-sidebar')):$('toggle')).focus({preventScroll:true});}setOpen(opened);$('toggle').onclick=()=>setOpen(!opened,true);$('close-sidebar').onclick=()=>setOpen(false,true);$('backdrop').onclick=()=>setOpen(false,true);mobile.addEventListener('change',()=>setOpen(!mobile.matches));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&opened&&!document.querySelector('dialog[open]'))setOpen(false,true);if(e.key==='Tab'&&opened&&mobile.matches&&!document.querySelector('dialog[open]')){const controls=[...$('sidebar').querySelectorAll('button,a,textarea')].filter(el=>!el.disabled&&el.getClientRects().length),first=controls[0],last=controls[controls.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+function renderContacts(){$('contacts').replaceChildren();discovered.forEach(id=>{const p=people[id],b=document.createElement('button');b.className='contact';b.dataset.contact=id;b.innerHTML=avatar(id)+'<span class="info"><span class="name">'+p.name+'</span><span class="contact-categories">'+categoryLabels(p)+'</span><span class="preview">'+(drafts[id]?'Draft: '+escapeText(drafts[id]):histories[id]?.length?'Conversation started':p.specialty||p.role)+'</span></span>';b.onclick=()=>openConversation(id);$('contacts').append(b);});}
+const drafts=Object.create(null), positions=Object.create(null);
+function escapeText(text){const el=document.createElement('span');el.textContent=text;return el.innerHTML;}
+function rememberConversation(){if(!current)return;drafts[current]=$('dm-input').value;positions[current]=$('dm-feed').scrollTop;}
+function atLatest(){const feed=$('dm-feed');return feed.scrollHeight-feed.clientHeight-feed.scrollTop<48;}
+function drawDm(animateLast=false,forceLatest=false){
+  const feed=$('dm-feed'), history=histories[current]||[];
+  const same=feed.dataset.conversation===current;
+  const follow=forceLatest||(same&&atLatest());
+  const previousTop=same?feed.scrollTop:positions[current];
+  if(!same||!animateLast){feed.replaceChildren();feed.dataset.conversation=current;}
+  feed.querySelector('.empty')?.remove();
+  const rendered=feed.children.length;
+  history.slice(rendered).forEach((m,offset)=>{
+    const index=rendered+offset,previous=history[index-1];
+    const grouped=previous&&Boolean(previous.mine)===Boolean(m.mine)&&previous.sender===m.sender;
+    const id=m.mine?'self':current==='team'?m.sender.toLowerCase():current;
+    const el=document.createElement('div');el.className='bubble'+(m.mine?' mine':'')+(grouped?' consecutive':'');
+    el.innerHTML=avatar(id)+'<div class="message-body"><div class="sender'+(grouped?' sr-only':'')+'"></div><p></p></div>';
+    el.querySelector('.sender').textContent=m.mine?'You':m.sender;
+    el.querySelector('p').textContent=m.text;
+    if(animateLast&&index===history.length-1)el.classList.add('message-arrival');
+    feed.append(el);
+  });
+  if(!history.length){const el=document.createElement('div');el.className='empty';el.innerHTML='<h3>Start a conversation</h3><p>Say hello and share why you’d like to connect.</p>';feed.append(el);}
+  feed.scrollTop=follow||previousTop===undefined?feed.scrollHeight:previousTop;
+  $('new-reply').hidden=!animateLast||follow||atLatest();
+}
+$('dm-feed').addEventListener('scroll',()=>{if(current)positions[current]=$('dm-feed').scrollTop;if(atLatest())$('new-reply').hidden=true;},{passive:true});
+$('new-reply').onclick=()=>{$('dm-feed').scrollTop=$('dm-feed').scrollHeight;$('new-reply').hidden=true;(current==='team'?$('back-list'):$('dm-identity')).focus({preventScroll:true});};
+function openConversation(id){
+  rememberConversation();current=id;histories[id]??=[];
+  $('sidebar').classList.add('in-thread');$('dm-avatar').innerHTML=avatar(id);
+  $('dm-title').textContent=id==='team'?'Midnight builders':people[id].name;
+  $('dm-title').title=$('dm-title').textContent;
+  $('dm-identity').disabled=id==='team';$('dm-identity').setAttribute('aria-label',id==='team'?'Midnight builders':'View '+people[id].name+' profile');$('dm-identity').setAttribute('aria-haspopup','dialog');$('dm-identity').onclick=()=>{if(id!=='team')openProfile(id,$('dm-identity'));};
+  $('dm-role').innerHTML=id==='team'?'Your team · 3 members':categoryLabels(people[id]);
+  const profile=$('dm-profile');profile.hidden=true;profile.replaceChildren();
+  $('dm-input').value=drafts[id]||'';setOpen(true);update($('dm-input'),$('dm-send'));drawDm();
+  (current==='team'?$('back-list'):$('dm-identity')).focus({preventScroll:true});
+}
+$('team').onclick=()=>openConversation('team');
+$('back-list').onclick=()=>{const id=current;rememberConversation();$('sidebar').classList.remove('in-thread');current=null;renderContacts();(id==='team'?$('team'):$('contacts').querySelector('[data-contact="'+id+'"]'))?.focus({preventScroll:true});};
+function update(input,button){input.style.height='40px';input.style.height=Math.min(116,input.scrollHeight)+'px';button.disabled=!input.value.trim()||(button.id==='finder-send'&&busy);}
+function wire(input,button,form){input.oninput=()=>{update(input,button);if(input.id==='dm-input'&&current)drafts[current]=input.value;};input.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();if(!button.disabled)form.requestSubmit();}};}wire($('finder-input'),$('finder-send'),$('finder-form'));wire($('dm-input'),$('dm-send'),$('dm-form'));
+$('dm-form').onsubmit=e=>{e.preventDefault();const text=$('dm-input').value.trim();if(!text||!current)return;const id=current;histories[id].push({mine:true,text});drafts[id]='';$('dm-input').value='';update($('dm-input'),$('dm-send'));drawDm(true,true);if(id==='team')$('team-preview').textContent='You: '+text;renderContacts();setTimeout(()=>{histories[id].push({sender:id==='team'?'Kai':people[id].name.split(' ')[0],text:id==='team'?'Sounds good! Send the matches here and we can meet them.':people[id].reply});if(current===id)drawDm(true);renderContacts();},900);};
+function message(text,user=false){
+  const el=document.createElement('div');el.className='msg message-arrival '+(user?'user':'assistant');
+  if(user)el.innerHTML='<div class="byline">'+avatar('self')+'<span>You</span></div>';
+  const p=document.createElement('p');p.textContent=text;el.append(p);$('thread').append(el);return el;
+}
+let profileOrigin=null;
+function openProfile(id,origin,reason=people[id].reason){
+  const p=people[id];profileOrigin=origin;
+  $('person-content').innerHTML='<div class="profile-identity">'+avatar(id)+'<h2 id="person-title">'+p.name+'</h2><div class="profile-categories">'+categoryLabels(p)+'</div></div><section class="profile-section profile-reason"><h3>Why connect</h3><p>'+reason+'</p></section><section class="profile-section"><h3>Stack & focus</h3><p>'+(p.stack||p.role)+'</p></section><p class="profile-about">'+p.bio+'</p><details class="profile-details"><summary>More about '+p.name.split(' ')[0]+'</summary><p>'+(p.skills||p.reason)+'</p></details><div class="profile-links">'+socials(id)+'</div>';
+  $('person-content').scrollTop=0;
+  const dialog=$('person-dialog');dialog.showModal();
+  if(origin&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+    dialog.animate([{transform:'translateY(6px)',opacity:.7},{transform:'none',opacity:1}],{duration:180,easing:'cubic-bezier(.16,1,.3,1)'});
+  }
+  $('person-message').textContent='Message '+p.name.split(' ')[0];
+  $('person-message').onclick=()=>{profileOrigin=null;dialog.close();openConversation(id);};
+}
+$('close-person').onclick=()=>$('person-dialog').close();
+$('person-dialog').addEventListener('close',()=>profileOrigin?.focus({preventScroll:true}));
+$('person-dialog').addEventListener('click',e=>{if(e.target===$('person-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
+function matches(parent,ids,query=''){
+  const list=document.createElement('div');list.className='matches';
+  ids.forEach(id=>{
+    if(!discovered.includes(id))discovered.push(id);
+    const p=people[id],card=document.createElement('button');card.className='match';card.type='button';card.setAttribute('aria-label','View '+p.name+' profile, '+(p.categories||[p.kind]).join(', '));card.setAttribute('aria-haspopup','dialog');
+    card.innerHTML=avatar(id)+'<span class="info"><span class="name">'+p.name+'</span><span class="match-meta">'+categoryLabels(p)+'</span><span class="match-specialty">'+(p.specialty||p.role.split(' · ')[0])+'</span></span><svg class="card-chevron" aria-hidden="true"><use href="#back"/></svg>';
+    const reason=/anime|ghibli/.test(query)&&['mika','ren'].includes(id)?'A shared interest in anime, alongside experience building full-stack projects.':p.reason;
+    card.onclick=()=>openProfile(id,card,reason);list.append(card);
+  });parent.append(list);renderContacts();
+}
+function find(text){if(busy)return;busy=true;$('feed').classList.add('has-conversation');$('feed').setAttribute('aria-busy','true');message(text,true);const pending=message('On it! Let me find your people…');pending.classList.add('waiting');pending.insertAdjacentHTML('afterbegin','<span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>');$('finder-input').value='';update($('finder-input'),$('finder-send'));$('feed').scrollTop=$('feed').scrollHeight;setTimeout(()=>{pending.remove();const q=text.toLowerCase();let ids=[],reply;if(/sponsor|api partner|developer tools/.test(q)){ids=['sasha'];reply='Sasha works with developer tools and APIs. Here’s a sample sponsor contact.';}else if(/mentor|security|secure|ctf|appsec|cyber/.test(q)){ids=['aya','noah','iris','theo','sam'];reply='Explore five demo mentors. Tap a person to see how they can help.';}else if(/design|figma|ui|ux|frontend|front-end/.test(q)&&!/full/.test(q)){ids=['jules'];reply='Jules works on design and frontend. Here’s their demo profile.';}else if(/meet people|network|anyone|everyone/.test(q)){ids=['mika','aya','sasha','ren'];reply='A few people to meet at Knight Hacks. Explore these fictional profiles.';}else if(/full.?stack|backend|back.end|react|node|python|team|build|anime|ghibli/.test(q)){ids=['mika','ren','jules'];reply=/anime|ghibli/.test(q)?'Explore these demo builders and their interests.':'Explore three demo teammates. Tap a person to learn more.';}else{reply='What would you like to connect over? This demo has sample builders, a security mentor, a designer, and a sponsor who works with APIs.';}const answer=message(reply);if(ids.length){matches(answer,ids,q);}busy=false;$('feed').setAttribute('aria-busy','false');update($('finder-input'),$('finder-send'));const feed=$('feed');feed.scrollTop+=answer.getBoundingClientRect().top-feed.getBoundingClientRect().top-16;},650);}
+$('finder-form').onsubmit=e=>{e.preventDefault();const text=$('finder-input').value.trim();if(text)find(text);};
+document.querySelectorAll('[data-prompt]').forEach((button,i)=>{
+  button.onclick=()=>find(button.dataset.prompt);
+  button.querySelector('svg').outerHTML=avatar(['mika','aya','ren','sasha'][i]);
+  button.lastChild.textContent=['Find teammates','Meet mentors','Meet people','Meet sponsors'][i];
+});renderContacts();
+if(window.visualViewport){const fit=()=>{$('app').style.height=window.visualViewport.height+'px';};window.visualViewport.addEventListener('resize',fit);fit();}
+</script><script src="app/hacky-customizer.js"></script></body></html>

@@ -1,0 +1,32 @@
+HACKY - WEBSITE REVIEW
+October 10, 2026
+
+OPEN THE DEMO
+1. Extract the entire ZIP first.
+2. Open index.html in Google Chrome. No install or build is required.
+3. Keep index.html, app, and assets together in this folder.
+
+PHONE-FIRST REVIEW
+In Chrome, open Developer Tools, toggle the device toolbar, and choose
+Responsive at 390 x 844. The page also adapts to desktop.
+
+TRY THESE FLOWS
+- Meet people: see Hacker, Mentor and Sponsor categories together.
+- Open a person, read their profile, and choose Message.
+- Type a draft, return to Chats, and reopen that conversation.
+- Style Hacky: change the companion, color, flair or movement and save.
+- Toggle light/dark mode.
+
+WHAT IS INCLUDED
+index.html - app markup, sample data and interactions
+app/ - styles and companion customization code
+assets/ - required character artwork, branding, fonts and font license
+
+DEMO SCOPE
+People, matching and replies are fictional. Messages are not sent.
+No social accounts are connected. There is no backend or live event data.
+Theme and companion preferences save locally when browser storage allows.
+Conversations and drafts last for the current page session.
+The categories shown are initial examples, not the final category system.
+
+This package contains the current website, not the earlier design-review board.
