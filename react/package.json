@@ -11,6 +11,7 @@
     "test:asset-parity": "node --test tests/public-assets.parity.js"
   },
   "dependencies": {
+    "@ai-sdk/react": "^4.0.140",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

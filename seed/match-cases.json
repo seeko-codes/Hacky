@@ -1,0 +1,129 @@
+{
+  "event": "knighthacks-ix",
+  "intake": {
+    "demo_you": { "skillsWanted": ["backend", "ML"], "goal": "win", "track": "Health" }
+  },
+  "cases": [
+    {
+      "name": "Backend dev into health tech: the backend dev wins, not-looking and skill-less people don't",
+      "viewer": "demo_you",
+      "query": "backend dev into health tech",
+      "neededSkills": ["backend"],
+      "kind": "hacker",
+      "expect": { "top": "maya_backend", "notIn": ["sam_offgrid"], "topBelow": ["maya_backend", "ivy_health"] }
+    },
+    {
+      "name": "Someone who stopped looking never appears, even for a search written for them",
+      "viewer": "demo_you",
+      "query": "advanced Go and Postgres backend engineer into health tech and distributed systems",
+      "neededSkills": ["Go", "Postgres"],
+      "kind": "hacker",
+      "expect": { "notIn": ["sam_offgrid", "jules_wearables"] }
+    },
+    {
+      "name": "A designer for a health app finds the designer",
+      "viewer": "demo_you",
+      "query": "a designer who can make our health app feel calm and accessible",
+      "neededSkills": ["design"],
+      "kind": "hacker",
+      "expect": { "top": "ivy_health" }
+    },
+    {
+      "name": "ML for a health project finds the ML engineer",
+      "viewer": "demo_you",
+      "query": "ML engineer for a health project",
+      "neededSkills": ["ML"],
+      "kind": "hacker",
+      "expect": { "top": "kai_ml" }
+    },
+    {
+      "name": "A beginner who asked for experience gets an experienced teammate first",
+      "viewer": "noah_newbie",
+      "query": "an experienced teammate who can help me build my first AI project",
+      "kind": "hacker",
+      "expect": { "topExperience": ["intermediate", "advanced"], "notIn": ["noah_newbie"] }
+    },
+    {
+      "name": "Auth trouble finds the auth mentor",
+      "viewer": "demo_you",
+      "query": "our OAuth sign-in keeps failing",
+      "neededSkills": ["auth"],
+      "kind": "mentor",
+      "expect": { "top": "leo_auth" }
+    },
+    {
+      "name": "A team that needs a frontend dev finds Pulse",
+      "viewer": "demo_you",
+      "query": "a health team that needs a frontend React dev",
+      "kind": "team",
+      "expect": { "top": "pulse_team" }
+    },
+    {
+      "name": "A team owner doesn't see their own team",
+      "viewer": "rina_owner",
+      "query": "a health team that needs a frontend React dev",
+      "kind": "team",
+      "expect": { "notIn": ["pulse_team"] }
+    },
+    {
+      "name": "An unsatisfiable search says nothing fits",
+      "viewer": "demo_you",
+      "query": "someone who builds medieval trebuchets and does falconry",
+      "neededSkills": ["trebuchet engineering", "falconry"],
+      "kind": "hacker",
+      "expect": { "noMatch": true }
+    },
+    {
+      "name": "No mentor knows Solidity, so nothing fits",
+      "viewer": "noah_newbie",
+      "query": "a mentor to review our Solidity smart contract",
+      "neededSkills": ["Solidity"],
+      "kind": "mentor",
+      "expect": { "noMatch": true }
+    },
+    {
+      "name": "Blocked by the best match: they disappear",
+      "viewer": "demo_you",
+      "query": "backend dev into health tech",
+      "neededSkills": ["backend"],
+      "kind": "hacker",
+      "setup": { "blocks": [["maya_backend", "demo_you"]] },
+      "expect": { "notIn": ["maya_backend", "sam_offgrid"] }
+    },
+    {
+      "name": "Someone you blocked disappears",
+      "viewer": "demo_you",
+      "query": "ML engineer for a health project",
+      "neededSkills": ["ML"],
+      "kind": "hacker",
+      "setup": { "blocks": [["demo_you", "kai_ml"]] },
+      "expect": { "notIn": ["kai_ml"] }
+    },
+    {
+      "name": "Someone who already sent you a request isn't suggested again",
+      "viewer": "demo_you",
+      "query": "ML engineer for a health project",
+      "neededSkills": ["ML"],
+      "kind": "hacker",
+      "setup": { "requests": [["kai_ml", "demo_you"]] },
+      "expect": { "notIn": ["kai_ml"] }
+    },
+    {
+      "name": "Someone you already requested isn't suggested again",
+      "viewer": "demo_you",
+      "query": "backend dev into health tech",
+      "neededSkills": ["backend"],
+      "kind": "hacker",
+      "setup": { "requests": [["demo_you", "maya_backend"]] },
+      "expect": { "notIn": ["maya_backend"] }
+    },
+    {
+      "name": "Contacting a team's owner hides that team",
+      "viewer": "demo_you",
+      "query": "a health team that needs a frontend React dev",
+      "kind": "team",
+      "setup": { "requests": [["demo_you", "rina_owner"]] },
+      "expect": { "notIn": ["pulse_team"] }
+    }
+  ]
+}

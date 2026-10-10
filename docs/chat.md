@@ -1,0 +1,147 @@
+# Hacky chat
+
+How the agent chat works and how the web app talks to it. Built on AI SDK 7: `ai` 7.0.x, `@ai-sdk/react` 4.0.x, `@ai-sdk/google` 4.0.x. Most examples online are for AI SDK 4–6 and use old names (`toUIMessageStreamResponse`, `stepCountIs`, `system`, `addToolResult`). Use the names in this file.
+
+## End to end
+
+1. Each user has one chat thread per event, stored in `agent_messages` as AI SDK `UIMessage`s (`id`, `role`, `parts`).
+2. The web app loads the thread, then `useChat` posts only the newest message to `POST /api/chat`.
+3. The server checks the Better Auth session and event membership, loads the stored thread, adds the new message, and runs `streamText` with Gemini (`server/agent/model.ts`), the tools, and a 5-step limit.
+4. The reply streams back as a UI message stream: `text` parts, plus one `tool-<name>` part per tool call whose `state` changes until its `output` is ready. When it ends, the server upserts the user and assistant messages by `id`.
+5. Intake questions: the model calls `ask_with_options` (input `{ question, options }`). It has no server `execute`, so the stream stops there. The UI shows chips, the tapped chip becomes the tool output via `addToolOutput`, and `useChat` posts again by itself. The server continues the same assistant message (same `id`).
+6. Tool outputs render as cards chosen by tool name (shapes in `shared/contract.ts`). The agent never sends, accepts or claims anything. Card buttons call the normal `/api` routes.
+
+## API
+
+`POST /api/chat` takes JSON `{ eventSlug, message }`. `message` is the last `UIMessage` in the chat: a new user message, or the assistant message that now carries an `ask_with_options` answer. The server never takes history or identity from the client. It reads only the new user text, or the answer to the pending question. The response is a `text/event-stream` (header `x-vercel-ai-ui-message-stream: v1`). Let `useChat` parse it; don't parse it yourself. Returns 401 with no session and 403 if the user isn't in the event.
+
+History (planned): `GET /api/events/<slug>/chat` returns `{ messages: UIMessage[] }`, oldest first. Both routes are defined in `shared/contract.ts`.
+
+## Client (Vite + React, JS)
+
+```jsx
+import { memo, useMemo, useState } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from 'ai';
+
+const CARDS = { search_people: PeopleCards, get_profile: PersonCard, draft_intro: DraftCard,
+  draft_help_request: HelpRequestCard, my_status: StatusCard }; // name → your component
+
+// Auto-send only after a question was answered (the stock helper alone loops after server tools).
+function answeredAsk({ messages }) {
+  const last = messages.at(-1);
+  if (last?.role !== 'assistant') return false;
+  const step = last.parts.slice(last.parts.findLastIndex((p) => p.type === 'step-start') + 1);
+  return step.some((p) => p.type === 'tool-ask_with_options' && p.state === 'output-available')
+    && lastAssistantMessageIsCompleteWithToolCalls({ messages });
+}
+
+// Mount only after history has loaded: `messages` is read once, when the chat is created.
+export function HackyChat({ eventSlug, initialMessages }) {
+  const transport = useMemo(() => new DefaultChatTransport({
+    api: '/api/chat',
+    body: { eventSlug },
+    prepareSendMessagesRequest: ({ messages, body }) => ({ body: { ...body, message: messages.at(-1) } }),
+  }), [eventSlug]);
+  const { messages, sendMessage, addToolOutput, status, error, clearError } = useChat({
+    id: `hacky-${eventSlug}`, messages: initialMessages, transport,
+    sendAutomaticallyWhen: answeredAsk, throttle: 50,
+  });
+  const [input, setInput] = useState('');
+  const ready = status === 'ready' || status === 'error';
+  const pending = messages.at(-1)?.parts.find(
+    (p) => p.type === 'tool-ask_with_options' && p.state === 'input-available');
+
+  // While a question is pending, typed text answers it.
+  const answer = (text) => {
+    if (!ready || !text.trim()) return;
+    clearError();
+    if (pending) addToolOutput({ tool: 'ask_with_options', toolCallId: pending.toolCallId, output: text });
+    else sendMessage({ text });
+  };
+
+  return (
+    <div>
+      {messages.map((m, i) => (
+        <Message key={m.id} message={m} onAnswer={ready && i === messages.length - 1 ? answer : null} />
+      ))}
+      {status === 'submitted' && <TypingDots />}
+      {error && <p>Hacky is busy. Try again in a few seconds.</p>}
+      <form onSubmit={(e) => { e.preventDefault(); answer(input); setInput(''); }}>
+        <input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button disabled={!ready}>Send</button>
+      </form>
+    </div>
+  );
+}
+
+const Message = memo(function Message({ message, onAnswer }) {
+  return message.parts.map((part, i) => {
+    if (part.type === 'text') return <p key={i} className={message.role}>{part.text}</p>;
+    if (!part.type.startsWith('tool-')) return null; // step-start, reasoning, ...
+    const name = part.type.slice('tool-'.length);
+    if (name === 'ask_with_options') return <Chips key={i} part={part} onAnswer={onAnswer} />;
+    if (part.state === 'output-error') return <p key={i}>Couldn't load that. Try again.</p>;
+    if (part.state !== 'output-available') return <CardSkeleton key={i} />;
+    const Card = CARDS[name];
+    return Card ? <Card key={i} data={part.output} /> : null; // unknown tool: render nothing
+  });
+});
+
+function Chips({ part, onAnswer }) {
+  if (part.state === 'input-streaming') return null; // input is still partial
+  const { question, options } = part.input;
+  return (
+    <div>
+      <p className="assistant">{question}</p>
+      {part.state === 'output-available'
+        ? <p className="user">{part.output}</p>
+        : options.map((o) => <button key={o} disabled={!onAnswer} onClick={() => onAnswer(o)}>{o}</button>)}
+    </div>
+  );
+}
+```
+
+Tool part states: `input-streaming` → `input-available` → `output-available` or `output-error`. The approval states (`approval-requested`, `approval-responded`, `output-denied`) exist but Hacky doesn't use approvals. Use `part.input` for the tool input, `part.output` for the result and `part.errorText` for the masked error.
+
+## Gotchas
+
+- **Same origin.** `/api` is on the app's own domain (Vite proxies it in dev), so the Better Auth cookie is sent with the default `credentials: 'same-origin'`. Never hardcode `http://localhost:8787`.
+- **Streaming.** `status` goes `submitted` (show typing dots) → `streaming` (text grows) → `ready`. Only send when ready. Memoize message rows; `throttle` caps re-renders.
+- **Pending questions.** Never `sendMessage` while an `ask_with_options` is unanswered. The model call fails on a tool call with no result. Route typed text through `addToolOutput` as shown.
+- **Free Gemini tier.** It's rate-limited per minute. A 429 or a mid-stream failure shows up as `error`. Keep the user's draft and let them retry. Never start chat requests from effects or loops.
+- **Never render raw tool JSON.** No `JSON.stringify(part.output)`, no input dumps. Errors get one friendly line.
+- **The server owns history.** Don't edit or reorder `messages` locally, and don't call `regenerate`.
+- **Dependency.** The web app imports from `ai` (`DefaultChatTransport`, `lastAssistantMessageIsCompleteWithToolCalls`), but `ai` is only a transitive dependency of `@ai-sdk/react`. Add `ai` at the same version to `react/package.json`.
+
+## Server shape (for agents in `server/`)
+
+```ts
+import { convertToModelMessages, createIdGenerator, createUIMessageStreamResponse,
+  isStepCount, streamText, toUIMessageStream, validateUIMessages } from "ai";
+import { chatModel } from "./agent/model.js";
+
+// inside app.post("/chat", ...) after auth, membership and Zod-parsing the body:
+const tools = buildTools({ userId, eventId }); // closures: the model never picks whose data
+const messages = await validateUIMessages({ messages: mergeNewest(history, body.message), tools });
+const result = streamText({
+  model: chatModel,
+  instructions,                                 // `system` is deprecated in v7
+  messages: await convertToModelMessages(messages, { tools }),
+  tools,
+  stopWhen: isStepCount(5),
+  prepareStep: ({ stepNumber }) => (stepNumber === 4 ? { toolChoice: "none" } : {}), // last step must talk
+});
+result.consumeStream(); // no await: finishes and saves even if the tab closes
+return createUIMessageStreamResponse({
+  stream: toUIMessageStream({
+    stream: result.stream,
+    originalMessages: messages,
+    generateMessageId: createIdGenerator({ prefix: "msg", size: 16 }), // without it, ids are ""
+    onEnd: ({ responseMessage }) => saveMessages(userId, eventId, [messages.at(-1)!, responseMessage]),
+    onError: () => "Hacky hit a snag. Try again in a few seconds.", // never leak raw errors
+  }),
+});
+```
+
+Store `parts` exactly as you get them. Tool parts carry `callProviderMetadata`, which holds Gemini's thought signatures.
