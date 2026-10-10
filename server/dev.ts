@@ -1,0 +1,9 @@
+// Local API server: `npm run dev:api` (reads .env.local).
+import { serve } from "@hono/node-server";
+import { app } from "./app.js";
+
+const port = Number(process.env.API_PORT ?? 8787);
+
+serve({ fetch: app.fetch, port }, (info) => {
+  console.log(`Hacky API on http://localhost:${info.port}/api`);
+});

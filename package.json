@@ -1,0 +1,27 @@
+{
+  "name": "hacky",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:api": "node --env-file=.env.local --watch --import tsx server/dev.ts",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.4",
+    "@neon/config": "^1.8.6",
+    "@neon/env": "^1.5.3",
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.13",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
