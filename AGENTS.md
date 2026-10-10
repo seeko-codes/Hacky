@@ -72,6 +72,7 @@ Change these only with the owner's agreement.
 - Tables that change through RPCs (`connections`, `conversations`, `help_requests`, `blocks`) have no insert, update or delete policies. Messages may be inserted directly by conversation members, with `sender_id = auth.uid()`.
 - `embeddings`, `portal_identities`, `event_launch_keys` and `used_tickets` have no client access at all. `request_hides` is readable only by the recipient.
 - Tools return only public fields. Embeddings and emails never reach the model or the browser.
+- Supabase grants `anon` and `authenticated` access to new tables by default. Every migration that creates a table must revoke `anon` and grant `authenticated` only the reads and column-level writes it needs (see `supabase/migrations/20261010100100_security.sql`).
 
 ## Sign-in rules
 
@@ -85,6 +86,7 @@ Change these only with the owner's agreement.
 
 ## Product rules
 
+- A person's avatar is their customized Hacky character, stored in `profiles.hacky_style` (JSON validated with Zod while the options are still being designed). There are no photo avatars.
 - The agent drafts and the user sends. This includes help requests: they reach mentors only when the user taps "Request help". No agent tool may send, accept, block, claim or change roles.
 - Match reasons are written only from the evidence fields the search returned. If nothing fits, say so.
 - One request per person per event. If two people request each other, both are accepted and one DM opens. Accepting twice returns the same conversation. Only the recipient can accept.
