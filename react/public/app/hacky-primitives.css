@@ -1,0 +1,163 @@
+@font-face { font-family:Lato; src:url('../assets/fonts/lato-regular.woff2') format('woff2'); font-style:normal; font-weight:400; font-display:swap }
+@font-face { font-family:Lato; src:url('../assets/fonts/lato-bold.woff2') format('woff2'); font-style:normal; font-weight:700; font-display:swap }
+:root {
+  font-family:Lato,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:var(--ink); background:var(--paper); color-scheme:light;
+  --ink:#243247; --blue:#0866d9; --muted:#606975; --paper:#f5f6f8; --white:#fff;
+  --line:#d8dde5; --wash:#e9edf3; --sidebar:#eef1f5; --stage:#edf2f8;
+  --action:#0866d9; --action-hover:#0754b3; --on-action:#fff;
+  --hover:#eaf1fb; --selection:#d4e5ff; --request:#eaf1fb;
+  --disabled:#e2e6ec; --disabled-ink:#657080; --focus:#0866d9; --scroll:#929eaf;
+  --gold:#0866d9; --overlay:#14203380; --radius:12px; --ease:cubic-bezier(.16,1,.3,1);
+  --hacker-ink:#24558c; --hacker-bg:#e6effa; --mentor-ink:#39604f; --mentor-bg:#e8f0eb; --sponsor-ink:#805915; --sponsor-bg:#f6e9c9;
+}
+:root[data-theme=dark] {
+  color-scheme:dark; --ink:#edf1f7; --blue:#80b5ff; --muted:#adb7c5; --paper:#181c24; --white:#242a35;
+  --line:#404b5c; --wash:#2d3542; --sidebar:#1e242e; --stage:#252f3e;
+  --action:#0866d9; --action-hover:#0754b3; --on-action:#fff;
+  --hover:#303d50; --selection:#27476f; --request:#26364b;
+  --disabled:#323b49; --disabled-ink:#acb6c6; --focus:#80b5ff; --scroll:#6c788b;
+  --gold:#80b5ff; --overlay:#0b121db3;
+  --hacker-ink:#bad8ff; --hacker-bg:#283e5b; --mentor-ink:#c5dbcc; --mentor-bg:#30463d; --sponsor-ink:#efd097; --sponsor-bg:#493e29;
+}
+* { box-sizing:border-box }
+body { margin:0; -webkit-font-smoothing:antialiased }
+button,textarea { font:inherit; color:inherit }
+button { cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; transition:background 160ms,color 160ms,border-color 160ms,transform 160ms var(--ease) }
+button:disabled { cursor:default }
+button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex="-1"]:focus-visible { outline:2px solid var(--blue); outline-offset:3px }
+::selection { background:var(--selection); color:var(--ink) }
+svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0 }
+[hidden] { display:none!important }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0 }
+
+/* Editable dimensions, shared by the app and the component playground. */
+:root { --object-radius:14px; --object-padding:18px; --object-gap:16px; --control-height:44px; }
+:is(.hk-button,.event-remind,.custom-save,.profile-message,.send) { min-height:var(--control-height); padding:10px 16px; border:0; border-radius:10px; font:inherit; font-size:14px; font-weight:700; background:var(--action); color:var(--on-action) }
+:is(.hk-button,.event-remind,.custom-save,.profile-message,.send):hover:not(:disabled) { background:var(--action-hover) }
+:is(.hk-button,.event-remind,.custom-save,.profile-message,.send):disabled { background:var(--disabled); color:var(--disabled-ink) }
+.hk-button.secondary { background:var(--white); color:var(--blue); border:1px solid var(--line) }
+.hk-notice { padding:var(--object-padding); border:1px solid var(--line); border-radius:var(--object-radius); background:var(--wash); font-size:14px; line-height:1.5 }
+.hk-empty { padding:24px 0; color:var(--muted); font-size:14px; line-height:1.6 }
+.hk-field { display:flex; flex-direction:column; gap:6px; font-size:14px }
+.hk-field input,.hk-field select { min-height:44px; border:1px solid var(--line); border-radius:10px; background:var(--white); color:var(--ink); padding:8px 12px; font:inherit; font-size:16px }
+.hk-field input:focus-visible,.hk-field select:focus-visible { outline:2px solid var(--blue); outline-offset:2px }
+
+/* Shared identity, conversation, object and input primitives. */
+.icon { width:44px; height:44px; border:0; border-radius:10px; background:transparent; color:var(--muted); display:grid; place-items:center; flex-shrink:0 }
+.toggle { justify-self:start; min-height:44px; display:inline-flex; align-items:center; gap:8px; border:0; border-radius:8px; padding:0 6px; background:transparent; color:var(--muted); font-size:14px }
+.icon:hover,.toggle:hover { color:var(--blue); background:var(--wash) }
+.icon:active,.toggle:active,.social-link:active:not(:disabled),.profile-message:active,.custom-save:active:not(:disabled) { transform:scale(.96) }
+/* Character portraits, with separate full-body and face treatments. */
+.avatar { width:40px; height:40px; display:block; flex-shrink:0 }
+.portrait { position:relative; isolation:isolate; border-radius:50%; overflow:hidden; background:var(--portrait-paper,#e8edf3) }
+.portrait-sprite { position:absolute; inset:0; background-image:var(--portrait-url); background-size:var(--portrait-size) var(--portrait-size); background-position:var(--portrait-x) var(--portrait-y); background-repeat:no-repeat; filter:var(--portrait-filter,none) }
+.portrait[data-look=classic] { --portrait-size:350%; --portrait-x:15%; --portrait-y:6%; --figure-scale:1 }
+.portrait[data-look=mochi] { --portrait-size:310%; --portrait-x:12%; --portrait-y:4%; --figure-scale:.96 }
+.portrait[data-look=cat] { --portrait-size:290%; --portrait-x:13%; --portrait-y:3%; --figure-scale:.96 }
+.portrait[data-look=dragon] { --portrait-size:330%; --portrait-x:13%; --portrait-y:2%; --figure-scale:1.02 }
+.portrait[data-look=star] { --portrait-size:370%; --portrait-x:15%; --portrait-y:11%; --figure-scale:1.06 }
+.portrait[data-look=pixel] { --portrait-size:330%; --portrait-x:14%; --portrait-y:6%; --figure-scale:1 }
+.match .portrait,.profile-identity .portrait,.suggestion .portrait { background:transparent; border-radius:0; overflow:visible }
+.match .portrait-sprite,.profile-identity .portrait-sprite,.suggestion .portrait-sprite { background-size:200% 200%; background-position:0 0; transform:scale(var(--figure-scale,1)); transform-origin:50% 85% }
+.team-portraits { position:relative; width:44px; height:44px }
+.team-portraits>.portrait { position:absolute; width:29px; height:29px; top:0; left:0; outline:2px solid var(--paper) }
+.team-portraits>.portrait+.portrait { top:13px; left:13px }
+.info { min-width:0; flex:1 }
+.name { display:block; font-size:16px; font-weight:700; line-height:1.35; overflow-wrap:anywhere }
+/* Categories remain explicit labels, including categories added later. */
+.person-kind { display:inline-flex; align-items:center; font-size:12px; line-height:18px; font-weight:700; padding:2px 7px; border-radius:5px; color:var(--blue); background:var(--wash); max-width:100%; overflow-wrap:anywhere }
+.person-kind[data-kind=hacker] { color:var(--hacker-ink); background:var(--hacker-bg) }
+.person-kind[data-kind=mentor] { color:var(--mentor-ink); background:var(--mentor-bg) }
+.person-kind[data-kind=sponsor] { color:var(--sponsor-ink); background:var(--sponsor-bg) }
+.match-meta,.contact-categories,.profile-categories,#dm-role { display:flex; align-items:center; gap:6px; flex-wrap:wrap }
+.match-meta,.contact-categories { margin-top:5px }
+.thread { display:flex; flex-direction:column; gap:24px }
+.thread:empty { display:none }
+.msg { font-size:15px; line-height:1.6; overflow-wrap:anywhere }
+.msg p { margin:0 }
+.msg.user { align-self:flex-end; max-width:88%; background:var(--request); padding:10px 14px; border-radius:12px }
+.byline { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-bottom:6px }
+.byline .portrait { width:24px; height:24px }
+.matches { margin-top:16px; display:grid; gap:10px }
+.match { width:100%; display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--line); border-radius:14px; text-align:left; background:var(--white) }
+.match:hover { border-color:var(--focus); background:var(--hover) }
+.match .portrait { width:62px; height:68px }
+.match-specialty { display:block; font-size:13px; color:var(--muted); margin-top:5px; line-height:1.45 }
+.card-chevron { width:18px; height:18px; transform:rotate(180deg); color:var(--muted) }
+.match:focus-visible .card-chevron,.match:hover .card-chevron { color:var(--blue) }
+.waiting { display:flex; align-items:center; gap:10px; color:var(--muted) }
+.thinking-dots { display:inline-flex; gap:4px; align-items:center; flex-shrink:0; height:20px; color:var(--blue) }
+.thinking-dots i { width:4px; height:4px; border-radius:50%; background:currentColor; animation:thinking 900ms ease-in-out infinite }
+.thinking-dots i:nth-child(2) { animation-delay:120ms }
+.thinking-dots i:nth-child(3) { animation-delay:240ms }
+/* Shared composer, with the same 44px action in both contexts. */
+.compose-wrap { flex-shrink:0; padding:8px 16px max(12px,env(safe-area-inset-bottom)); background:var(--paper) }
+.composer { display:flex; align-items:flex-end; gap:8px; padding:6px 6px 6px 14px; border:1px solid var(--line); border-radius:14px; background:var(--white) }
+.composer:focus-within { outline:2px solid var(--blue); outline-offset:1px }
+textarea { caret-color:var(--blue); border:0; outline:none; background:transparent; width:100%; min-width:0; height:40px; max-height:116px; resize:none; padding:8px 0; line-height:24px; font-size:16px }
+textarea::placeholder { color:var(--muted); opacity:1 }
+.send { width:44px; height:44px; padding:0; flex-shrink:0; display:grid; place-items:center }
+.send:hover:not(:disabled),.custom-save:hover:not(:disabled),.profile-message:hover { background:var(--action-hover) }
+.send:active:not(:disabled) { transform:scale(.94) }
+.send:disabled,.custom-save:disabled { background:var(--disabled); color:var(--disabled-ink) }
+.demo-note { text-align:center; font-size:12px; line-height:1.5; color:var(--muted); margin:8px 0 0 }
+
+/* One small set of shape and rhythm decisions across every composition. */
+:root { --control-radius:10px; --sheet-radius:16px; --space-tight:8px; --space-group:16px; --space-section:24px; }
+:is(.hk-button,.event-remind,.custom-save,.profile-message,.send) { border-radius:var(--control-radius); line-height:20px; transition:background 160ms,color 160ms,transform 160ms var(--ease); }
+:is(.hk-button,.event-remind,.custom-save,.profile-message,.send):active:not(:disabled) { transform:translateY(1px); }
+.hk-button.secondary:hover:not(:disabled),.event-remind[aria-pressed=true]:hover { background:var(--hover); color:var(--blue); }
+:is(input,textarea,select) { caret-color:var(--blue); accent-color:var(--blue); }
+:is(input,textarea)::placeholder { color:var(--muted); opacity:1; }
+:is(.hk-field input,.hk-field select,.schedule-day-label select):focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+:is(.match,.suggestion) { border-radius:var(--object-radius); }
+.match { padding:16px; gap:14px; }
+.match .portrait { width:56px; height:64px; }
+.match-specialty { margin-top:6px; }
+.composer { border-radius:var(--object-radius); }
+.person-kind { letter-spacing:.01em; }
+.hk-disclosure>summary { display:flex; align-items:center; justify-content:space-between; gap:16px; list-style:none; }
+.hk-disclosure>summary::-webkit-details-marker { display:none; }
+.hk-disclosure>summary::after { content:''; width:7px; height:7px; flex-shrink:0; border-right:1.8px solid var(--blue); border-bottom:1.8px solid var(--blue); transform:rotate(45deg); margin:0 4px 4px 0; transition:transform 160ms var(--ease); }
+.hk-disclosure[open]>summary::after { transform:rotate(225deg); margin-bottom:0; }
+.hk-disclosure>summary:focus-visible { outline-offset:2px; border-radius:4px; }
+.guidance-note { font-size:12px; line-height:1.5; color:var(--muted); }
+
+.self-portrait[data-look=knit]{--portrait-size:180%;--portrait-x:40%;--portrait-y:8%;--figure-scale:1}.match .portrait[data-look=knit] .portrait-sprite,.profile-identity .portrait[data-look=knit] .portrait-sprite,.suggestion .portrait[data-look=knit] .portrait-sprite{background-size:contain;background-position:center}
+
+input,textarea{caret-color:var(--blue)}
+
+/* Message shapes stay separate from the information objects they introduce. */
+:root{--incoming-bubble:#e9edf3;--outgoing-bubble:#0866d9;--outgoing-text:#fff}
+:root[data-theme=dark]{--incoming-bubble:#2d3542;--outgoing-bubble:#0866d9;--outgoing-text:#fff}
+.msg.user,.msg.assistant:not(.hacky-brief):not(.plan-reply)>p:first-of-type,.msg.plan-reply,.message-body p{
+ position:relative;width:fit-content;max-width:100%;padding:10px 14px;border-radius:20px;background:var(--incoming-bubble);color:var(--ink);font-size:15px;line-height:1.45;
+}
+.msg.assistant:not(.hacky-brief):not(.plan-reply)>p:first-of-type,.msg.plan-reply,.message-body p{border-bottom-left-radius:6px}
+.msg.user{max-width:85%;background:var(--outgoing-bubble);color:var(--outgoing-text);border-bottom-right-radius:6px}
+.msg.user>.byline,.plan-reply>.byline{display:none}
+.msg.assistant:not(.hacky-brief):not(.plan-reply)>p:first-of-type::before,.msg.plan-reply::before,.message-body p::before{
+ content:'';position:absolute;bottom:0;left:-5px;width:12px;height:14px;background:var(--incoming-bubble);border-bottom-right-radius:10px;clip-path:polygon(45% 0,100% 0,100% 100%,0 100%,35% 65%);
+}
+.msg.user::after,.bubble.mine .message-body p::after{content:'';position:absolute;bottom:0;right:-5px;width:12px;height:14px;background:var(--outgoing-bubble);border-bottom-left-radius:10px;clip-path:polygon(0 0,55% 0,65% 65%,100% 100%,0 100%)}
+.msg.plan-reply{align-self:flex-start;max-width:38ch}
+.msg.plan-reply p{margin:0}
+.msg.plan-reply .event-source{font-size:14px;min-height:36px;margin-top:2px}
+.msg.plan-pending{min-height:0;padding:12px 14px}
+.msg.plan-pending>p:first-of-type{padding:0!important;background:none!important}
+.msg.plan-pending>p:first-of-type::before{display:none}
+
+.message-receipt{display:block;font-size:11px;line-height:16px;font-weight:700;color:var(--muted);text-align:right;white-space:nowrap;padding-right:2px}
+.msg.user.has-receipt{margin-bottom:20px}
+.msg.user>.message-receipt{position:absolute;right:0;top:calc(100% + 4px)}
+.bubble.mine .message-receipt{margin-top:4px}
+/* Knit role silhouettes: hooded students, bespectacled mentors. */
+.portrait:is([data-look=student],[data-look=mentor],[data-look=knit]){background:transparent;border-radius:0;overflow:visible}
+.portrait:is([data-look=student],[data-look=mentor],[data-look=knit]) .portrait-sprite{background-size:contain;background-position:center;transform:none}
+
+/* Each attendee owns a distinct silhouette; no color-filter identity variants. */
+.portrait[data-figure]{background:transparent;border-radius:0;overflow:visible}
+.portrait[data-figure] .portrait-sprite{background-size:contain;background-position:center;transform:none}
+
+:root{--link:#0866d9;--link-hover:#0754b3}
+:root[data-theme=dark]{--link:#80b5ff;--link-hover:#b2d2ff}

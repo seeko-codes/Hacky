@@ -1,0 +1,30 @@
+{
+  "browser": "WebKit",
+  "viewport": {"width": 390, "height": 844},
+  "checks": [
+    "Initial light theme",
+    "Theme toggles to dark",
+    "Dark theme persists after reload",
+    "Customizer opens native dialog",
+    "Unchanged draft cannot be saved",
+    "Draft changes are disclosed",
+    "Preview does not change applied mascot",
+    "Close discards draft",
+    "Reopen resets discarded draft",
+    "ArrowRight selects next tab",
+    "Keyboard tab selection moves focus",
+    "End selects Moves",
+    "Reduced-motion notice is visible",
+    "Home selects Looks",
+    "ArrowLeft wraps to final tab",
+    "Escape dismisses customizer",
+    "Customizer restores trigger focus",
+    "Save closes customizer",
+    "All four customization choices persist",
+    "Saved mascot is applied after reload",
+    "Reduced motion disables mascot animation",
+    "Light theme persists after reload",
+    "No runtime errors: []"
+  ],
+  "errors": []
+}
