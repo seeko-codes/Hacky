@@ -1,0 +1,119 @@
+/* A single conversation stage. The full portrait is the visual anchor. */
+#onboarding.companion-onboarding{height:100dvh;overflow:auto;background:var(--paper);padding:16px 24px max(20px,env(safe-area-inset-bottom));display:flex;justify-content:center}
+.companion-flow{width:100%;max-width:400px;min-height:0;display:flex;flex-direction:column;margin:0;gap:0}
+.companion-nav{display:flex;align-items:center;justify-content:space-between;min-height:44px;flex-shrink:0}
+.companion-back,.companion-skip{display:grid;place-items:center;min-width:44px;min-height:44px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;border-radius:8px;cursor:pointer}
+.companion-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.companion-back:disabled{visibility:hidden}
+.companion-skip:hover,.companion-back:hover{background:var(--wash);color:var(--ink)}
+.companion-progress{display:flex;gap:6px}
+.companion-progress i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.companion-progress i.active{background:var(--blue)}
+.companion-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 0 auto;padding:24px 0 16px;min-height:0}
+.companion-thought{position:relative;display:grid;place-items:center;width:min(100%,324px);min-height:104px;padding:20px 22px;background:var(--white);border-radius:32px;box-shadow:0 8px 24px rgb(18 31 52 / 5%);animation:thought-appears .35s cubic-bezier(.16,1,.3,1);z-index:1}
+.companion-thought::before,.companion-thought::after{content:'';position:absolute;background:var(--white);border-radius:50%}
+.companion-thought::before{width:17px;height:17px;bottom:-23px;left:53%}
+.companion-thought::after{width:9px;height:9px;bottom:-39px;left:49%}
+#onboarding .companion-thought h1{font-size:24px;line-height:1.3;letter-spacing:-.02em;font-weight:700;text-align:center;margin:0;text-wrap:balance;outline:none}
+#onboarding .companion-portrait{width:clamp(190px,31dvh,280px);height:clamp(190px,31dvh,280px);margin:34px 0 0;flex-shrink:0}
+#onboarding .companion-portrait .hacky-pet{width:100%;height:100%;margin:0}
+.companion-responses{display:flex;flex-direction:column;gap:14px;padding-bottom:10px;flex-shrink:0}
+.companion-hint{text-align:center;font-size:13px;line-height:1.4;color:var(--muted);margin:0}
+.companion-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0;margin:0;border:0;min-width:0}
+.companion-option{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:10px 8px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--ink);font-size:14px;line-height:1.3;text-align:center;cursor:pointer;transition:background .16s,border-color .16s}
+.companion-option input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:inherit}
+.companion-option svg{display:none;width:14px;height:14px;flex-shrink:0;color:var(--blue)}
+.companion-option:has(:checked){background:var(--selection);border-color:var(--blue)}
+.companion-option:has(:checked) svg{display:block}
+.companion-option:hover{background:var(--wash)}
+.companion-option:has(:focus-visible){outline:2px solid var(--focus);outline-offset:3px}
+.companion-options:disabled .companion-option{cursor:wait}
+#onboarding .companion-responses .hk-button{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;min-height:48px;border-radius:14px;margin-top:4px}
+#onboarding .companion-responses .hk-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#onboarding[data-reacting=true] .companion-portrait{animation:companion-nod .8s ease-in-out}
+#onboarding :is(button,input):focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+@keyframes thought-appears{from{transform:translateY(5px) scale(.96)}to{transform:none}}
+@keyframes companion-nod{0%,100%{transform:none}40%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(3deg)}}
+@media(min-width:760px) and (min-height:601px){
+#onboarding.companion-onboarding{padding-block:24px}
+.companion-flow{max-width:420px}
+.companion-stage{padding-top:20px}
+#onboarding .companion-portrait{width:clamp(220px,31dvh,320px);height:clamp(220px,31dvh,320px)}
+}
+@media(max-height:740px){
+#onboarding.companion-onboarding{padding-block:10px}
+.companion-stage{padding:10px 0 12px}
+.companion-thought{min-height:88px;padding:16px 20px}
+#onboarding .companion-thought h1{font-size:22px}
+#onboarding .companion-portrait{width:clamp(150px,28dvh,205px);height:clamp(150px,28dvh,205px);margin-top:30px}
+.companion-responses{gap:10px;padding-bottom:0}
+.companion-option{min-height:44px}
+}
+@media(max-width:359px){#onboarding.companion-onboarding{padding-inline:18px}.companion-option{font-size:13px}}
+@media(max-height:500px) and (min-width:600px){
+#onboarding.companion-onboarding{padding:10px 24px}
+.companion-flow{max-width:760px;display:grid;grid-template-columns:1fr 1fr;column-gap:36px}
+.companion-nav{grid-column:1/-1}
+.companion-stage{grid-column:1;grid-row:2;padding:0}
+.companion-responses{grid-column:2;grid-row:2;align-self:center}
+.companion-thought{min-height:76px;padding:12px 16px}
+#onboarding .companion-thought h1{font-size:20px}
+#onboarding .companion-portrait{width:150px;height:150px;margin-top:24px}
+.companion-thought::before{bottom:-18px;width:12px;height:12px}.companion-thought::after{bottom:-30px;width:7px;height:7px}
+}
+@media(prefers-reduced-motion:reduce){.companion-thought,#onboarding[data-reacting=true] .companion-portrait{animation:none}.companion-option{transition:none}}
+/* Reserve the answer space so Hacky never shifts between questions. */
+.companion-options{grid-auto-rows:48px;align-content:start;min-height:160px}
+@media(max-height:740px){.companion-options{grid-auto-rows:44px;min-height:148px}}
+@media(max-height:600px) and (max-width:599px){.companion-stage{padding:0 0 4px}#onboarding .companion-portrait{width:150px;height:150px}}
+
+/* Free response stays beneath the companion, in the same answer space. */
+.companion-context{display:flex;flex-direction:column;gap:12px}
+#onboarding .companion-context textarea{display:block;width:100%;height:126px;min-height:100px;resize:vertical;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--white);color:var(--ink);font:inherit;font-size:16px;line-height:1.5;caret-color:var(--blue)}
+#onboarding .companion-context textarea::placeholder{color:var(--muted);opacity:1}
+#onboarding .companion-context textarea:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+@media(max-height:740px){.companion-context{gap:10px}#onboarding .companion-context textarea{height:114px}}
+@media(max-height:600px) and (max-width:599px){#onboarding .companion-context textarea{height:104px;padding:10px 12px}.companion-context .companion-hint{font-size:12px}}
+
+/* Speech owns the timing; answer space stays reserved while Hacky talks. */
+#onboarding .companion-speaking{display:grid;width:100%;white-space:pre-line}
+.companion-speaking>span{grid-area:1/1}
+.speech-measure{visibility:hidden}
+.speech-words{align-self:center}
+.speech-wait{display:inline-flex;gap:5px;align-items:center;justify-content:center;min-height:30px}
+.speech-wait i{width:5px;height:5px;border-radius:50%;background:var(--muted)}
+.companion-responses[data-ready=false]{visibility:hidden;pointer-events:none}
+.companion-responses :is(.companion-hint,.companion-option,.companion-context,#make-plan){opacity:0;visibility:hidden;transform:translateY(7px)}
+.companion-responses[data-ready=true] :is(.companion-hint,.companion-option,.companion-context,#make-plan){opacity:1;visibility:visible;transform:none;transition:opacity .36s ease-out,transform .4s cubic-bezier(.16,1,.3,1),visibility 0s;transition-delay:80ms}
+#onboarding .companion-responses[data-ready=true] .companion-option{transition-delay:calc(180ms + var(--answer-order,0)*460ms)}
+#onboarding[data-step="1"] .companion-responses[data-ready=true] #make-plan{transition-delay:2960ms}
+#onboarding[data-step="2"] .companion-responses[data-ready=true] #make-plan{transition-delay:640ms}
+.companion-context .companion-hint{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.companion-responses :is(.companion-hint,.companion-option,.companion-context,#make-plan){transition:none!important;transform:none}}
+
+/* Slow breathing and weight shifts continue between conversational gestures. */
+#onboarding .companion-portrait{position:relative}
+#onboarding .companion-portrait::after{content:'';position:absolute;left:29%;right:24%;bottom:2%;height:5%;border-radius:50%;background:var(--ink);opacity:.07;filter:blur(5px);transform:scaleX(.92);animation:companion-ground 4.8s ease-in-out infinite;pointer-events:none}
+#onboarding .companion-portrait .hacky-pet{z-index:1;transform-origin:50% 92%}
+#onboarding .companion-portrait [data-move=idle] .pet-sprite{transform-origin:50% 92%;animation:companion-breathe 4.8s ease-in-out infinite}
+#onboarding[data-speaking=true] .companion-portrait>.hacky-pet{animation:companion-talk 1.5s ease-in-out infinite}
+@keyframes companion-breathe{
+0%,100%{transform:translateY(0) rotate(-1.5deg) scale(1,1)}
+25%{transform:translateY(-4px) rotate(.5deg) scale(1.012,1.025)}
+50%{transform:translateY(-1px) rotate(2deg) scale(1.008,1.006)}
+75%{transform:translateY(-5px) rotate(-.5deg) scale(1.018,1.026)}
+}
+@keyframes companion-talk{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg) translateY(-3px)}65%{transform:rotate(2deg) translateY(-1px)}}
+@keyframes companion-ground{0%,50%,100%{transform:scaleX(.92);opacity:.07}25%,75%{transform:scaleX(.84);opacity:.045}}
+@media(prefers-reduced-motion:reduce){#onboarding .companion-portrait::after,#onboarding .companion-portrait .pet-sprite,#onboarding .companion-portrait>.hacky-pet{animation:none!important}}
+
+/* The vector rig owns its own joints and ground shadow. */
+#onboarding .companion-portrait[data-live=true]{animation:none}
+#onboarding .companion-portrait[data-live=true]::after{display:none}
+
+/* Supplied animation footage is the performance, without extra CSS puppetry. */
+.hacky-film{position:relative;width:100%;height:100%;overflow:visible;background:transparent}
+.hacky-film video{display:block;width:125%;max-width:none;height:100%;margin-left:-12.5%;object-fit:contain}
+.hacky-film-toggle{position:absolute;right:6px;bottom:6px;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:var(--wash);color:var(--muted);cursor:pointer;opacity:.7;transition:opacity .2s}
+.hacky-film-toggle:hover,.hacky-film-toggle:focus-visible{opacity:1;color:var(--ink)}
+.hacky-film-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
