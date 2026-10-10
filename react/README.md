@@ -29,7 +29,7 @@ The production preview runs at `http://127.0.0.1:5174/`. The build output is `di
 - `src/Conversation.jsx`, `src/People.jsx`: Hacky conversation, profiles, team/direct chats and contact selection. `src/conversation-model.js` contains demo matching and reply rules.
 - `src/Events.jsx`, `src/event-model.js`: event answers, panels, details, recommendations and reminders.
 - `src/ui.jsx`: shared icons, mascot, avatars and native dialogs. `src/storage.js`: browser storage, media queries and reply timing.
-- `src/event-data.js`, `src/people.js`, `src/mascot-data.js`: event snapshot and demo fixtures. `public/`: existing artwork, fonts and styles.
+- `src/event-data.js`, `src/people.js`, `src/mascot-data.js`: event snapshot and demo fixtures. `public/` contains all artwork, fonts and styles needed by this standalone React app. In the full local workspace, those files mirror root `assets/`, `app/*.css`, `event-demo/assets/`, and `event-demo/dashboard.css`; `tests/public-assets.parity.js` checks that copy boundary.
 
 ## Demo boundaries
 
@@ -41,4 +41,8 @@ Preferences, mascot style and guidance settings persist in this browser when sto
 
 ## Validation
 
-Run `npm test` for event-model invariants and `npm run build` for the production build. Repeatable browser flows are in `verification/`; run them from the repository root with its configured Playwright CLI and the dev server running. These exercise WebKit emulation, not physical devices.
+Run `npm test` for event-model invariants, then `npm run build` for the production build. Both commands work from the React-only GitHub checkout or a standalone copy of this directory.
+
+Run `npm run test:asset-parity` separately when the complete, current HTML prototype is present alongside `react/`. This optional check compares asset lists, bytes and styles against the root sources. Those sources are not all included in the React-only branch, so this check is intentionally outside the default test suite. It fails on missing or mismatched sources rather than silently skipping them.
+
+Repeatable browser flows are in `verification/`; run them from the repository root with its configured Playwright CLI and the dev server running. These exercise WebKit emulation, not physical devices.
