@@ -29,7 +29,7 @@ export const Experience = z.enum(["beginner", "intermediate", "advanced"]);
 export const HackGoal = z.enum(["win", "learn", "ship"]);
 export const ConnectionStatus = z.enum(["pending", "accepted"]);
 export const ConnectionSource = z.enum(["agent", "qr", "profile"]);
-export const ConversationKind = z.enum(["dm", "mentor"]);
+export const ConversationKind = z.enum(["dm", "mentor", "team"]);
 export const MessageKind = z.enum(["text", "card", "system"]);
 export const HelpStatus = z.enum(["open", "claimed", "resolved"]);
 // Onboarding step 1: why they came. member_profiles.motivations (checked in the DB).
@@ -186,7 +186,7 @@ export const MyEvent = z.object({
 });
 export type MyEvent = z.infer<typeof MyEvent>;
 
-export const Me = z.object({ profile: PublicProfile, events: z.array(MyEvent) });
+export const Me = z.object({ profile: PublicProfile, events: z.array(MyEvent), demoMode: z.boolean().default(false) });
 export type Me = z.infer<typeof Me>;
 
 export const UpdateProfileBody = z
@@ -311,7 +311,9 @@ export type Message = z.infer<typeof Message>;
 export const ConversationSummary = z.object({
   id: Uuid,
   kind: ConversationKind,
-  peer: PersonSummary, // the other member: DM partner, or the hacker/mentor in a mentor chat
+  peer: PersonSummary, // DM partner; for team chats use team and members for display
+  team: z.object({ id: Uuid, name: z.string(), maxSize: z.number().int().positive() }).nullable().optional(),
+  members: z.array(PersonSummary).optional(),
   helpRequest: z
     .object({ id: Uuid, title: z.string(), status: HelpStatus })
     .nullable(),
@@ -321,6 +323,9 @@ export const ConversationSummary = z.object({
   createdAt: Timestamp,
 });
 export type ConversationSummary = z.infer<typeof ConversationSummary>;
+
+export const AddTeamChatMemberBody = z.object({ userId: UserId });
+export const TeamChatResult = z.object({ conversationId: Uuid });
 
 // Cursors are message ids. before: older page on scroll-up. after: catch-up
 // after a reconnect or tab focus. Messages come back oldest first.
@@ -731,6 +736,15 @@ export const endpoints = {
     path: "/api/events/:slug/conversations",
     params: SlugParams,
     response: z.object({ conversations: z.array(ConversationSummary) }),
+  },
+  // Demo-only: initialize the signed-in hacker's team chat, or add a connected hacker.
+  demoTeamChat: {
+    method: "POST", path: "/api/events/:slug/demo/team-chat", params: SlugParams,
+    response: TeamChatResult,
+  },
+  addTeamChatMember: {
+    method: "POST", path: "/api/conversations/:id/team-members", params: IdParams,
+    body: AddTeamChatMemberBody, response: TeamChatResult,
   },
   messages: {
     method: "GET",

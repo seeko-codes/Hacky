@@ -115,7 +115,7 @@ export const hackGoal = pgEnum("hack_goal", ["win", "learn", "ship"]);
 export const embeddingOwner = pgEnum("embedding_owner", ["member", "team"]);
 export const connectionStatus = pgEnum("connection_status", ["pending", "accepted"]);
 export const connectionSource = pgEnum("connection_source", ["agent", "qr", "profile"]);
-export const conversationKind = pgEnum("conversation_kind", ["dm", "mentor"]);
+export const conversationKind = pgEnum("conversation_kind", ["dm", "mentor", "team"]);
 export const messageKind = pgEnum("message_kind", ["text", "card", "system"]);
 export const helpStatus = pgEnum("help_status", ["open", "claimed", "resolved"]);
 
@@ -415,13 +415,15 @@ export const conversations = pgTable(
     helpRequestId: uuid("help_request_id")
       .unique()
       .references(() => helpRequests.id, { onDelete: "cascade" }),
+    teamId: uuid("team_id").unique().references(() => teams.id, { onDelete: "cascade" }),
     createdAt: createdAt(),
   },
   (t) => [
     check(
       "conversations_shape",
-      sql`(${t.kind} = 'dm' and ${t.dmUserLow} is not null and ${t.dmUserHigh} is not null and ${t.dmUserLow} < ${t.dmUserHigh} and ${t.helpRequestId} is null)
-        or (${t.kind} = 'mentor' and ${t.helpRequestId} is not null and ${t.dmUserLow} is null and ${t.dmUserHigh} is null)`,
+      sql`(${t.kind}::text = 'dm' and ${t.dmUserLow} is not null and ${t.dmUserHigh} is not null and ${t.dmUserLow} < ${t.dmUserHigh} and ${t.helpRequestId} is null and ${t.teamId} is null)
+        or (${t.kind}::text = 'mentor' and ${t.helpRequestId} is not null and ${t.dmUserLow} is null and ${t.dmUserHigh} is null and ${t.teamId} is null)
+        or (${t.kind}::text = 'team' and ${t.teamId} is not null and ${t.helpRequestId} is null and ${t.dmUserLow} is null and ${t.dmUserHigh} is null)`,
     ),
     uniqueIndex("conversations_one_dm_per_pair")
       .on(t.eventId, t.dmUserLow, t.dmUserHigh)

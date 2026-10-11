@@ -401,7 +401,7 @@ function parseSkills(text) {
 }
 
 function HelpRequestCard({ data }) {
-  const { slug } = useContext(CardActions);
+  const { slug, openConversation } = useContext(CardActions);
   const [title, setTitle] = useState(data?.title || '');
   const [details, setDetails] = useState(data?.details || '');
   const [skills, setSkills] = useState(list(data?.skillsNeeded).join(', '));
@@ -421,12 +421,16 @@ function HelpRequestCard({ data }) {
     sending.current = true;
     setState({ phase: 'sending' });
     try {
-      await api(`/api/events/${slug}/help-requests`, {
+      const { helpRequest } = await api(`/api/events/${slug}/help-requests`, {
         method: 'POST',
         body: { title: title.trim(), details: details.trim() || null, skillsNeeded: tags },
       });
-      setState({ phase: 'sent' });
+      setState({ phase: 'sent', conversationId: helpRequest?.conversationId });
       notifyChanged('help');
+      if (helpRequest?.conversationId) {
+        notifyChanged('conversations');
+        openConversation(helpRequest.conversationId);
+      }
     } catch (error) {
       sending.current = false;
       setState({ phase: 'draft', error: failure(error, 'Couldn’t send that. Try again.') });
@@ -440,7 +444,7 @@ function HelpRequestCard({ data }) {
       <label className="hk-field"><span>Skills needed</span><input value={skills} onChange={(e) => setSkills(e.target.value)} disabled={locked} placeholder="React, Auth" /></label>
       {state.error && <p className="hc-alert" role="alert">{state.error}</p>}
       {done
-        ? <p className="hc-done" role="status">Sent to mentors. Their chat opens in Chats when one picks it up.</p>
+        ? <p className="hc-done" role="status">{state.conversationId ? 'A mentor accepted. Your chat is ready.' : 'Sent to mentors. Their chat opens in Chats when one picks it up.'}</p>
         : (
           <div className="hc-actions">
             <button type="button" className="hk-button" disabled={Boolean(problem) || locked} onClick={send}>

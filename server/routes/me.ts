@@ -7,7 +7,7 @@ import {
   type ProfileLinks,
   type PublicProfile,
 } from "../../shared/contract.js";
-import { ensureProfile } from "../auth.js";
+import { ensureProfile, isDemoMode } from "../auth.js";
 import { db } from "../db/index.js";
 import { eventMembers, events, profiles } from "../db/schema.js";
 import { fail, readJson, requireUser, type AppEnv } from "./http.js";
@@ -62,7 +62,7 @@ export async function loadMe(user: { id: string; name: string }): Promise<Me> {
     .where(eq(eventMembers.userId, user.id))
     .orderBy(asc(events.startsAt), asc(events.name));
 
-  return { profile: toPublicProfile(profile), events: memberships };
+  return { profile: toPublicProfile(profile), events: memberships, demoMode: isDemoMode() };
 }
 
 export const meRoutes = new Hono<AppEnv>()

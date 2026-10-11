@@ -10,6 +10,7 @@ import {
   HelpBar,
   ThreadFeed,
   ThreadIdentity,
+  TeamChatBar,
 } from "./social/Thread.jsx";
 
 function Composer({
@@ -345,20 +346,20 @@ export default function Conversation({
                   <Icon name="back" />
                 </button>
                 <div id="dm-avatar">
-                  {dmChat && <PersonAvatar person={dmChat.peer} />}
+                  {dmChat && (dmChat.kind === 'team' ? <span className="team-chat-avatar" aria-hidden="true"><Icon name="chat" /></span> : <PersonAvatar person={dmChat.peer} />)}
                 </div>
                 <button
                   id="dm-identity"
                   className="dm-identity"
                   aria-haspopup="dialog"
-                  aria-disabled={!dmChat}
+                  aria-disabled={!dmChat || dmChat.kind === 'team'}
                   aria-label={
-                    dmChat
+                    dmChat?.kind === 'team' ? dmChat.team.name : dmChat
                       ? "View " + dmChat.peer.name + " profile"
                       : "Selected conversation"
                   }
                   onClick={(event) => {
-                    if (!dmChat) return;
+                    if (!dmChat || dmChat.kind === 'team') return;
                     event.currentTarget.focus({ preventScroll: true });
                     setProfile({ handle: dmChat.peer.handle });
                   }}
@@ -367,6 +368,7 @@ export default function Conversation({
                 </button>
               </header>
               <HelpBar key={current} conversation={dmChat} social={social} />
+              <TeamChatBar key={`team-${current}`} conversation={dmChat} social={social} onOpen={openConversation} />
               <div
                 ref={dmFeed}
                 id="dm-feed"

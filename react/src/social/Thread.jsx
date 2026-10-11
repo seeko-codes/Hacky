@@ -6,6 +6,10 @@ import { HelpStatus, RoleChip, firstName } from './parts.jsx';
 
 export function ThreadIdentity({ conversation, missing }) {
   const peer = conversation?.peer;
+  if (conversation?.kind === 'team') return <>
+    <span className="name" id="dm-title">{conversation.team.name}</span>
+    <span className="role" id="dm-role">Team chat · {conversation.members?.length || 0} members</span>
+  </>;
   return (
     <>
       <span className="name" id="dm-title" title={peer?.name}>
@@ -17,6 +21,34 @@ export function ThreadIdentity({ conversation, missing }) {
       </span>
     </>
   );
+}
+
+export function TeamChatBar({ conversation, social, onOpen }) {
+  const [state, setState] = useState({ busy: false, error: '' });
+  if (!social.demoMode || social.role !== 'hacker' || !conversation) return null;
+  if (conversation.kind === 'team') return <div className="social-teambar" aria-label="Team members">
+    <span>{conversation.members?.map(p => p.userId === social.selfId ? `${p.name} (you)` : p.name).join(' · ')}</span>
+    <span>{conversation.members?.length}/{conversation.team.maxSize} spots filled</span>
+  </div>;
+  if (conversation.kind !== 'dm' || conversation.peer?.role !== 'hacker') return null;
+  const team = social.teamChat;
+  const joined = team?.members?.some(p => p.userId === conversation.peer.userId);
+  const full = team && team.members?.length >= team.team.maxSize;
+  const add = async () => {
+    if (state.busy) return;
+    setState({ busy: true, error: '' });
+    try {
+      const id = await social.addToTeam(conversation.peer.userId);
+      setState({ busy: false, error: '' });
+      onOpen(id);
+    } catch (error) { setState({ busy: false, error: friendly(error) }); }
+  };
+  return <div className="social-teambar">
+    <span>{joined ? 'Already on your team' : full ? 'Your team is full' : 'Build together with your team'}</span>
+    {joined ? <button className="hk-button secondary" onClick={() => onOpen(team.id)}>Open team chat</button>
+      : <button className="hk-button secondary" disabled={!team || full || state.busy} onClick={add}>{state.busy ? 'Inviting…' : 'Invite to team chat'}</button>}
+    {state.error && <p className="social-error" role="alert">{state.error}</p>}
+  </div>;
 }
 
 // Mentor chats: the help request, and "Mark resolved" while it's claimed.
@@ -219,7 +251,7 @@ export function ThreadFeed({ id, thread, conversation, missing, selfId, onRetry,
             m={m}
             mine={m.senderId === selfId}
             joined={grouped(messages[i - 1], m)}
-            peer={person}
+            peer={conversation?.kind === 'team' ? conversation.members?.find(p => p.userId === m.senderId) : person}
             onRetry={onRetry}
             deletable={deletable}
             picked={deletable && picked === m.id}

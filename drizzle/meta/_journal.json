@@ -50,6 +50,13 @@
       "when": 1791670832624,
       "tag": "0006_profile_photo_url",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791728849576,
+      "tag": "0007_demo_team_chats",
+      "breakpoints": true
     }
   ]
 }

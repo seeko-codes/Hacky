@@ -251,6 +251,25 @@ export function useSocial({ activeId }) {
     api(`/api/events/${slug}/requests`).then((r) => r.requests));
   const conversations = useResource('conversations', () =>
     api(`/api/events/${slug}/conversations`).then((r) => r.conversations));
+  const [teamSetup, setTeamSetup] = useState({ busy: false, error: '' });
+  const setupTeam = async () => {
+    if (!me?.demoMode || role !== 'hacker') return;
+    setTeamSetup({ busy: true, error: '' });
+    try {
+      await api(`/api/events/${slug}/demo/team-chat`, { method: 'POST' });
+      await conversations.refetch();
+      setTeamSetup({ busy: false, error: '' });
+    } catch (error) { setTeamSetup({ busy: false, error: friendly(error) }); }
+  };
+  useEffect(() => { setupTeam(); }, [slug, selfId, me?.demoMode, role]);
+  const teamChat = conversations.data?.find(c => c.kind === 'team');
+  const addToTeam = async (userId) => {
+    if (!teamChat) throw new Error('Your team chat is not ready yet.');
+    const { conversationId } = await api(`/api/conversations/${teamChat.id}/team-members`, { method: 'POST', body: { userId } });
+    await conversations.refetch();
+    threads.load(conversationId);
+    return conversationId;
+  };
   const help = useResource('help', () =>
     helpOn ? api(`/api/events/${slug}/help-queue`) : Promise.resolve({ open: [], mine: [] }));
   const threads = useThreads(selfId);
@@ -276,6 +295,7 @@ export function useSocial({ activeId }) {
       const m = e.message;
       threads.receive(m);
       const { activeId: open, visible: shown, conversations: list } = latest.current;
+      if (m.kind === 'system' && list?.some(c => c.id === m.conversationId && c.kind === 'team')) conversations.refetch();
       if (!list?.some((c) => c.id === m.conversationId)) conversations.refetch();
       else {
         const seen = m.conversationId === open && shown;
@@ -371,6 +391,8 @@ export function useSocial({ activeId }) {
     role,
     verified: Boolean(eventMe?.verified),
     selfId,
+    demoMode: Boolean(me?.demoMode),
+    teamChat, teamSetup, setupTeam, addToTeam,
     hiddenChats: hidden.ids,
     hideChat: hidden.hide,
     restoreChat: hidden.restore,

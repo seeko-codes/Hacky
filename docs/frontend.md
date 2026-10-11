@@ -136,3 +136,13 @@ The agent never sends anything. Only these buttons do.
    - refetch requests, conversations and the help queue.
 
    Live updates only notify. The API is the truth.
+
+## Demo invitations and team chats
+
+`GET /api/me` exposes `demoMode`. With `DEMO_MODE=true`, sending a connection request waits about two seconds and returns an accepted request with a reusable conversation ID. This includes mentor invitations. Outside demo mode, recipients accept requests themselves.
+
+For hackers in the demo, `POST /api/events/:slug/demo/team-chat` initializes or returns their existing team chat. A new group includes a seeded teammate and a short greeting. Conversation summaries with `kind: 'team'` include `team` and `members`; display those instead of the compatibility `peer` field. Messages use the existing conversation endpoints, pagination, unread state and live updates.
+
+An accepted hacker DM offers **Invite to team chat**. Send `POST /api/conversations/:id/team-members` with `{ userId }` to the group ID, show **Inviting…**, then open the returned conversation after its two-second acceptance. Refetch the conversation list so the member names update. Repeated invitations return the same group without duplicate join messages. Existing group history and the DM remain intact. Joined hackers get **Open team chat**; mentors never get a team invitation button. Membership, connection, capacity and block checks still apply.
+
+Apply `drizzle/0007_demo_team_chats.sql` with `npm run db:migrate` before deploying this version. Both team endpoints are unavailable outside demo mode. `npm run test:demo` checks the SQL migration and demo rules without live credentials; `react/verification/demo-team-flow.cjs` checks the desktop and mobile flow with fixture APIs.

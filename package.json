@@ -14,6 +14,7 @@
     "test:prompts": "node --import tsx --test server/agent/prompts.test.ts",
     "test:chat": "node --env-file=.env.local --import tsx --test server/routes/chat.test.ts",
     "test:social": "node --env-file=.env.local --import tsx --test server/social/conversations.test.ts",
+    "test:demo": "node --experimental-test-module-mocks --import tsx --test server/social/demo.test.ts",
     "check:threads": "node --env-file=.env.local --import tsx server/scripts/check-threads.ts",
     "seed:generate": "node --env-file=.env.local --import tsx seed/generate.ts",
     "seed:load": "node --env-file=.env.local --import tsx seed/load.ts",
@@ -34,6 +35,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@types/node": "^22.20.5",
     "drizzle-kit": "^0.31.11",
     "tsx": "^4.23.15",

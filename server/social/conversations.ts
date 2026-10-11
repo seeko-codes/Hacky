@@ -13,6 +13,7 @@ import type {
   MessagePage,
 } from "../../shared/contract.js";
 import { db } from "../db/index.js";
+import { isDemoMode } from "../auth.js";
 import { conversationMembers, messages } from "../db/schema.js";
 import { withTransaction } from "../db/tx.js";
 import { ApiFail, fail } from "../routes/http.js";
@@ -45,6 +46,7 @@ const isMember = (conversationId: string, userId: string) => sql`exists (
   join conversations c on c.id = cm.conversation_id
   join event_members em on em.event_id = c.event_id and em.user_id = cm.user_id
   where cm.conversation_id = ${conversationId} and cm.user_id = ${userId}
+    and (c.kind <> 'team' or ${isDemoMode()})
 )`;
 
 // A block in either direction between the user and any other member.
@@ -65,6 +67,9 @@ type SummaryRow = {
   id: string;
   kind: ConversationKind;
   created_at: string;
+  team_id: string | null;
+  team_name: string | null;
+  team_max_size: number | null;
   help_id: string | null;
   help_title: string | null;
   help_status: HelpStatus | null;
@@ -95,6 +100,7 @@ export async function listConversations(
     select
       c.id,
       c.kind::text as kind,
+      t.id as team_id, t.name as team_name, t.max_size as team_max_size,
       ${iso("c.created_at")} as created_at,
       hr.id as help_id,
       hr.title as help_title,
@@ -121,6 +127,7 @@ export async function listConversations(
       ) as unread_count
     from conversation_members me
     join conversations c on c.id = me.conversation_id
+    left join teams t on t.id = c.team_id
     join lateral (
       select o.user_id, o.last_read_at
       from conversation_members o
@@ -140,17 +147,34 @@ export async function listConversations(
     ) lm on true
     where me.user_id = ${userId}
       and c.event_id = ${eventId}
+      and (c.kind <> 'team' or ${isDemoMode()})
       and not exists (
-        select 1 from blocks b
-        where (b.blocker_id = me.user_id and b.blocked_id = peer.user_id)
-           or (b.blocker_id = peer.user_id and b.blocked_id = me.user_id)
+        select 1 from blocks b join conversation_members o on o.conversation_id = c.id
+        where (b.blocker_id = me.user_id and b.blocked_id = o.user_id)
+           or (b.blocker_id = o.user_id and b.blocked_id = me.user_id)
       )
     order by coalesce(lm.created_at, c.created_at) desc, c.id desc
   `);
 
+  const groupIds = rows.filter(row => row.kind === 'team').map(row => row.id);
+  const members = groupIds.length ? (await db.execute<{
+    conversation_id: string; user_id: string; handle: string; name: string;
+    hacky_style: Record<string, unknown>; photo_url: string | null; role: MemberRole;
+  }>(sql`select m.conversation_id, p.user_id, p.handle, p.name, p.hacky_style, p.photo_url, e.role::text
+    from conversation_members m join profiles p on p.user_id = m.user_id
+    join event_members e on e.user_id = p.user_id and e.event_id = ${eventId}
+    where m.conversation_id in (${sql.join(groupIds.map(id => sql`${id}::uuid`), sql`, `)})
+    order by m.joined_at, p.user_id`)).rows : [];
   return rows.map((row) => ({
     id: row.id,
     kind: row.kind,
+    ...(row.kind === 'team' && row.team_id && row.team_name && row.team_max_size ? {
+      team: { id: row.team_id, name: row.team_name, maxSize: row.team_max_size },
+      members: members.filter(m => m.conversation_id === row.id).map(m => ({
+        userId: m.user_id, handle: m.handle, name: m.name, hackyStyle: m.hacky_style,
+        photoUrl: m.photo_url, role: m.role,
+      })),
+    } : {}),
     peer: {
       userId: row.peer_id,
       handle: row.peer_handle,

@@ -11,8 +11,8 @@ import {
   blockUser,
   hideRequest,
   listRequests,
-  sendRequest,
 } from "../social/requests.js";
+import { sendDemoAwareRequest } from "../social/demo.js";
 import { fail, readJson, readParams, requireUser, type AppContext, type AppEnv } from "./http.js";
 
 const SlugParams = z.object({ slug: Slug });
@@ -45,7 +45,7 @@ export const requestsRoutes = new Hono<AppEnv>()
   .post("/events/:slug/requests", async (c) => {
     const { user, eventId } = await requireEventMember(c);
     const body = await readJson(c, SendRequestBody);
-    return c.json<RequestResult>({ request: await sendRequest(eventId, user.id, body) });
+    return c.json<RequestResult>({ request: await sendDemoAwareRequest(eventId, user.id, body) });
   })
 
   .post("/requests/:id/accept", async (c) => {

@@ -98,6 +98,7 @@ function RequestForm({ person, onSent, onConflict }) {
 }
 
 function Actions({ person, relation, setRelation, onMessage, onConflict }) {
+  const { me } = useSession();
   const [state, setState] = useState({ busy: false, error: "", hidden: false });
   const run = async (fn) => {
     setState((s) => ({ ...s, busy: true, error: "" }));
@@ -181,7 +182,10 @@ function Actions({ person, relation, setRelation, onMessage, onConflict }) {
             conversationId: request.conversationId,
           });
           notifyChanged("requests");
-          if (request.status === "accepted") notifyChanged("conversations");
+          if (request.status === "accepted") {
+            notifyChanged("conversations");
+            if (me?.demoMode && request.conversationId) onMessage(request.conversationId);
+          }
         }}
       />
     );

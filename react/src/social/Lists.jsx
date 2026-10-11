@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../api.js';
 import { useSession } from '../session.jsx';
-import { PersonAvatar } from '../ui.jsx';
+import { Icon, PersonAvatar } from '../ui.jsx';
 import { skillLabel } from '../labels.js';
 import { friendly } from './useSocial.js';
 import { HelpStatus, RoleChip, roleLabel } from './parts.jsx';
@@ -123,14 +123,15 @@ function preview(c, selfId, draft) {
 }
 
 function ChatRow({ c, selfId, draft, unread, onOpen, menuOpen, onMenu, onHide }) {
+  const name = c.team?.name || c.peer.name;
   return (
     <div className="contact-row">
     <button type="button" className="contact" data-contact={c.id} onClick={() => onOpen(c.id)}>
-      <PersonAvatar person={c.peer} />
+      {c.kind === 'team' ? <span className="team-chat-avatar" aria-hidden="true"><Icon name="chat" /></span> : <PersonAvatar person={c.peer} />}
       <span className="info">
-        <span className="name">{c.peer.name}</span>
+        <span className="name">{name}</span>
         <span className="contact-categories">
-          <RoleChip role={c.peer.role} />
+          {c.kind === 'team' ? <span className="social-tag">Team · {c.members?.length || 0} members</span> : <RoleChip role={c.peer.role} />}
           {c.helpRequest && (
             <span className="social-tag social-help-title">
               {c.helpRequest.title} · <HelpStatus status={c.helpRequest.status} />
@@ -146,7 +147,7 @@ function ChatRow({ c, selfId, draft, unread, onOpen, menuOpen, onMenu, onHide })
         </span>
       )}
     </button>
-    <button type="button" className="icon contact-options" aria-label={`Options for ${c.peer.name}`} aria-expanded={menuOpen} onClick={onMenu} onKeyDown={e => { if (e.key === 'Escape' && menuOpen) onMenu(); }}><span aria-hidden="true">⋯</span></button>
+    <button type="button" className="icon contact-options" aria-label={`Options for ${name}`} aria-expanded={menuOpen} onClick={onMenu} onKeyDown={e => { if (e.key === 'Escape' && menuOpen) onMenu(); }}><span aria-hidden="true">⋯</span></button>
     {menuOpen && <div className="contact-actions"><button type="button" className="toggle" onClick={onHide}>Hide chat on this device</button></div>}
     </div>
   );
@@ -285,6 +286,8 @@ export function ChatLists({ social, drafts, activeId, onOpen, onProfile, onHide 
       )}
       <section aria-labelledby="social-chats">
         <h2 className="label" id="social-chats">Chats</h2>
+        {social.teamSetup?.busy && <p className="social-note" role="status">Preparing your team chat…</p>}
+        {social.teamSetup?.error && <p className="social-note social-error" role="alert">{social.teamSetup.error} <button type="button" className="toggle" onClick={social.setupTeam}>Retry team chat</button></p>}
         {chats.map((c) => (
           <ChatRow
             key={c.id}
@@ -305,8 +308,8 @@ export function ChatLists({ social, drafts, activeId, onOpen, onProfile, onHide 
         )}
         {conversations.error && <p className="social-note" role="status">{conversations.error}</p>}
         {social.hideChatError && <p className="social-note social-error" role="alert">{social.hideChatError}</p>}
-        {lastHidden && social.hiddenChats.includes(lastHidden.id) && <div className="social-hide-notice" role="status"><span>{lastHidden.peer.name} hidden on this device.</span><button type="button" className="toggle" onClick={() => restore(lastHidden.id)}>Undo</button></div>}
-        {hidden.length > 0 && <details className="social-hidden"><summary>Hidden chats on this device ({hidden.length})</summary>{hidden.map(c => <div className="social-restore" key={c.id}><span>{c.peer.name}</span><button type="button" className="toggle" onClick={() => restore(c.id)} aria-label={`Restore chat with ${c.peer.name}`}>Restore</button></div>)}</details>}
+        {lastHidden && social.hiddenChats.includes(lastHidden.id) && <div className="social-hide-notice" role="status"><span>{lastHidden.team?.name || lastHidden.peer.name} hidden on this device.</span><button type="button" className="toggle" onClick={() => restore(lastHidden.id)}>Undo</button></div>}
+        {hidden.length > 0 && <details className="social-hidden"><summary>Hidden chats on this device ({hidden.length})</summary>{hidden.map(c => <div className="social-restore" key={c.id}><span>{c.team?.name || c.peer.name}</span><button type="button" className="toggle" onClick={() => restore(c.id)} aria-label={`Restore chat with ${c.team?.name || c.peer.name}`}>Restore</button></div>)}</details>}
       </section>
     </div>
   );

@@ -19,6 +19,7 @@ import {
   resolveHelpRequest,
 } from "../social/help.js";
 import { readJson, readParams, requireUser, type AppEnv } from "./http.js";
+import { autoClaimDemoHelp } from "../social/demo.js";
 
 const SlugParams = z.object({ slug: Slug });
 const IdParams = z.object({ id: Uuid });
@@ -28,7 +29,7 @@ export const helpRoutes = new Hono<AppEnv>()
     const user = requireUser(c);
     const { slug } = readParams(c, SlugParams);
     const draft = await readJson(c, HelpRequestDraft);
-    const helpRequest = await createHelpRequest(slug, user.id, draft);
+    const helpRequest = await autoClaimDemoHelp(await createHelpRequest(slug, user.id, draft));
     return c.json<HelpRequestResult>({ helpRequest });
   })
 

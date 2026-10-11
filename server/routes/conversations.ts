@@ -5,7 +5,8 @@
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
-import { MessagesQuery, SendMessageBody, Slug, Uuid } from "../../shared/contract.js";
+import { AddTeamChatMemberBody, MessagesQuery, SendMessageBody, Slug, Uuid } from "../../shared/contract.js";
+import { ensureDemoTeamChat, addDemoTeamMember } from "../social/demo.js";
 import { db } from "../db/index.js";
 import { eventMembers, events } from "../db/schema.js";
 import {
@@ -46,6 +47,16 @@ function readQuery<T extends z.ZodType>(c: AppContext, schema: T): z.infer<T> {
 }
 
 export const conversationsRoutes = new Hono<AppEnv>()
+  .post("/events/:slug/demo/team-chat", async c => {
+    const { user, eventId } = await requireEventMember(c);
+    return c.json({ conversationId: await ensureDemoTeamChat(eventId, user.id) });
+  })
+  .post("/conversations/:id/team-members", async c => {
+    const user = requireUser(c);
+    const { id } = readParams(c, IdParams);
+    const { userId } = await readJson(c, AddTeamChatMemberBody);
+    return c.json({ conversationId: await addDemoTeamMember(id, user.id, userId) });
+  })
   .get("/events/:slug/conversations", async (c) => {
     const { user, eventId } = await requireEventMember(c);
     return c.json({ conversations: await listConversations(eventId, user.id) });

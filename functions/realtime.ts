@@ -386,10 +386,10 @@ async function poll(db: Sql, me: Identity, f: Feeds): Promise<{ events: LiveEven
           and c.event_id = any(${eventIds}::uuid[])
           and m.created_at > greatest(${f.messages.since}::timestamptz - ${OVERLAP}::interval, ${start}::timestamptz)
           and m.id <> all(${seenIds(f.messages)}::uuid[])
-          and (m.sender_id is null or m.sender_id = ${userId} or not exists (
-            select 1 from blocks b
-            where (b.blocker_id = ${userId} and b.blocked_id = m.sender_id)
-               or (b.blocker_id = m.sender_id and b.blocked_id = ${userId})))
+          and not exists (
+            select 1 from blocks b join conversation_members o on o.conversation_id = c.id
+            where (b.blocker_id = ${userId} and b.blocked_id = o.user_id)
+               or (b.blocker_id = o.user_id and b.blocked_id = ${userId}))
         order by m.created_at, m.id
         limit ${PAGE_SIZE}`,
     ],
