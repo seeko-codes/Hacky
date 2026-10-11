@@ -13,26 +13,28 @@ const goals = [
   ['Compete for prizes', 'Win a prize', 'compete'],
   ['Have fun', 'Have fun', 'fun'],
 ];
-// onComplete(plan, answers): plan stays local for event picks; answers ({motivations, idea}) go to the intake.
-export default function Onboarding({initialPlan, intake, onComplete, onSkip}) {
+// The plan (goals and idea) comes from the saved intake, the one place it lives, so this editor,
+// the chat's plan and the event picks always agree. set is false until goals or an idea are saved.
+export function planFromIntake(intake) {
+  const choices = goals.filter(goal => intake?.motivations?.includes(goal[2])).map(goal => goal[0]);
+  const detail = intake?.idea?.trim() || '';
+  return {choices, detail, set: choices.length > 0 || !!detail, pace: '4',
+    goal: (choices.length ? choices.join(' + ') : 'Explore everything') + (detail ? ': ' + detail : '')};
+}
+
+// onComplete(answers): {motivations, idea} for the intake; leaving idea out keeps the saved one.
+export default function Onboarding({intake, onComplete, onSkip}) {
   const [step, setStep] = useState(1);
   const [reacting, setReacting] = useState(false);
-  const [choices, setChoices] = useState(() => initialPlan
-    ? initialPlan.choices || [initialPlan.choice].filter(Boolean)
-    : goals.filter(goal => intake?.motivations?.includes(goal[2])).map(goal => goal[0]));
-  const [detail, setDetail] = useState(() => initialPlan ? initialPlan.detail || '' : intake?.idea || '');
+  const [choices, setChoices] = useState(() => planFromIntake(intake).choices);
+  const [detail, setDetail] = useState(() => planFromIntake(intake).detail);
   const heading = useRef(null);
   const [listening, setListening] = useState(false);
 
   // Skipping the second question leaves the saved idea alone.
   function complete(context = detail, keepIdea = false) {
-    context = context.trim();
-    const picked = goals.filter(([value]) => choices.includes(value));
-    const selected = picked.map(goal => goal[0]);
-    const motivations = picked.map(goal => goal[2]);
-    onComplete({choices: selected, detail: context,
-      goal: (selected.length ? selected.join(' + ') : 'Explore everything') + (context ? ': ' + context : ''), pace: '4'},
-      keepIdea ? {motivations} : {motivations, idea: context || null});
+    const motivations = goals.filter(([value]) => choices.includes(value)).map(goal => goal[2]);
+    onComplete(keepIdea ? {motivations} : {motivations, idea: context.trim() || null});
   }
 
   const acknowledgement = choices.length > 1 ? "I like that mix. We'll make it happen." : {
