@@ -50,7 +50,7 @@ How `react/` talks to the backend. Every route and shape is in `shared/contract.
 
   The free text goes in `idea` (at most 2000 characters, or `null` if empty). Don't send the combined `goal` string: `goal` is one of `win | learn | ship`, and Hacky asks for it in chat.
 - **On skip:** send nothing.
-- **Customizer:** load from `me.profile.hackyStyle`, filling missing keys with the defaults in `mascot-data.js`. On save, `PATCH /api/me/profile` with `{ hackyStyle: { look, color, flair, move } }`. Every person's avatar is `person.photoUrl` when it's set, otherwise their Hacky from `person.hackyStyle` (see Product rules in `AGENTS.md`).
+- **Customizer:** load from `me.profile.hackyStyle`, filling missing keys with the defaults in `mascot-data.js`. On save, `PATCH /api/me/profile` with `{ hackyStyle: { look: "knit", color, flair, move } }`. Every Hacky is the knit one: the API rejects any other `look` (leaving it out is fine), and older profiles that still name another look are drawn as knit. Every person's avatar is `person.photoUrl` when it's set, otherwise their Hacky from `person.hackyStyle` (see Product rules in `AGENTS.md`).
 
 ## 3. Chat
 

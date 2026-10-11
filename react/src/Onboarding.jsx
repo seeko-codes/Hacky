@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Icon, Pet} from './ui.jsx';
+import {Icon} from './ui.jsx';
 import HackyFilm from './HackyFilm';
 import {useMedia} from './storage';
 import './Onboarding.css';
@@ -14,7 +14,7 @@ const goals = [
   ['Have fun', 'Have fun', 'fun'],
 ];
 // onComplete(plan, answers): plan stays local for event picks; answers ({motivations, idea}) go to the intake.
-export default function Onboarding({initialPlan, intake, style, onComplete, onSkip}) {
+export default function Onboarding({initialPlan, intake, onComplete, onSkip}) {
   const [step, setStep] = useState(1);
   const [reacting, setReacting] = useState(false);
   const [choices, setChoices] = useState(() => initialPlan
@@ -77,7 +77,7 @@ export default function Onboarding({initialPlan, intake, style, onComplete, onSk
     return () => window.clearTimeout(timer);
   }, [reacting, finished, reducedMotion]);
 
-  return <main id="onboarding" className="companion-onboarding" data-step={step} data-reacting={reacting} data-speaking={!finished}>
+  return <main id="onboarding" className="companion-onboarding" data-step={step}>
     <form id="plan-form" className="companion-flow" onSubmit={event => {
       event.preventDefault();
       if (!answersReady) return;
@@ -96,7 +96,7 @@ export default function Onboarding({initialPlan, intake, style, onComplete, onSk
             <span className="speech-words" aria-hidden="true">{reducedMotion ? message : spoken || <span className="speech-wait"><i/><i/><i/></span>}</span>
           </h1>
         </div>
-        <div id="onboarding-pet" className="companion-portrait" data-live={!style?.look || style.look === 'knit'}>{!style?.look || style.look === 'knit' ? <HackyFilm/> : <Pet style={style} animated />}</div>
+        <div id="onboarding-pet" className="companion-portrait"><HackyFilm/></div>
       </div>
       <div className="companion-responses" data-ready={answersReady} aria-hidden={!answersReady} inert={!answersReady}>
         {step === 1 ? <>

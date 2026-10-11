@@ -44,7 +44,7 @@ export function SelfAvatar() {
 export function Pet({ style=defaults, extra='', animated=false, intro=false }) {
   const state={...defaults,...style};
   const filter=colors.find(c=>c[0]===state.color)?.[3]||'none';
-  return <span className={'hacky-pet '+extra} role="img" aria-label="Your customized Hacky" data-look={state.look} data-flair={state.flair} data-move={state.move} data-animated={animated?'':undefined} data-intro-dance={intro?'':undefined} style={{'--pet-url':`url("/assets/mascots/webp/hacky-${state.look}.webp")`,'--pet-filter':filter}}><span className="pet-sprite"/><span className="pet-flair" aria-hidden="true">{[0,1,2].map(n=><i key={n}><Icon name={state.flair==='hearts'?'heart':'star'}/></i>)}</span></span>;
+  return <span className={'hacky-pet '+extra} role="img" aria-label="Your customized Hacky" data-flair={state.flair} data-move={state.move} data-animated={animated?'':undefined} data-intro-dance={intro?'':undefined} style={{'--pet-filter':filter}}><span className="pet-sprite"/><span className="pet-flair" aria-hidden="true">{[0,1,2].map(n=><i key={n}><Icon name={state.flair==='hearts'?'heart':'star'}/></i>)}</span></span>;
 }
 export function WorkingPet({style,state='working'}) {
   return <span className={'working-hacky '+state} aria-hidden="true"><Pet style={style}/><span className="work-mark">{state==='done'?<Icon name="check"/>:<><span/><span/><span/></>}</span></span>;

@@ -4,13 +4,14 @@ import Onboarding from './Onboarding';
 import Customizer from './Customizer';
 import { useEvents } from './Events';
 import { Symbols, Pet, WorkingPet } from './ui';
-import { defaults, looks, colors, flairs, moves } from './mascot-data';
+import { defaults, colors, flairs, moves } from './mascot-data';
 import { readStore, writeStore } from './storage';
 import { api, ApiError } from './api';
 import { useSession } from './session';
 import './session.css';
 
-function hackyStyle(raw){const result={...defaults};for(const [key,options] of Object.entries({look:looks,color:colors,flair:flairs,move:moves})){const value=key==='flair'&&raw?.[key]==='sparks'?'stars':raw?.[key];if(options.some(option=>option[0]===value))result[key]=value;}return result;}
+// Hacky is always knit: look stays the default ('knit') whatever an older saved style holds.
+function hackyStyle(raw){const result={...defaults};for(const [key,options] of Object.entries({color:colors,flair:flairs,move:moves})){const value=key==='flair'&&raw?.[key]==='sparks'?'stars':raw?.[key];if(options.some(option=>option[0]===value))result[key]=value;}return result;}
 function storedPlan(){const plan=readStore('hacky-plan-khix-v1',null);return typeof plan?.goal==='string'&&typeof plan?.pace==='string'?plan:null;}
 function dismissOnboarding(){try{sessionStorage.setItem('hacky-onboarding-skipped','true');}catch{}}
 function needsOnboarding(intake){let skipped=false;try{skipped=sessionStorage.getItem('hacky-onboarding-skipped')==='true';}catch{}return new URLSearchParams(location.search).get('onboarding')==='1'||(!intake.motivations.length&&intake.idea==null&&!skipped&&location.hash!=='#events');}
@@ -68,5 +69,5 @@ function HackyApp(){
   catch(error){session.setProfile(profile);setNotice(error.message);}
  };
  const skip=()=>{dismissOnboarding();setOnboarding(false);};
- return <>{onboarding&&<Onboarding initialPlan={plan} intake={session.eventMe.intake} style={style} onComplete={savePlan} onSkip={skip}/>}<div hidden={onboarding}><Conversation plan={plan} planRevision={planRevision} style={style} onPreferences={()=>setOnboarding(true)} onCustomize={event=>{event.currentTarget.focus({preventScroll:true});setCustomizing(true);}} events={events} theme={theme} onThemeChange={changeTheme}/></div>{events.dialogs}{events.nudge}<Customizer open={customizing} style={style} onSave={saveStyle} onClose={()=>setCustomizing(false)}/>{notice&&<div className="pet-toast" role="status">{notice}</div>}</>;
+ return <>{onboarding&&<Onboarding initialPlan={plan} intake={session.eventMe.intake} onComplete={savePlan} onSkip={skip}/>}<div hidden={onboarding}><Conversation plan={plan} planRevision={planRevision} style={style} onPreferences={()=>setOnboarding(true)} onCustomize={event=>{event.currentTarget.focus({preventScroll:true});setCustomizing(true);}} events={events} theme={theme} onThemeChange={changeTheme}/></div>{events.dialogs}{events.nudge}<Customizer open={customizing} style={style} onSave={saveStyle} onClose={()=>setCustomizing(false)}/>{notice&&<div className="pet-toast" role="status">{notice}</div>}</>;
 }

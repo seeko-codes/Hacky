@@ -22,14 +22,14 @@ export const PEOPLE_PATH = new URL("./people.json", import.meta.url);
 export const KNIGHTHACKS = "knighthacks-ix";
 export const DEMO_HACKS = "demo-hacks";
 
-// Option ids from react/src/mascot-data.js (looks, colors, flairs, moves).
-export const HACKY_LOOKS = ["knit", "mochi", "cat", "dragon", "star", "pixel"] as const;
+// Option ids from react/src/mascot-data.js (colors, flairs, moves). Every
+// Hacky is the knit one.
 export const HACKY_COLORS = ["original", "berry", "mint", "sunset", "rose", "ice"] as const;
 export const HACKY_FLAIRS = ["none", "stars", "hearts"] as const;
 export const HACKY_MOVES = ["idle", "bounce", "dance", "hype"] as const;
 
 export const SeedHackyStyle = z.object({
-  look: z.enum(HACKY_LOOKS),
+  look: z.literal("knit"),
   color: z.enum(HACKY_COLORS),
   flair: z.enum(HACKY_FLAIRS),
   move: z.enum(HACKY_MOVES),

@@ -50,7 +50,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Maya Okafor",
     bio: "Backend engineer who loves clean APIs and boring, reliable databases. Last summer I built appointment services for a small clinic.",
     links: site("maya_backend"),
-    hackyStyle: { look: "cat", color: "mint", flair: "stars", move: "bounce" },
+    hackyStyle: { look: "knit", color: "mint", flair: "stars", move: "bounce" },
     photoUrl: "/assets/people/iris.webp",
     memberships: [
       {
@@ -80,7 +80,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Sam Whitaker",
     bio: "Backend and infrastructure nerd. Already locked in with my crew this weekend, but always up to talk Go and Postgres.",
     links: {},
-    hackyStyle: { look: "dragon", color: "original", flair: "none", move: "idle" },
+    hackyStyle: { look: "knit", color: "original", flair: "none", move: "idle" },
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -109,7 +109,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Ivy Nakamura",
     bio: "Product designer on a mission to make health apps less scary. Figma is my happy place.",
     links: site("ivy_health"),
-    hackyStyle: { look: "mochi", color: "rose", flair: "hearts", move: "dance" },
+    hackyStyle: { look: "knit", color: "rose", flair: "hearts", move: "dance" },
     photoUrl: "/assets/people/ren.webp",
     memberships: [
       {
@@ -139,7 +139,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Noah Bennett",
     bio: "First hackathon! I know some Python and HTML and I'm here to learn from people who have done this before.",
     links: {},
-    hackyStyle: { look: "star", color: "sunset", flair: "stars", move: "bounce" },
+    hackyStyle: { look: "knit", color: "sunset", flair: "stars", move: "bounce" },
     photoUrl: "/assets/people/mika.webp",
     memberships: [
       {
@@ -170,7 +170,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Kai Nguyen",
     bio: "ML engineer who trains models on medical images for fun. Looking for builders who want to ship something real in 36 hours.",
     links: site("kai_ml"),
-    hackyStyle: { look: "pixel", color: "ice", flair: "none", move: "hype" },
+    hackyStyle: { look: "knit", color: "ice", flair: "none", move: "hype" },
     photoUrl: "/assets/people/noah.webp",
     memberships: [
       {
@@ -200,7 +200,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Rina Patel",
     bio: "Pre-med turned product person. I keep teams focused, run the user interviews and give the pitch.",
     links: site("rina_owner"),
-    hackyStyle: { look: "cat", color: "sunset", flair: "hearts", move: "bounce" },
+    hackyStyle: { look: "knit", color: "sunset", flair: "hearts", move: "bounce" },
     photoUrl: "/assets/people/aya.webp",
     memberships: [
       {
@@ -230,7 +230,7 @@ export const heroPeople: SeedPerson[] = [
     name: "Jules Moreau",
     bio: "Hardware tinkerer. If it has a sensor, I want to wire it up.",
     links: {},
-    hackyStyle: { look: "star", color: "mint", flair: "none", move: "dance" },
+    hackyStyle: { look: "knit", color: "mint", flair: "none", move: "dance" },
     photoUrl: "/assets/people/jules.webp",
     memberships: [
       {

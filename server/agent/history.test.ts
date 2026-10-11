@@ -331,4 +331,23 @@ describe("upgraded history validates against the real tool schemas", () => {
     const outputs = result.data[0]!.parts.map((p) => asTool(p).output).filter(Boolean) as { status: string }[];
     assert.deepEqual(outputs.map((o) => o.status), ["closest", "noMatch"]);
   });
+
+  test("people saved with a look from before knit-only (cat, dragon) still validate", async () => {
+    const output = {
+      ...oldHackerSearch,
+      cards: [
+        personCard({ ...maya, hackyStyle: { look: "cat", color: "mint" } }, ["Python"], "Python backend."),
+        personCard({ ...devon, hackyStyle: { look: "dragon", flair: "stars", move: "hype" } }, ["React"], "React frontend."),
+      ],
+    };
+    const message: UIMessage = {
+      id: "msg_a4",
+      role: "assistant",
+      parts: [{ type: "step-start" }, searchPart("call_s7", { kind: "hacker", query: "anyone" }, output)],
+    };
+    const result = await safeValidateUIMessages({ messages: [{ ...message, parts: load(message.parts) }], tools });
+    assert.ok(result.success, result.success ? "" : result.error.message);
+    const looks = peopleIn(result.data[0]!.parts.map((p) => asTool(p).output)).map((p) => (p.hackyStyle as { look?: string }).look);
+    assert.deepEqual(looks, ["cat", "dragon"]);
+  });
 });

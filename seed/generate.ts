@@ -21,7 +21,6 @@ import {
   DEMO_HACKS,
   HACKY_COLORS,
   HACKY_FLAIRS,
-  HACKY_LOOKS,
   HACKY_MOVES,
   KNIGHTHACKS,
   PEOPLE_PATH,
@@ -581,7 +580,7 @@ function toSeed(batch: Batch, gen: GenBatch, taken: Set<string>): { people: Seed
       bio: clip(g.bio, 280),
       links: seed % 3 === 0 ? { website: `https://example.com/${handle}` } : {},
       hackyStyle: {
-        look: pick(HACKY_LOOKS, seed),
+        look: "knit",
         color: pick(HACKY_COLORS, seed >>> 4),
         flair: pick(HACKY_FLAIRS, seed >>> 8),
         move: pick(HACKY_MOVES, seed >>> 12),

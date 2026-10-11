@@ -108,7 +108,7 @@
         "website": "https://example.com/maya_backend"
       },
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "bounce"
@@ -161,7 +161,7 @@
       "bio": "Backend and infrastructure nerd. Already locked in with my crew this weekend, but always up to talk Go and Postgres.",
       "links": {},
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -213,7 +213,7 @@
         "website": "https://example.com/ivy_health"
       },
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "dance"
@@ -266,7 +266,7 @@
       "bio": "First hackathon! I know some Python and HTML and I'm here to learn from people who have done this before.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "bounce"
@@ -318,7 +318,7 @@
         "website": "https://example.com/kai_ml"
       },
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "hype"
@@ -372,7 +372,7 @@
         "website": "https://example.com/rina_owner"
       },
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "bounce"
@@ -425,7 +425,7 @@
       "bio": "Hardware tinkerer. If it has a sensor, I want to wire it up.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "dance"
@@ -525,7 +525,7 @@
       "bio": "I train and orchestrate retrieval-augmented LLM pipelines. Let us build an agent that actually wins prizes.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "berry",
         "flair": "hearts",
         "move": "bounce"
@@ -575,7 +575,7 @@
       "bio": "Data scientist obsessed with messy datasets and clean evaluations. Ready to benchmark and tune models all weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "bounce"
@@ -628,7 +628,7 @@
         "website": "https://example.com/marcus_codes"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "bounce"
@@ -730,7 +730,7 @@
       "bio": "Frontend enthusiast making slick Vue apps. I want to pair with somebody with strong models so we can launch a real demo.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "idle"
@@ -830,7 +830,7 @@
       "bio": "Math student experimenting with numeric algorithms and plotting data in Jupyter notebooks. Excited to discover practical AI.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "bounce"
@@ -879,7 +879,7 @@
       "bio": "React Native hacker obsessed with healthy habits and clean streaks. Ready to craft a slick client and grab a podium spot.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "dance"
@@ -929,7 +929,7 @@
       "bio": "Nursing undergrad learning wireframing and basic web markup. Eager to make clinical workflows friendlier for everyday patients.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "idle"
@@ -979,7 +979,7 @@
       "bio": "Hardware tinkerer wiring low-power microcontrollers and environmental probes. Let us capture real ground truth data.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "hype"
@@ -1029,7 +1029,7 @@
       "bio": "Cartography and data visualization fan. I like parsing spatial coordinates and rendering crisp layers with D3 and Python.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "hype"
@@ -1081,7 +1081,7 @@
         "website": "https://example.com/nico_go"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "idle"
@@ -1131,7 +1131,7 @@
       "bio": "Environmental studies student diving into R stats and ecological surveys. Looking to combine field science with solid software.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "dance"
@@ -1180,7 +1180,7 @@
       "bio": "Just got into coding through frontend fundamentals. Ready to stitch together accessible HTML and CSS for a community project.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "dance"
@@ -1229,7 +1229,7 @@
       "bio": "Ex-intern from retail payments infrastructure. I build rock-solid transactional backends that handle throughput cleanly.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "bounce"
@@ -1279,7 +1279,7 @@
       "bio": "Full-stack hacker bridging Django logic with clean React forms. Passionate about empowering students to manage personal debt.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "hype"
@@ -1383,7 +1383,7 @@
         "website": "https://example.com/camila_pitch"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "bounce"
@@ -1432,7 +1432,7 @@
       "bio": "Unity and C# developer crafting responsive physics and custom pixel shaders. Let us make something responsive and fun.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "berry",
         "flair": "none",
         "move": "idle"
@@ -1482,7 +1482,7 @@
       "bio": "Pixel artist and Godot explorer. I love drawing expressive sprites, smooth tilesets, and coding fluid platformers.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "hype"
@@ -1531,7 +1531,7 @@
       "bio": "Started out building minigames on Scratch and now trying JavaScript. Excited to combine sprites and code at my first hackathon.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "dance"
@@ -1630,7 +1630,7 @@
       "bio": "Industry AI researcher here to help you debug tensor shapes, fine-tune models, and architect inference setups.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "dance"
@@ -1677,7 +1677,7 @@
       "bio": "Frontend architect available to troubleshoot responsive flexbox grids, component state, and web accessibility standards.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "idle"
@@ -1725,7 +1725,7 @@
       "bio": "Mobile engineer happy to assist with app lifecycle bugs, native bridging, and cross-platform layouts in Flutter or Swift.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "dance"
@@ -1775,7 +1775,7 @@
         "website": "https://example.com/garth_cloud_ops"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "dance"
@@ -1822,7 +1822,7 @@
       "bio": "Data platform engineer here to help you optimize query performance, design table schemas, and clean batch feeds.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "bounce"
@@ -1869,7 +1869,7 @@
       "bio": "Developer advocate at AstraBase Cloud. Come ask me how to spin up our managed document-store clusters in seconds.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "idle"
@@ -1918,7 +1918,7 @@
         "website": "https://example.com/valerie_crest"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "bounce"
@@ -2018,7 +2018,7 @@
       "bio": "CS sophomore who loves lightweight web frameworks. Looking to ship a clean educational app before Sunday demos.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "berry",
         "flair": "none",
         "move": "bounce"
@@ -2068,7 +2068,7 @@
       "bio": "Junior analyzing environmental datasets. Excited to explore predictive modeling and pick up new visualization tricks.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "idle"
@@ -2168,7 +2168,7 @@
       "bio": "Mobile engineer focused on smooth native experiences. Ready to grind and build an award-winning Android study companion.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "hype"
@@ -2217,7 +2217,7 @@
       "bio": "Senior backend engineer who loves scalable APIs and data pipelines. Want to deliver a working climate tool this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "idle"
@@ -2267,7 +2267,7 @@
       "bio": "Taking my first university CS course and know basic Java. Excited to see how real dev tools get built.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "none",
         "move": "idle"
@@ -2316,7 +2316,7 @@
         "website": "https://example.com/amina_ux"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "none",
         "move": "hype"
@@ -2415,7 +2415,7 @@
       "bio": "Graduate student working with natural language processing. I want to build a high-accuracy code assistant and win the track.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "dance"
@@ -2465,7 +2465,7 @@
       "bio": "Senior engineer at Apex Cloud. Happy to help debug React state, optimize Node services, or tune SQL queries.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "idle"
@@ -2513,7 +2513,7 @@
       "bio": "Former founder and product director. Ping me for product scope pruning, slide deck storytelling, and demo rehearsals.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "hype"
@@ -2614,7 +2614,7 @@
       "bio": "I focus on speech recognition and audio ML. Excited to build cool voice-powered tools.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "bounce"
@@ -2665,7 +2665,7 @@
       "bio": "I build RAG chatbots and vector search tools. Looking to team up and ship a solid prototype.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "bounce"
@@ -2717,7 +2717,7 @@
         "website": "https://example.com/bianca_agents"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "hype"
@@ -2767,7 +2767,7 @@
       "bio": "Sophomore learning how to hook up LLM APIs to simple scripts. Eager to learn from experienced hackers.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "hype"
@@ -2818,7 +2818,7 @@
         "website": "https://example.com/ruth_robotics"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "none",
         "move": "idle"
@@ -2921,7 +2921,7 @@
       "bio": "Linguistics major learning NLP, speaks Mandarin and English. Excited to explore text processing.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "hype"
@@ -2970,7 +2970,7 @@
       "bio": "I rapidly prototype AI products using Streamlit. Let us test some wild ideas this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "bounce"
@@ -3074,7 +3074,7 @@
       "bio": "I test and red-team LLM applications to catch failures early. Let us build secure models.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "idle"
@@ -3175,7 +3175,7 @@
       "bio": "Applied AI engineer happy to help with LLMs, RAG systems, NLP, and data science challenges.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "idle"
@@ -3225,7 +3225,7 @@
       "bio": "Building a real-time vision model for sign language. Let us win this hackathon!",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "idle"
@@ -3277,7 +3277,7 @@
       "bio": "Working on autonomous drone navigation and spatial tracking. Excited to ship a cool project!",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -3330,7 +3330,7 @@
         "website": "https://example.com/celeste_geo"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "idle"
@@ -3382,7 +3382,7 @@
       "bio": "Just finished my first deep learning course and ready to try image classification.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "hype"
@@ -3432,7 +3432,7 @@
       "bio": "Exploring hand-tracking and touchless gesture controls for desktop and mobile games.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "dance"
@@ -3482,7 +3482,7 @@
       "bio": "Building robust models to catch financial fraud before it hits users. Let us take home the prize.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -3533,7 +3533,7 @@
       "bio": "Transforming messy financial datasets into clean, actionable dashboards.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "berry",
         "flair": "hearts",
         "move": "hype"
@@ -3583,7 +3583,7 @@
       "bio": "I speak Portuguese and English, and I love digging into climate and weather data.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "idle"
@@ -3688,7 +3688,7 @@
         "website": "https://example.com/jaewon_metrics"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "idle"
@@ -3738,7 +3738,7 @@
       "bio": "Mapping environmental risks and urban heat islands using spatial databases.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -3788,7 +3788,7 @@
       "bio": "I love building fast interfaces with React and Tailwind. Let's make something amazing!",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "bounce"
@@ -3889,7 +3889,7 @@
       "bio": "Just starting out with web games and excited to learn how to code!",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "hype"
@@ -3936,7 +3936,7 @@
       "bio": "I build interactive web maps to help visualize environmental data.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "dance"
@@ -3985,7 +3985,7 @@
       "bio": "I speak Hindi and English, and I love building robust web apps with Angular.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "dance"
@@ -4185,7 +4185,7 @@
       "bio": "I design clean, engaging interfaces and prototypes for indie games.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "bounce"
@@ -4234,7 +4234,7 @@
       "bio": "Product designer focused on creating intuitive financial apps.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -4283,7 +4283,7 @@
       "bio": "Graphic design student exploring the world of UX and sustainability.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "dance"
@@ -4330,7 +4330,7 @@
       "bio": "I research and design user experiences specifically tailored for AI products.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "dance"
@@ -4379,7 +4379,7 @@
       "bio": "Motion designer who loves adding slick CSS animations to web apps.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "hype"
@@ -4427,7 +4427,7 @@
       "bio": "Product designer fluent in Korean and English, passionate about design systems.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "idle"
@@ -4526,7 +4526,7 @@
       "bio": "Building high-throughput financial systems with Go and Postgres this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "hype"
@@ -4626,7 +4626,7 @@
       "bio": "I speak Spanish and English, ready to code some Python sustainability tools.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "hype"
@@ -4678,7 +4678,7 @@
         "website": "https://example.com/jonah_sockets"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "berry",
         "flair": "none",
         "move": "idle"
@@ -4778,7 +4778,7 @@
       "bio": "Learning the ropes of JavaScript and Express at my first hackathon.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "dance"
@@ -4826,7 +4826,7 @@
       "bio": "Built my first Flask app recently and excited to ship something green.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "dance"
@@ -4874,7 +4874,7 @@
       "bio": "Optimizing queries and scaling databases for high-volume fintech platforms.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "bounce"
@@ -4923,7 +4923,7 @@
       "bio": "Working on vector search and indexing to make AI apps respond faster.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "idle"
@@ -5022,7 +5022,7 @@
       "bio": "Automating infrastructure deployment with Terraform and Kubernetes.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "idle"
@@ -5072,7 +5072,7 @@
       "bio": "Setting up serverless workflows and Docker containers for rapid AI deployment.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "bounce"
@@ -5121,7 +5121,7 @@
       "bio": "Studying hard for my cloud certs and learning how Linux powers servers.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "dance"
@@ -5169,7 +5169,7 @@
       "bio": "Locking down endpoints with JWT and OAuth. Security first in fintech.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "idle"
@@ -5219,7 +5219,7 @@
       "bio": "CTF competitor exploring reverse engineering and secure AI inputs.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "idle"
@@ -5268,7 +5268,7 @@
       "bio": "Exploring network packets and cybersecurity through hands-on CTF challenges.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "idle"
@@ -5369,7 +5369,7 @@
         "website": "https://example.com/hector_mentor"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "bounce"
@@ -5419,7 +5419,7 @@
       "bio": "Building health apps for patients. I want to win this hackathon with a great tool.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "hype"
@@ -5520,7 +5520,7 @@
       "bio": "Cross platform app builder. Let us build a greener future together.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "idle"
@@ -5569,7 +5569,7 @@
       "bio": "Just starting out with mobile development. Here to learn how to build fun games.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "hype"
@@ -5718,7 +5718,7 @@
       "bio": "Cross platform mobile lead. Let us ship a great fintech product this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "hype"
@@ -5766,7 +5766,7 @@
       "bio": "VR developer and gamer. Building immersive experiences in Unreal.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "idle"
@@ -5817,7 +5817,7 @@
       "bio": "3D artist bringing virtual worlds to life. Excited to collaborate on a rhythm game.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "idle"
@@ -5867,7 +5867,7 @@
       "bio": "Godot developer making pixel art games. I speak Portuguese and English.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "bounce"
@@ -5919,7 +5919,7 @@
         "website": "https://example.com/riley_design"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "idle"
@@ -6016,7 +6016,7 @@
       "bio": "Augmented reality enthusiast. Building interactive AR experiences.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "idle"
@@ -6065,7 +6065,7 @@
       "bio": "Building VR recovery tools. Looking forward to winning with a health tech app.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "bounce"
@@ -6115,7 +6115,7 @@
       "bio": "Kinesiology student helping out with health research and data tracking.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "idle"
@@ -6163,7 +6163,7 @@
       "bio": "WebXR and 3D web developer. Let us build a sustainable virtual world.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "hearts",
         "move": "bounce"
@@ -6213,7 +6213,7 @@
       "bio": "Blender hobbyist learning 3D modeling for indie games.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "hype"
@@ -6259,7 +6259,7 @@
       "bio": "Game developer and XR engineer here to help you debug Unity, Unreal, and VR projects.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "hype"
@@ -6309,7 +6309,7 @@
       "bio": "I build ESP32 and LoRa sensor networks for smart agriculture.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "idle"
@@ -6360,7 +6360,7 @@
       "bio": "I am a robotics enthusiast who speaks Japanese and English.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "sunset",
         "flair": "none",
         "move": "bounce"
@@ -6410,7 +6410,7 @@
       "bio": "I am a biomedical engineering student passionate about wearable sensors.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "hype"
@@ -6460,7 +6460,7 @@
       "bio": "I build custom game controllers and physical interfaces.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "idle"
@@ -6509,7 +6509,7 @@
       "bio": "I am a Raspberry Pi beginner exploring IoT projects.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "hype"
@@ -6556,7 +6556,7 @@
         "website": "https://example.com/bjorn_rust"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "idle"
@@ -6704,7 +6704,7 @@
         "website": "https://example.com/darius_grid"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "rose",
         "flair": "none",
         "move": "idle"
@@ -6752,7 +6752,7 @@
       "bio": "I work with carbon accounting data and emissions modeling.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "dance"
@@ -6800,7 +6800,7 @@
       "bio": "I am an environmental studies student learning spatial analysis.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "idle"
@@ -6846,7 +6846,7 @@
       "bio": "I am a music producer and audio programmer building web sound tools.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "bounce"
@@ -6898,7 +6898,7 @@
         "website": "https://example.com/aria_sound"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "berry",
         "flair": "hearts",
         "move": "bounce"
@@ -6947,7 +6947,7 @@
       "bio": "I am building a music therapy iOS app.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "hype"
@@ -6996,7 +6996,7 @@
       "bio": "I am a guitarist learning to write my own audio plugins.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "idle"
@@ -7043,7 +7043,7 @@
       "bio": "I can help with hardware, embedded systems, microcontrollers, and robotics projects.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "hype"
@@ -7092,7 +7092,7 @@
       "bio": "I mentor hackers on audio programming, DSP, and music tech applications.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "hype"
@@ -7140,7 +7140,7 @@
       "bio": "I am a climate tech data engineer who speaks French and English.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "ice",
         "flair": "none",
         "move": "idle"
@@ -7188,7 +7188,7 @@
       "bio": "Building transparent crypto tools this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "mint",
         "flair": "stars",
         "move": "idle"
@@ -7242,7 +7242,7 @@
       "bio": "Learning how to audit secure web3 code.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "idle"
@@ -7294,7 +7294,7 @@
         "website": "https://example.com/brendan_chain"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "hype"
@@ -7341,7 +7341,7 @@
       "bio": "Tracking carbon credits on the blockchain.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "dance"
@@ -7391,7 +7391,7 @@
       "bio": "Wiring up secure payment APIs for everyone.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "idle"
@@ -7441,7 +7441,7 @@
       "bio": "Making budgeting easier with nice charts.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "hype"
@@ -7488,7 +7488,7 @@
       "bio": "I study finance and code sometimes, and I speak Spanish and English too.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "dance"
@@ -7538,7 +7538,7 @@
       "bio": "Managing products and driving the pitch.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "hype"
@@ -7589,7 +7589,7 @@
       "bio": "Leading storytelling and product vision for AI projects.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "bounce"
@@ -7638,7 +7638,7 @@
       "bio": "Pre-med student focusing on product and user research.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "berry",
         "flair": "stars",
         "move": "bounce"
@@ -7687,7 +7687,7 @@
       "bio": "Business major learning the ropes of game marketing.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "dance"
@@ -7736,7 +7736,7 @@
       "bio": "Building tools to make studying more interactive.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "hype"
@@ -7786,7 +7786,7 @@
       "bio": "I teach kids code and speak Haitian Creole and English.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "mint",
         "flair": "none",
         "move": "idle"
@@ -7891,7 +7891,7 @@
         "website": "https://example.com/lukas_mentor"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "hype"
@@ -7940,7 +7940,7 @@
       "bio": "I can help with payments architecture, Java, Kafka, and I speak Spanish too.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "rose",
         "flair": "stars",
         "move": "idle"
@@ -7988,7 +7988,7 @@
       "bio": "I can help polish your pitch and structure your product presentation.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "idle"
@@ -8036,7 +8036,7 @@
       "bio": "I can help with edtech integrations, learning design, and React apps.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "sunset",
         "flair": "hearts",
         "move": "dance"
@@ -8083,7 +8083,7 @@
       "bio": "I love analyzing public health data to find meaningful insights. Looking for a teammate to build something impactful together.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "original",
         "flair": "hearts",
         "move": "idle"
@@ -8132,7 +8132,7 @@
       "bio": "As a pre-med student learning to code, I am excited to build my first health app. I speak Spanish and English.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "dance"
@@ -8231,7 +8231,7 @@
       "bio": "I craft cross-platform mobile apps for the health sector. Looking to team up and build a winner.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "stars",
         "move": "hype"
@@ -8329,7 +8329,7 @@
         "website": "https://example.com/etienne_flutter"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "ice",
         "flair": "hearts",
         "move": "dance"
@@ -8376,7 +8376,7 @@
       "bio": "I am a digital health engineer ready to help teams navigate FHIR, HIPAA compliance, and health data architecture.",
       "links": {},
       "hackyStyle": {
-        "look": "pixel",
+        "look": "knit",
         "color": "sunset",
         "flair": "none",
         "move": "bounce"
@@ -8423,7 +8423,7 @@
       "bio": "I am a bilingual developer building tools for learners. I speak Spanish and English.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "idle"
@@ -8475,7 +8475,7 @@
       "bio": "Hey, I am an education student eager to learn and collaborate this weekend.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "berry",
         "flair": "none",
         "move": "dance"
@@ -8579,7 +8579,7 @@
         "website": "https://example.com/takeshi_iot"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "ice",
         "flair": "stars",
         "move": "bounce"
@@ -8629,7 +8629,7 @@
       "bio": "I build fast tools that make developer workflows smoother.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "rose",
         "flair": "hearts",
         "move": "hype"
@@ -8678,7 +8678,7 @@
       "bio": "I craft extensions that supercharge everyday code editors.",
       "links": {},
       "hackyStyle": {
-        "look": "mochi",
+        "look": "knit",
         "color": "original",
         "flair": "none",
         "move": "bounce"
@@ -8727,7 +8727,7 @@
       "bio": "Just starting my journey with systems programming and version control.",
       "links": {},
       "hackyStyle": {
-        "look": "cat",
+        "look": "knit",
         "color": "original",
         "flair": "stars",
         "move": "hype"
@@ -8878,7 +8878,7 @@
       "bio": "Excited for my first hackathon! I speak Arabic and English.",
       "links": {},
       "hackyStyle": {
-        "look": "star",
+        "look": "knit",
         "color": "berry",
         "flair": "hearts",
         "move": "dance"
@@ -8980,7 +8980,7 @@
         "website": "https://example.com/aiden_ai"
       },
       "hackyStyle": {
-        "look": "dragon",
+        "look": "knit",
         "color": "berry",
         "flair": "none",
         "move": "hype"
