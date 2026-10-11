@@ -66,13 +66,16 @@ const Ok = z.object({ ok: z.literal(true) });
 // People
 // ---------------------------------------------------------------------------
 
-// The Hacky character, the avatar for people without a photo. Every Hacky is
-// the knit one. Color, flair and move ids live in react/src/mascot-data.js and
-// are still being designed, so they're plain strings and unknown keys pass through.
+// The Hacky character, the avatar for people without a photo, or with one who
+// chose their Hacky (avatar: "hacky"; left out means the photo when there is
+// one). Every Hacky is the knit one. Color, flair and move ids live in
+// react/src/mascot-data.js and are still being designed, so they're plain
+// strings and unknown keys pass through.
 const hackyStyleOptions = {
   color: z.string().max(40).optional(),
   flair: z.string().max(40).optional(),
   move: z.string().max(40).optional(),
+  avatar: z.enum(["photo", "hacky"]).optional(),
 };
 const hackyStyleFits = (style: object) => JSON.stringify(style).length <= 2000;
 
@@ -89,8 +92,9 @@ export const HackyStyle = z
   .refine(hackyStyleFits, "hackyStyle is too large");
 export type HackyStyle = z.infer<typeof HackyStyle>;
 
-// The profile photo, the avatar when set: a site path (/assets/...) or an https
-// URL. Same rule as the profiles_photo_url_format check in the database.
+// The profile photo, the avatar when set (unless hackyStyle.avatar is "hacky"):
+// a site path (/assets/...) or an https URL. Same rule as the
+// profiles_photo_url_format check in the database.
 export const PhotoUrl = z.string().regex(/^(\/assets\/|https:\/\/)/, "Must be an /assets/ path or an https URL");
 
 export const ProfileLinks = z.object({
