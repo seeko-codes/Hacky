@@ -14,15 +14,15 @@ const goals = [
   ['Have fun', 'Have fun', 'fun'],
 ];
 // The plan (goals and idea) comes from the saved intake, the one place it lives, so this editor,
-// the chat's plan and the event picks always agree. set is false until goals or an idea are saved.
+// the chat's plan and the event picks always agree. set is true only when goals are saved; the idea is context.
 export function planFromIntake(intake) {
   const choices = goals.filter(goal => intake?.motivations?.includes(goal[2])).map(goal => goal[0]);
   const detail = intake?.idea?.trim() || '';
-  return {choices, detail, set: choices.length > 0 || !!detail, pace: '4',
+  return {choices, detail, intake, set: choices.length > 0, pace: '4',
     goal: (choices.length ? choices.join(' + ') : 'Explore everything') + (detail ? ': ' + detail : '')};
 }
 
-// onComplete(answers): {motivations, idea} for the intake; leaving idea out keeps the saved one.
+// onComplete(answers): {motivations, idea} for the intake. Skip saves nothing, on either question.
 export default function Onboarding({intake, onComplete, onSkip}) {
   const [step, setStep] = useState(1);
   const [reacting, setReacting] = useState(false);
@@ -31,10 +31,9 @@ export default function Onboarding({intake, onComplete, onSkip}) {
   const heading = useRef(null);
   const [listening, setListening] = useState(false);
 
-  // Skipping the second question leaves the saved idea alone.
-  function complete(context = detail, keepIdea = false) {
+  function complete() {
     const motivations = goals.filter(([value]) => choices.includes(value)).map(goal => goal[2]);
-    onComplete(keepIdea ? {motivations} : {motivations, idea: context.trim() || null});
+    onComplete({motivations, idea: detail.trim() || null});
   }
 
   const acknowledgement = choices.length > 1 ? "I like that mix. We'll make it happen." : {
@@ -89,7 +88,7 @@ export default function Onboarding({intake, onComplete, onSkip}) {
       <nav className="companion-nav" aria-label="Onboarding progress">
         <button type="button" className="companion-back" aria-label="Back" disabled={step === 1 || reacting} onClick={() => setStep(1)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
         <span className="companion-progress" aria-label={`Question ${step} of 2`}><i className="active"/><i className={step === 2 ? 'active' : ''}/></span>
-        <button id="skip-plan" type="button" className="companion-skip" onClick={() => step === 1 ? onSkip() : complete('', true)}>Skip</button>
+        <button id="skip-plan" type="button" className="companion-skip" onClick={onSkip}>Skip</button>
       </nav>
       <div className="companion-stage">
         <div className="companion-thought" key={`${step}-${reacting}`}>

@@ -1,17 +1,53 @@
-/* Curated public Knight Hacks IX facts, checked 2026-10-10.
+/* Curated public Knight Hacks IX facts, checked 2026-10-11. events is the full agenda.
    Guide and linked agenda take precedence over the older homepage FAQ.
    Field names align with the public PortalScheduleEvent shape; ISO strings
    keep the static fixture serializable. null means unpublished, never guessed. */
 export const data = (() => {
   const guide = 'https://knight-hacks.notion.site/knight-hacks-ix-hackers-guide';
   const agenda = 'https://knight-hacks.notion.site/Knight-Hacks-IX-Schedule-38ae290ccffe802796e3e34ff53952f5';
+  // What each event is about, beyond its tag (Workshop, Social and Career fair add their own). Recommendations match
+  // these against the person's track, goals, skills and interests (event-model.js).
+  const topics = {
+    'teams':['networking'],
+    'career-fair':['networking'],
+    'hackathons-101':['beginner'],
+    'full-stack':['web','beginner'],
+    'codex':['ai','web'],
+    'databricks':['data','ai','prizes'],
+    'oneethos':['prizes','career'],
+    'figma':['design','prizes'],
+    'aws':['cloud','career','networking'],
+    'devpost-workshop':['submission','prizes'],
+    'jetson-pickup':['embedded','ai','prizes'],
+    'jetson-pickup-2':['embedded','ai','prizes'],
+    'pitch-speedrun':['career','networking'],
+    'resume-ready':['career'],
+    'mcp-servers':['ai','web'],
+    'intro-git':['beginner','web'],
+    'intro-ml':['ai','beginner'],
+    'unity':['game'],
+    'embedded-1':['embedded'],
+    'embedded-2':['embedded'],
+    'adobe':['design','prizes'],
+    'additive':['hardware','embedded'],
+    'copilot':['ai','web'],
+    'nextera':['ai','embedded','prizes','career'],
+    'amd':['ai','gpu','prizes'],
+    'fullsail-1':['game','prizes'],
+    'encompass':['ai','data','prizes'],
+    'nvidia':['hardware','career'],
+    'ai-studio':['ai'],
+    'fullsail-2':['ai','game'],
+    'bny':['ai','security','finance','prizes'],
+    'fullsail-3':['career']
+  };
   const event = (id, name, startDateTime, endDateTime, location, tag, description, sponsorIds = []) => ({
-    id: `khix-${id}`, name, startDateTime, endDateTime, location, tag, description, sponsorIds,
+    id: `khix-${id}`, name, startDateTime, endDateTime, location, tag, description, sponsorIds, topics: topics[id] || [],
     points: null, purpose: id === 'check-in' ? 'primary_check_in' : 'event', sourceUrl: agenda
   });
   return {
     name: 'Knight Hacks IX', startDate: '2026-10-09', endDate: '2026-10-11', timeZone: 'America/New_York',
-    venue: 'University of Central Florida', checkedAt: '2026-10-10',
+    venue: 'University of Central Florida', checkedAt: '2026-10-11',
     sources: {guide, agenda, website:'https://2026.knighthacks.org/', sponsors:'https://2026.knighthacks.org/#sponsors', mlh:'https://www.mlh.com/seasons/2027/events', devpost:'https://knight-hacks-ix.devpost.com/'},
     days: [{date:'2026-10-09',label:'Friday',short:'Oct 9'},{date:'2026-10-10',label:'Saturday',short:'Oct 10'},{date:'2026-10-11',label:'Sunday',short:'Oct 11'}],
     events: [
@@ -32,8 +68,54 @@ export const data = (() => {
       event('submission','Devpost submission deadline','2026-10-11T10:00:00-04:00',null,'Devpost','Deadline','The hacker guide specifies a hard 10 AM deadline with no late submissions. The Devpost page header lists 11 AM; follow the guide and confirm any updates with organizers.'),
       event('code-freeze','Final code push / hacking ends','2026-10-11T11:00:00-04:00',null,'Your project repository','Deadline','Finish your final code push by 11 AM. The guide prohibits code or repository changes afterward.'),
       event('judging','Judging / Project Expo','2026-10-11T12:00:00-04:00','2026-10-11T16:00:00-04:00',null,'Judging','Claim your project on the Hacker Dashboard to see assigned judging times and rooms. Each appointment allows 2 minutes to set up, 6 for judging, and 2 to pack up.'),
-      event('closing','Closing Ceremony','2026-10-11T18:00:00-04:00','2026-10-11T19:30:00-04:00','SU Cape Florida Ballroom','Ceremony','Attend in Cape Florida or watch the stream in SU Key West Ballroom. Winners watching in Key West will be escorted by an organizer.')
-    ],
+      event('closing','Closing Ceremony','2026-10-11T18:00:00-04:00','2026-10-11T19:30:00-04:00','SU Cape Florida Ballroom','Ceremony','Attend in Cape Florida or watch the stream in SU Key West Ballroom. Winners watching in Key West will be escorted by an organizer.'),
+      // The rest of the agenda (checked 2026-10-11), so every day lists everything.
+      event('jetson-pickup','NVIDIA Jetson hardware pickup','2026-10-09T16:00:00-04:00','2026-10-09T18:45:00-04:00','ENG2 Atrium','Hardware','Pick up NVIDIA Jetson hardware for the Best Use of Jetson Nano challenge.'),
+      event('dinner-fri','Dinner: Publix subs','2026-10-09T17:00:00-04:00','2026-10-09T18:45:00-04:00','ENG2 205','Meal','Dinner for all classes. Scan your QR code at the meal.'),
+      event('pitch-speedrun','Elevator Pitch Speedrun','2026-10-09T21:00:00-04:00','2026-10-09T22:00:00-04:00','SU 225','Workshop','Practice a short pitch for yourself or your idea.'),
+      event('resume-ready','Resume Ready','2026-10-09T21:00:00-04:00','2026-10-09T22:00:00-04:00','SU 220','Workshop','Get your resume ready before the career fair.'),
+      event('jetson-pickup-2','NVIDIA Jetson hardware pickup','2026-10-09T21:00:00-04:00','2026-10-09T21:30:00-04:00','Outside SU Key West','Hardware','A second pickup window for NVIDIA Jetson hardware.'),
+      event('snack-sat','Midnight snack: Dunkin Munchkins','2026-10-10T00:00:00-04:00','2026-10-10T01:00:00-04:00','ENG2 Atrium','Meal','A midnight snack for all hackers.'),
+      event('karaoke','Late Night Karaoke','2026-10-10T00:00:00-04:00','2026-10-10T01:00:00-04:00','BA1 146','Social','Karaoke with other hackers.'),
+      event('mcp-servers','KH x SASE: MCP Servers','2026-10-10T00:00:00-04:00','2026-10-10T01:00:00-04:00','ENG2 203','Workshop','A workshop on MCP servers with SASE UCF.'),
+      event('intro-git','KH: Intro to Git - Sprout Track','2026-10-10T01:00:00-04:00','2026-10-10T02:00:00-04:00','ENG2 102','Workshop','A beginner introduction to Git for your project.'),
+      event('intro-ml','KH: Intro to ML - AI/ML Track','2026-10-10T01:00:00-04:00','2026-10-10T02:00:00-04:00','BA1 119','Workshop','A beginner introduction to machine learning for the AI/ML track.'),
+      event('unity','KH x GPK: Unity Crash Course','2026-10-10T01:00:00-04:00','2026-10-10T02:00:00-04:00','ENG2 203','Workshop','A Unity crash course with Graphics Programming Knights.'),
+      event('larping','Larping Competition','2026-10-10T01:00:00-04:00','2026-10-10T02:00:00-04:00','BA1 146','Social','A late-night larping competition.'),
+      event('embedded-1','KH x IEEE: Embedded Systems','2026-10-10T02:00:00-04:00','2026-10-10T03:00:00-04:00','BA1 119','Workshop','An embedded systems workshop with IEEE UCF.'),
+      event('snacks-sat','Misc snacks','2026-10-10T03:00:00-04:00','2026-10-10T05:00:00-04:00','ENG2 Atrium','Meal','Snacks for anyone hacking through the night.'),
+      event('adobe','Adobe Workshop','2026-10-10T07:00:00-04:00','2026-10-10T08:00:00-04:00','ENG2 102','Workshop','A sponsor workshop from Adobe.'),
+      event('embedded-2','KH x IEEE: Embedded Systems II','2026-10-10T07:00:00-04:00','2026-10-10T08:00:00-04:00','BA1 119','Workshop','Part two of the embedded systems workshop with IEEE UCF.'),
+      event('additive','KH x RCCF: Additive Manufacturing Workshop','2026-10-10T08:15:00-04:00','2026-10-10T09:15:00-04:00','ENG2 203','Workshop','A 3D printing and additive manufacturing workshop with the Robotics Club of Central Florida.'),
+      event('breakfast-sat','Breakfast: Jeff\'s Bagel Run','2026-10-10T09:00:00-04:00','2026-10-10T10:30:00-04:00','ENG2 105 & ENG2 205','Meal','Blight eats in ENG2 105 and Bloom in ENG2 205. Slots: Whisperseed and Dryad 9:00, Collosus and Petalborn 9:15, Chomper and Spora 9:30, everyone 9:45.'),
+      event('copilot','MLH: Intro to GitHub Copilot','2026-10-10T10:15:00-04:00','2026-10-10T11:15:00-04:00','ENG2 203','Workshop','An MLH introduction to GitHub Copilot.'),
+      event('nextera','NextEra Energy: Spot the Dog, Robot Vision at Nuclear Plants','2026-10-10T10:15:00-04:00','2026-10-10T11:15:00-04:00','BA1 119','Workshop','NextEra Energy on robot vision, connected to its SPOT Management Dashboard challenge.'),
+      event('amd','AMD: Your First GPU Kernel','2026-10-10T11:15:00-04:00','2026-10-10T12:15:00-04:00','ENG2 102','Workshop','Write a first GPU kernel with HIP and AI-assisted GPU programming.'),
+      event('lunch-sat','Lunch: Panda Express','2026-10-10T12:30:00-04:00','2026-10-10T15:00:00-04:00','ENG2 105 & ENG2 205','Meal','Blight eats in ENG2 105 and Bloom in ENG2 205. Slots: Collosus and Petalborn 12:30, Chomper and Spora 1:00, Whisperseed and Dryad 1:30, everyone 2:00.'),
+      event('just-dance','KH x SHPE: Just Dance','2026-10-10T12:30:00-04:00','2026-10-10T13:30:00-04:00','BA1 146','Social','Just Dance with SHPE UCF.'),
+      event('fullsail-1','Full Sail: From Point A to Point B','2026-10-10T13:15:00-04:00','2026-10-10T14:15:00-04:00','ENG2 102','Workshop','A Full Sail University session.'),
+      event('encompass','Encompass: Building Scalable AI Systems for the Real World','2026-10-10T14:15:00-04:00','2026-10-10T15:15:00-04:00','BA1 119','Workshop','Encompass on building AI systems that scale.'),
+      event('shinies-giveaway','Shinies: Lenny giveaway flower','2026-10-10T14:30:00-04:00','2026-10-10T15:00:00-04:00','ENG2 Atrium','Social','A Shinies Props giveaway.'),
+      event('family-feud','KH x SASE: Family Feud','2026-10-10T15:00:00-04:00','2026-10-10T16:30:00-04:00','BA1 146','Social','Family Feud with SASE UCF.'),
+      event('nvidia','NVIDIA: A Physical Designer Journey','2026-10-10T15:15:00-04:00','2026-10-10T16:15:00-04:00','ENG2 102','Workshop','An NVIDIA talk on a physical designer\'s career.'),
+      event('ai-studio','MLH: Intro to Google AI Studio','2026-10-10T16:15:00-04:00','2026-10-10T17:15:00-04:00','ENG2 203','Workshop','An MLH introduction to Google AI Studio.'),
+      event('cup-stacking','MLH Cup Stacking','2026-10-10T17:30:00-04:00','2026-10-10T18:30:00-04:00','ENG2 Atrium','Social','A cup stacking game with MLH.'),
+      event('shinies-swap','Shinies: Lenny Swap Social','2026-10-10T18:15:00-04:00','2026-10-10T19:00:00-04:00','ENG2 Atrium','Social','A Shinies Props swap social.'),
+      event('fullsail-2','Full Sail: Vision Quest, Exploring AI Face Detection','2026-10-10T18:15:00-04:00','2026-10-10T19:15:00-04:00','BA1 119','Workshop','A Full Sail University session on AI face detection.'),
+      event('dinner-sat','Dinner: Shah\'s','2026-10-10T19:00:00-04:00','2026-10-10T21:30:00-04:00','ENG2 105 & ENG2 205','Meal','Blight eats in ENG2 105 and Bloom in ENG2 205. Slots: Chomper and Spora 7:00, Whisperseed and Dryad 7:30, Collosus and Petalborn 8:00, everyone 8:30.'),
+      event('bny','BNY: Prompt Wars, Attack and Defend AI Chatbots','2026-10-10T20:15:00-04:00','2026-10-10T21:15:00-04:00','BA1 119','Workshop','Attack and defend AI chatbots with BNY.'),
+      event('fullsail-3','Full Sail: Fireside Chat','2026-10-10T20:15:00-04:00','2026-10-10T21:15:00-04:00','ENG2 102','Workshop','A fireside chat with Full Sail University.'),
+      event('potions','Potion Creation Contest','2026-10-10T21:00:00-04:00','2026-10-10T22:00:00-04:00','BA1 146','Social','A potion creation contest.'),
+      event('rave','KH x EDM Knights: Knight Hacks Rave','2026-10-10T22:00:00-04:00','2026-10-11T00:00:00-04:00','ENG2 Atrium','Social','A rave with EDM Knights. No points for this one.'),
+      event('snack-sun','Midnight snack: McDonald\'s cookies','2026-10-11T00:00:00-04:00','2026-10-11T01:00:00-04:00','ENG2 302','Meal','A midnight snack for all hackers.'),
+      event('scavenger-hunt','Scavenger Hunt','2026-10-11T00:00:00-04:00','2026-10-11T01:00:00-04:00','ENG2 Atrium','Social','A late-night scavenger hunt.'),
+      event('mafia','Late Night Mafia','2026-10-11T01:30:00-04:00','2026-10-11T02:30:00-04:00','BA1 146','Social','A late-night game of Mafia.'),
+      event('breakfast-sun','Breakfast: Vecky Bakery','2026-10-11T08:00:00-04:00','2026-10-11T10:00:00-04:00','ENG2 105 & ENG2 205','Meal','Blight eats in ENG2 105 and Bloom in ENG2 205. Slots: Whisperseed and Dryad 8:00, Collosus and Petalborn 8:15, Chomper and Spora 8:30, everyone 8:45.'),
+      event('merch-1','Merch Market','2026-10-11T09:00:00-04:00','2026-10-11T11:00:00-04:00','ENG2 Atrium','Social','Spend your points: hoodie 500, Funko Pop or cards 400, legacy swag 200.'),
+      event('boba','Sno Tea Cafe boba popup','2026-10-11T11:15:00-04:00','2026-10-11T12:30:00-04:00','ENG2 Atrium','Meal','A boba popup from Sno Tea Cafe.'),
+      event('lunch-sun','Lunch: Lechonera','2026-10-11T13:00:00-04:00','2026-10-11T16:00:00-04:00','ENG2 105','Meal','Lunch for all classes.'),
+      event('merch-2','Merch Market (second session)','2026-10-11T16:00:00-04:00','2026-10-11T18:00:00-04:00','ENG2 Atrium','Social','The second Merch Market. Spend your points: hoodie 500, Funko Pop or cards 400, legacy swag 200.'),
+    ].sort((a, b) => a.startDateTime.localeCompare(b.startDateTime)),
     sponsors: [
       {id:'codex',name:'OpenAI Codex',website:'https://openai.com/codex/',focus:'AI-assisted coding',careerFair:false,challenge:null},
       {id:'databricks',name:'Databricks',website:'https://www.databricks.com/',focus:'Data & AI',careerFair:true,challenge:'Best Use of Databricks'},
