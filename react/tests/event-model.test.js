@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { data } from '../src/event-data.js';
-import { schedule, recommendEvents, matchQuestion } from '../src/event-model.js';
+import { schedule, recommendEvents, matchQuestion, describeEvent } from '../src/event-model.js';
 
 const beforeWeekend = Date.parse('2026-10-09T00:00:00-04:00');
 const broadGoal = 'Explore everything, learn skills, meet people, career opportunities, compete for prizes, relax, design, AI, cloud and build a project';
@@ -77,6 +77,22 @@ test('deadline questions retain the guide versus Devpost source conflict', () =>
   assert.match(submission.description, /follow the guide and confirm any updates with organizers/);
   assert.equal(submission.sourceUrl, data.sources.agenda);
   assert.equal(data.sources.devpost, 'https://knight-hacks-ix.devpost.com/');
+});
+
+test('a deadline question gets the time, zone and source conflict, not just cards', () => {
+  const result = matchQuestion('What time is the Devpost submission deadline today?', beforeWeekend);
+  assert.equal(result.best?.id, 'khix-submission');
+  const text = describeEvent(result.best);
+  assert.match(text, /Sunday, Oct 11 at 10:00 AM EDT/);
+  assert.match(text, /hard 10 AM deadline/);
+  assert.match(text, /Devpost page header lists 11 AM/);
+});
+
+test('a question with one clear match names it; a tie or an upcoming list does not', () => {
+  const workshop = matchQuestion('When is the DevPost workshop?', beforeWeekend).best;
+  assert.equal(workshop?.id, 'khix-devpost-workshop');
+  assert.match(describeEvent(workshop), /Sunday, Oct 11 at 8:00 AM–9:00 AM EDT · ENG2 102/);
+  assert.equal(matchQuestion('Show upcoming events', beforeWeekend).best, null);
 });
 
 test('upcoming guide search uses the supplied clock, caps results and preserves source references', () => {

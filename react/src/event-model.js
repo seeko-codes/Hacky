@@ -42,10 +42,21 @@ export function recommendEvents(goal = 'Explore everything', pace = '4', goals =
   return picks.sort((a, b) => Date.parse(a.event.startDateTime) - Date.parse(b.event.startDateTime));
 }
 
+// A direct answer to "when/where is X": day, time and zone, then the place. A deadline keeps its
+// source note instead, since the guide and Devpost disagree and the reader should see both.
+export function describeEvent(event) {
+  const day = data.days[event.day], when = `${day.label}, ${day.short} at ${event.time}${event.end ? `–${event.end}` : ''} EDT`;
+  return event.tag === 'Deadline' ? `${event.name}: ${when}. ${event.description}` : `From the guide: ${event.name}, ${when} · ${event.place}.`;
+}
 export function matchQuestion(question, now = Date.now()) {
   const q = question.toLowerCase();
   const words = q.match(/[a-z0-9]+/g)?.filter(w => !['the','is','a','an','at','in','to','for','of','where','when','what','which','i','can','do','me','about','with','are','event','events','please','tell','show'].includes(w)) || [];
   const score = text => words.reduce((n, w) => n + (text.toLowerCase().includes(w) ? 1 : 0), 0);
-  const events = /next|coming|upcoming/.test(q) ? schedule.filter(event => Date.parse(event.startDateTime) > now).slice(0, 4) : schedule.map(event => ({ event, score: score([event.name,event.description,event.tag,event.place].join(' ')) })).filter(item => item.score > 0).sort((a,b) => b.score - a.score).slice(0, 4).map(item => item.event);
-  return { found: words.length > 0, events, sponsors: data.sponsors.filter(item => /sponsors?/.test(q) || score(`${item.name} ${item.focus}`) > 0), help: data.help.filter(item => score(`${item.title} ${item.text}`) > 0) };
+  const upcoming = /next|coming|upcoming/.test(q);
+  const ranked = upcoming ? [] : schedule.map(event => ({ event, score: score([event.name,event.description,event.tag,event.place].join(' ')) })).filter(item => item.score > 0).sort((a,b) => b.score - a.score);
+  const events = upcoming ? schedule.filter(event => Date.parse(event.startDateTime) > now).slice(0, 4) : ranked.slice(0, 4).map(item => item.event);
+  // The one event the question is about: the deadline when it asks for one, else a top match that beats the rest.
+  const deadline = /deadline|\bdue\b/.test(q) || (/\bwhen\b|what time/.test(q) && /submi/.test(q));
+  const best = upcoming ? null : deadline ? schedule.find(event => event.tag === 'Deadline') : ranked.length && (ranked.length === 1 || ranked[0].score > ranked[1].score) ? ranked[0].event : null;
+  return { found: words.length > 0, events, best, sponsors: data.sponsors.filter(item => /sponsors?/.test(q) || score(`${item.name} ${item.focus}`) > 0), help: data.help.filter(item => score(`${item.title} ${item.text}`) > 0) };
 }
