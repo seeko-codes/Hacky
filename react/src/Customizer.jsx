@@ -6,7 +6,9 @@ import {colors, flairs, moves, defaults} from './mascot-data.js';
 const tabs = [['color', 'Color'], ['flair', 'Flair'], ['move', 'Moves']];
 const groups = {color: colors, flair: flairs, move: moves};
 
-export default function Customizer({open, style, onSave, onClose}) {
+// hasPhoto: the signed-in person has a profile photo, so saving here also picks Hacky over it
+// (style.avatar 'hacky'), and "Use my photo" switches back.
+export default function Customizer({open, style, hasPhoto = false, onSave, onClose}) {
   const [draft, setDraft] = useState(() => ({...defaults, ...style}));
   const [tab, setTab] = useState('color');
   const tabButtons = useRef({});
@@ -18,6 +20,7 @@ export default function Customizer({open, style, onSave, onClose}) {
     }
   }, [open, style]);
   const changed = Object.keys(defaults).some(key => draft[key] !== style[key]);
+  const showsPhoto = hasPhoto && style.avatar !== 'hacky';
 
   function selectTab(next, focus = false) {
     setTab(next);
@@ -48,6 +51,7 @@ export default function Customizer({open, style, onSave, onClose}) {
           <div>
             <div className="preview-title" id="preview-title">Hacky</div>
             <button type="button" className="surprise" id="surprise-hacky" onClick={() => setDraft(previous => ({...previous, ...Object.fromEntries(Object.entries(groups).map(([key, options]) => [key, options[Math.floor(Math.random() * options.length)][0]]))}))}><Icon name="shuffle" />Surprise me</button>
+            {hasPhoto && !showsPhoto && <div><button type="button" className="style-button" id="use-photo" onClick={() => onSave({...style, avatar: 'photo'})}><Icon name="event-photo" />Use my photo</button></div>}
           </div>
         </div>
         <div className="custom-controls">
@@ -65,8 +69,8 @@ export default function Customizer({open, style, onSave, onClose}) {
         </div>
       </div>
       <footer className="custom-bottom">
-        <span className="custom-saved-note" id="save-status">{changed ? 'Unsaved changes. Close to discard.' : 'Your current look.'}</span>
-        <button type="button" id="save-hacky" className="custom-save" disabled={!changed} onClick={() => onSave({...draft})}><Icon name="check" />Save Hacky</button>
+        <span className="custom-saved-note" id="save-status">{changed ? 'Unsaved changes. Close to discard.' : showsPhoto ? 'Your photo is your avatar. Save to use Hacky.' : 'Your current look.'}</span>
+        <button type="button" id="save-hacky" className="custom-save" disabled={!changed && !showsPhoto} onClick={() => onSave({...draft, avatar: 'hacky'})}><Icon name="check" />Save Hacky</button>
       </footer>
     </div>
   </Modal>;

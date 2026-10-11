@@ -12,7 +12,8 @@ import { opensWelcome, welcomedKey } from './welcome';
 import './session.css';
 
 // Hacky is always knit: look stays the default ('knit') whatever an older saved style holds.
-function hackyStyle(raw){const result={...defaults};for(const [key,options] of Object.entries({color:colors,flair:flairs,move:moves})){const value=key==='flair'&&raw?.[key]==='sparks'?'stars':raw?.[key];if(options.some(option=>option[0]===value))result[key]=value;}return result;}
+// avatar ('photo' or 'hacky') is which one a person with a photo chose to show.
+function hackyStyle(raw){const result={...defaults};for(const [key,options] of Object.entries({color:colors,flair:flairs,move:moves})){const value=key==='flair'&&raw?.[key]==='sparks'?'stars':raw?.[key];if(options.some(option=>option[0]===value))result[key]=value;}if(['photo','hacky'].includes(raw?.avatar))result.avatar=raw.avatar;return result;}
 // The welcome (Onboarding) opens from the entry link /index.html?onboarding=1, or once for someone new (welcome.js).
 // Designer-owned event theme (events.theme) onto the app's CSS variables.
 const themeVars=[['brand','--action'],['brand','--outgoing-bubble'],['brandContrast','--on-action'],['brandContrast','--outgoing-text'],['accent','--gold'],['surface','--paper']];
@@ -73,10 +74,10 @@ function HackyApp(){
  };
  const saveStyle=async next=>{
   setCustomizing(false);session.setProfile({...profile,hackyStyle:next});
-  try{session.setProfile(await api('/api/me/profile',{method:'PATCH',body:{hackyStyle:next}}));setNotice('Hacky’s look is saved.');}
+  try{session.setProfile(await api('/api/me/profile',{method:'PATCH',body:{hackyStyle:next}}));setNotice(next.avatar==='photo'?'Your photo is your avatar again.':'Hacky’s look is saved.');}
   catch(error){session.setProfile(profile);setNotice(error.message);}
  };
  // Skip saves nothing: the saved goals stay as they were.
  const skip=()=>setOnboarding(false);
- return <>{onboarding&&<Onboarding intake={session.eventMe.intake} onComplete={savePlan} onSkip={skip}/>}<div hidden={onboarding}><Conversation plan={plan} planRevision={planRevision} paused={onboarding} style={style} onPreferences={()=>setOnboarding(true)} onCustomize={event=>{event.currentTarget.focus({preventScroll:true});setCustomizing(true);}} events={events} theme={theme} onThemeChange={changeTheme}/></div>{events.dialogs}{events.nudge}<Customizer open={customizing} style={style} onSave={saveStyle} onClose={()=>setCustomizing(false)}/>{notice&&<div className="pet-toast" role="status">{notice}</div>}</>;
+ return <>{onboarding&&<Onboarding intake={session.eventMe.intake} onComplete={savePlan} onSkip={skip}/>}<div hidden={onboarding}><Conversation plan={plan} planRevision={planRevision} paused={onboarding} style={style} onPreferences={()=>setOnboarding(true)} onCustomize={event=>{event.currentTarget.focus({preventScroll:true});setCustomizing(true);}} events={events} theme={theme} onThemeChange={changeTheme}/></div>{events.dialogs}{events.nudge}<Customizer open={customizing} style={style} hasPhoto={Boolean(profile.photoUrl)} onSave={saveStyle} onClose={()=>setCustomizing(false)}/>{notice&&<div className="pet-toast" role="status">{notice}</div>}</>;
 }

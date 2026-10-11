@@ -108,7 +108,7 @@ After changing tool or card schemas in `shared/contract.ts`, run `npm run check:
 
 ## Product rules
 
-- A person's avatar is their profile photo (`profiles.photo_url`, an `/assets/...` path or an https URL, sent as `photoUrl`) when they have one. Otherwise it's a knit Hacky picture chosen from `profiles.hacky_style` (JSON validated with Zod while the options are still being designed). There's no photo upload yet.
+- A person's avatar is their profile photo (`profiles.photo_url`, an `/assets/...` path or an https URL, sent as `photoUrl`) when they have one, unless they chose their Hacky (`hackyStyle.avatar: "hacky"`, set by saving in the customizer; "Use my photo" sets it back to `"photo"`). Otherwise it's a knit Hacky picture chosen from `profiles.hacky_style` (JSON validated with Zod while the options are still being designed). There's no photo upload yet.
 - The agent drafts and the user sends. This includes help requests: they reach mentors only when the user taps "Request help". No agent tool may send, accept, block, claim or change roles.
 - Match reasons are written only from the evidence fields the search returned. If nothing fits, say so.
 - One request per person per event. If two people request each other, both are accepted and one DM opens. Accepting twice returns the same conversation. Only the recipient can accept.

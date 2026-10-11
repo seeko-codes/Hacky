@@ -6,6 +6,10 @@ framed for a circular crop (24-64 px on screen).
 
 Naming: `knit-{color}-{flair}.webp`, using the ids from `react/src/mascot-data.js`.
 
+The web app shows only the `knit-original-{flair}` files. It turns the whole Hacky the person's
+color at runtime with the same filter as the Customizer preview (`recolorMatrix` in
+`react/src/mascot-data.js`), so the other color files are unused.
+
 - `color` sets the cape: `original` (knit orange), `berry` (purple), `mint`, `sunset` (coral red),
   `rose` (pink), `ice` (light blue). The head, body and LED face are the same for every color.
 - `flair` sets the glowing LED face: `none` (rounded-square eyes, smile), `stars` (happy `^ ^`
