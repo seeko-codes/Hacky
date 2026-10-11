@@ -1,0 +1,6 @@
+.profile-editor{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.profile-editor h3{font-size:18px;margin:0}
+.profile-editor textarea{display:block;box-sizing:border-box;width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--white);color:var(--ink);padding:10px 12px;font:inherit;font-size:16px;line-height:1.5}
+.profile-editor textarea:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.profile-editor .profile-editor-hint{margin:-6px 0 2px;font-size:12px;line-height:1.5;color:var(--muted)}
+.profile-editor .social-footer-actions{margin-top:4px}

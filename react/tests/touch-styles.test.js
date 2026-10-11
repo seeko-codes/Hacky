@@ -50,17 +50,19 @@ test('hover styles apply only where a pointer can hover', () => {
   }
 });
 
-test('focus styles use :focus-visible; plain :focus only hides a heading outline', () => {
+test('plain :focus only resets outlines; controls are reset only after pointer input', () => {
   for (const rule of all.filter((r) => /:focus(?![-\w])/.test(r.selector))) {
-    assert.doesNotMatch(rule.selector, /\b(button|a|summary|input|select|textarea)\b/, where(rule));
-    assert.deepEqual(declarations(rule.body), [['outline', 'none']], where(rule));
+    if (/\b(button|a|summary|input|select|textarea)\b/.test(rule.selector)) {
+      assert.match(rule.selector, /^:root\[data-input=pointer\]/, where(rule));
+    }
+    assert.deepEqual(declarations(rule.body).map(([prop, value]) => [prop, value.replace(/!important$/, '').trim()]), [['outline', 'none']], where(rule));
   }
 });
 
 test('after a tap, focus moved by script draws no ring, and keyboard rings stay', () => {
   const primitives = rules(read('public/app/hacky-primitives.css'));
   assert.ok(primitives.some((r) => r.selector.startsWith('button:focus-visible') && /outline:\s*2px solid/.test(r.body)), 'keyboard ring');
-  assert.ok(primitives.some((r) => r.selector.startsWith(':root[data-input=pointer]') && /:focus-visible/.test(r.selector) && /outline:\s*none/.test(r.body)), 'no ring after a tap');
+  assert.ok(primitives.some((r) => r.selector.startsWith(':root[data-input=pointer]') && /:focus$/.test(r.selector) && /outline:\s*none/.test(r.body)), 'no native or custom ring after a tap');
   // Focus looks other than the outline (a background, a color) are keyboard-only too.
   for (const rule of all.filter((r) => r.selector.includes(':focus-visible'))) {
     const looks = declarations(rule.body).filter(([prop]) => !/^(outline|outline-offset|outline-color|border-radius)$/.test(prop));

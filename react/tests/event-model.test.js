@@ -169,7 +169,7 @@ test('recommendation questions go to Hacky; time, place and schedule questions s
 test('show_events names from the event guide find their schedule entries', () => {
   // Every session in the guide's schedule (check-in and the deadline line aside) has a card.
   const guide = readFileSync(new URL('../../server/agent/event-guides/knighthacks-ix.md', import.meta.url), 'utf8');
-  const lines = guide.slice(guide.indexOf('## Schedule'), guide.indexOf('## Official links')).split('\n').filter(line => line.startsWith('- '));
+  const lines = guide.slice(guide.indexOf('## Schedule'), guide.indexOf('## Official links')).split(/\r?\n/).filter(line => line.startsWith('- '));
   const missing = lines.map(line => line.split(' · ')[1]).filter(name => !findEvents([name], beforeWeekend).length);
   assert.deepEqual(missing, ['Check-in and swag pickup (photo ID + Blade QR)', 'Hard Devpost submission deadline (edits until 11:00 AM)']);
   const ids = (names, now = beforeWeekend) => findEvents(names, now).map(event => event.id);

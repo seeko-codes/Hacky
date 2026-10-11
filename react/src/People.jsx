@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Icon, Modal, PersonAvatar } from "./ui.jsx";
+import { Icon, Modal, PersonAvatar, focusQuietly } from "./ui.jsx";
+import ProfileEditor from "./ProfileEditor.jsx";
 import { api, notifyChanged } from "./api.js";
 import { useSession } from "./session.jsx";
 import { friendly } from "./social/useSocial.js";
@@ -198,16 +199,20 @@ function Actions({ person, relation, setRelation, onMessage, onConflict }) {
 }
 
 // Your own profile shows what others see, with buttons to change your answers and Hacky.
-export default function People({ profile, onClose, onMessage, onEditAnswers, onCustomize, onBlocked }) {
+export default function People({ profile, onClose, onMessage, onCustomize, onBlocked }) {
   const { slug, me } = useSession();
   const handle = profile?.handle;
   const [load, setLoad] = useState({ person: null, error: "" });
   const [relation, setRelation] = useState(null);
   const [blocking, setBlocking] = useState({ confirm: false, busy: false, error: "" });
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setLoad({ person: null, error: "" });
     setRelation(null);
+    setEditing(false);
+    setSaving(false);
     setBlocking({ confirm: false, busy: false, error: "" });
     if (!handle) return;
     const controller = new AbortController();
@@ -228,6 +233,10 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
 
   const p = load.person;
   const self = p && p.userId === me?.profile?.userId;
+  const finishEditing = () => {
+    setEditing(false);
+    requestAnimationFrame(() => focusQuietly(document.getElementById('edit-profile')));
+  };
   // Where you stand with them, fresh from the server (after a send it refused as a repeat).
   const refreshRelation = () => {
     if (!handle) return;
@@ -250,7 +259,7 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
   return (
     <Modal
       open={Boolean(handle)}
-      onClose={onClose}
+      onClose={() => { if (!saving) onClose(); }}
       id="person-dialog"
       className="person-dialog"
       labelledBy="person-title"
@@ -259,7 +268,7 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
       {handle && (
         <div className="person-sheet" tabIndex={-1}>
           <header className="person-toolbar">
-            <button id="close-person" className="toggle" onClick={onClose}>
+            <button id="close-person" className="toggle" disabled={saving} onClick={editing ? finishEditing : onClose}>
               <Icon name="back" />
               Back
             </button>
@@ -302,19 +311,28 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
                   </section>
                 )}
                 {/* Just the essentials. The summary restates the skills, so it stands in only when there's no bio. */}
-                <Text title="About">{p.bio || p.summary}</Text>
-                <Chips title="Skills" items={p.skills} />
+                {editing && self ? <ProfileEditor
+                  person={p}
+                  busy={saving}
+                  onBusy={setSaving}
+                  onUpdate={changes => setLoad(current => ({ ...current, person: { ...current.person, ...changes } }))}
+                  onDone={finishEditing}
+                /> : <>
+                  <Text title="About">{p.bio || p.summary}</Text>
+                  <Chips title="Skills" items={p.skills} />
+                </>}
               </>
             )}
           </div>
-          {p && self && (
+          {p && self && !editing && (
             <footer className="person-footer">
               <div className="social-footer-actions">
                 <button
+                  id="edit-profile"
                   className="hk-button"
                   onClick={() => {
-                    onClose();
-                    onEditAnswers();
+                    setEditing(true);
+                    requestAnimationFrame(() => focusQuietly(document.getElementById('profile-about')));
                   }}
                 >
                   Edit my answers

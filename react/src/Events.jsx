@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { createPortal } from 'react-dom';
 import { data } from './event-data.js';
 import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn, isRecommendationQuestion } from './event-model.js';
-import { Icon, Modal, Group, ExternalLink } from './ui.jsx';
+import { Icon, Modal, Group, ExternalLink, focusQuietly } from './ui.jsx';
 import { readStore, writeStore, useMedia } from './storage.js';
 
 const guidanceKey = 'hacky-guidance-khix-2026-v1';
@@ -32,8 +32,8 @@ function EventIcon({ event }) {
   return event.sponsorIds?.length ? <SponsorIcon id={event.sponsorIds[0]} /> : <svg className="recommendation-icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4m8-4v4M4 10h16m-9 5h3" /></svg>;
 }
 // reason: why it was recommended, shown under the name.
-export function EventChoice({ event, openDetail, reason }) {
-  return <div className="event-result"><button type="button" className="detail-choice" data-event-detail={event.id} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><EventIcon event={event} /><span>{event.name}{reason && <small className="choice-reason">{reason}</small>}</span><Icon name="back" /></button></div>;
+export function EventChoice({ event, openDetail, reason, selected = false }) {
+  return <div className="event-result"><button type="button" className="detail-choice" data-event-detail={event.id} data-selected={selected || undefined} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><EventIcon event={event} /><span>{event.name}{reason && <small className="choice-reason">{reason}</small>}</span><Icon name="back" /></button></div>;
 }
 export function EventChoices({ events, openDetail, label, reasons }) {
   return events.length ? <Group label={label || `${events.length} events`}>{events.map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons?.[event.id]} />)}</Group> : null;
@@ -82,7 +82,7 @@ function ReminderNudge({ children, token }) {
 const essentialNames = { 'check-in': 'Check-in', submission: 'Submit on Devpost', 'code-freeze': 'Final code push', judging: 'Judging & expo' };
 const essentials = Object.keys(essentialNames).map(id => schedule.find(event => event.id === `khix-${id}`));
 
-// onEditGoals opens the goals editor (the same one as Edit my answers on your profile).
+// onEditGoals opens onboarding to choose the motivations used for recommendations.
 export function useEvents(plan, onEditGoals) {
   const [store] = useState(createGuidanceStore);
   const { value: guidance, error } = useGuidance(store);
@@ -91,26 +91,30 @@ export function useEvents(plan, onEditGoals) {
   const [view, setView] = useState('recommendations');
   const [page, setPage] = useState(0);
   const [detailStack, setDetailStack] = useState([]);
+  const [selectedEventId, setSelectedEventId] = useState(null);
   const [now, setNow] = useState(Date.now);
   const detailContent = useRef(null);
+  const previousDetails = useRef(detailStack);
   const short = useMedia('(max-height: 599px)');
   const size = short ? 2 : 4;
   const picks = useMemo(() => recommendEvents(plan?.intake, now), [plan, now]);
   const reasons = useMemo(() => Object.fromEntries(picks.map(pick => [pick.event.id, pick.reason])), [picks]);
   // When nothing ahead matches, show what's still on (in progress or later) rather than an empty panel.
   const shown = useMemo(() => picks.length ? picks.map(pick => pick.event) : stillOn(now), [picks, now]);
-  const openDetail = useCallback((type, id, origin) => setDetailStack(stack => [...stack, { type, id, origin }]), []);
-  const closeDetail = useCallback(() => setDetailStack(stack => {
-    const item = stack.at(-1);
-    requestAnimationFrame(() => {
-      const origin = item?.origin?.isConnected ? item.origin : document.querySelector(`#info-content [data-event-detail="${item?.id}"]`);
-      origin?.focus({ preventScroll: true });
-    });
-    return stack.slice(0, -1);
-  }), []);
+  const openDetail = useCallback((type, id, origin) => {
+    if (type === 'event') setSelectedEventId(id);
+    setDetailStack(stack => [...stack, { type, id, origin }]);
+  }, []);
+  const closeDetail = useCallback(() => setDetailStack(stack => stack.slice(0, -1)), []);
   useEffect(() => {
+    const previous = previousDetails.current;
+    previousDetails.current = detailStack;
+    // Modal restores focus when the outer sheet closes. Only a nested Back needs its own return.
+    if (!detailStack.length) return;
     if (detailContent.current) detailContent.current.scrollTop = 0;
-    if (detailStack.length) document.querySelector('#info-dialog .person-sheet')?.focus({ preventScroll: true });
+    const closed = previous.length > detailStack.length ? previous.at(-1) : null;
+    const origin = closed?.origin?.isConnected ? closed.origin : closed && document.querySelector(`#info-content [data-event-detail="${closed.id}"]`);
+    focusQuietly(origin || document.querySelector('#info-dialog .person-sheet'));
   }, [detailStack]);
   useEffect(() => {
     const tick = () => { if (!document.hidden) setNow(Date.now()); };
@@ -118,19 +122,19 @@ export function useEvents(plan, onEditGoals) {
     document.addEventListener('visibilitychange', tick);
     return () => { clearInterval(interval); document.removeEventListener('visibilitychange', tick); };
   }, []);
-  const openPanel = useCallback(event => { event?.currentTarget?.focus({ preventScroll: true }); setView('recommendations'); setPage(0); setAttention(false); setPanelOpen(true); }, []);
+  const openPanel = useCallback(event => { focusQuietly(event?.currentTarget); setView('recommendations'); setPage(0); setSelectedEventId(null); setAttention(false); setPanelOpen(true); }, []);
   const total = Math.max(1, Math.ceil((view === 'recommendations' ? shown.length : essentials.length) / size));
   const safePage = Math.min(page, total - 1);
   const activeDetail = detailStack.at(-1);
   const detailEvent = activeDetail?.type === 'event' ? schedule.find(event => event.id === activeDetail.id) : null;
   const detailSponsor = activeDetail?.type === 'sponsor' ? data.sponsors.find(sponsor => sponsor.id === activeDetail.id) : null;
-  const switchView = () => { setView(v => v === 'recommendations' ? 'essentials' : 'recommendations'); setPage(0); requestAnimationFrame(() => { document.getElementById('event-panel-content')?.scrollTo(0, 0); document.getElementById('essentials-title')?.focus({ preventScroll: true }); }); };
+  const switchView = () => { setView(v => v === 'recommendations' ? 'essentials' : 'recommendations'); setPage(0); setSelectedEventId(null); requestAnimationFrame(() => { document.getElementById('event-panel-content')?.scrollTo(0, 0); focusQuietly(document.getElementById('essentials-title')); }); };
   // The wording follows the saved goals (plan.set), never the editor's unsaved picks.
   const intro = !shown.length ? 'No upcoming sessions in this guide snapshot.' : !plan?.set ? 'Here are some upcoming events you might like.' : picks.length ? 'Based on your goals and context.' : 'Nothing coming up matches your goals. Here’s what’s still on.';
   const dialogs = <>
     <Modal open={panelOpen} onClose={() => setPanelOpen(false)} id="essentials-dialog" className="essentials-dialog" labelledBy="essentials-title" initialFocus="#close-essentials">
       <header><h2 id="essentials-title" tabIndex={-1}>{view === 'recommendations' ? 'Recommended events' : 'Check-in & deadlines'}</h2><button type="button" className="icon" id="close-essentials" aria-label="Close essentials" onClick={() => setPanelOpen(false)}><Icon name="close" /></button></header>
-      <div id="event-panel-content" className="event-panel-content"><div id="your-events" hidden={view !== 'recommendations'}><p className="guidance-note" id="your-events-intro">{intro}</p>{!plan?.set && <button type="button" id="set-goals" className={shown.length ? 'hk-button secondary' : 'hk-button'} onClick={() => { setPanelOpen(false); onEditGoals(); }}>Set your goals</button>}<div id="recommended-events">{shown.slice(safePage * size, (safePage + 1) * size).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons[event.id]} />)}</div></div><div id="event-essentials" hidden={view !== 'essentials'}><div className="essential-content"><p className="essentials-timezone">All times EDT</p><div className="essential-rows">{essentials.slice(safePage * size, (safePage + 1) * size).map(event => { const id = event.id.replace('khix-', ''); return <div className="essential-row" key={event.id}><button type="button" className="essential-choice" data-event-detail={event.id} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><span className="essential-label">{essentialNames[id]}</span><span className="essential-time">{data.days[event.day].short} · {event.time}{id === 'submission' ? ' · Verify time' : Date.parse(event.endDateTime || event.startDateTime) < now ? ' · Past' : ''}</span><Icon name="back" /></button></div>; })}</div></div></div></div>
+      <div id="event-panel-content" className="event-panel-content"><div id="your-events" hidden={view !== 'recommendations'}><p className="guidance-note" id="your-events-intro">{intro}</p>{!plan?.set && <button type="button" id="set-goals" className={shown.length ? 'hk-button secondary' : 'hk-button'} onClick={() => { setPanelOpen(false); onEditGoals(); }}>Set your goals</button>}<div id="recommended-events">{shown.slice(safePage * size, (safePage + 1) * size).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons[event.id]} selected={event.id === selectedEventId} />)}</div></div><div id="event-essentials" hidden={view !== 'essentials'}><div className="essential-content"><p className="essentials-timezone">All times EDT</p><div className="essential-rows">{essentials.slice(safePage * size, (safePage + 1) * size).map(event => { const id = event.id.replace('khix-', ''); return <div className="essential-row" key={event.id}><button type="button" className="essential-choice" data-event-detail={event.id} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><span className="essential-label">{essentialNames[id]}</span><span className="essential-time">{data.days[event.day].short} · {event.time}{id === 'submission' ? ' · Verify time' : Date.parse(event.endDateTime || event.startDateTime) < now ? ' · Past' : ''}</span><Icon name="back" /></button></div>; })}</div></div></div></div>
       <footer className="event-panel-footer"><nav id="event-pager" className="event-pager" aria-label="Event pages" hidden={total === 1}><button type="button" id="event-prev" className="toggle" aria-label="Previous page" disabled={safePage === 0} onClick={() => setPage(safePage - 1)}>Back</button><span id="event-page-count" aria-live="polite">{safePage + 1} of {total}</span><button type="button" id="event-next" className="toggle" aria-label="Next page" disabled={safePage === total - 1} onClick={() => setPage(safePage + 1)}>Next</button></nav><nav className="event-links" aria-label="Event resources"><button type="button" id="event-panel-switch" className="event-source event-panel-switch" onClick={switchView}>{view === 'recommendations' ? 'Essentials' : 'Events'}</button><ExternalLink href={data.sources.agenda}>Schedule</ExternalLink><ExternalLink href={data.sources.guide}>Guide</ExternalLink></nav></footer>
     </Modal>
     <Modal open={!!activeDetail} onClose={closeDetail} id="info-dialog" className="person-dialog info-dialog" labelledBy="info-title" initialFocus=".person-sheet"><div className="person-sheet" tabIndex={-1}><header className="person-toolbar"><button type="button" className="toggle" id="close-info" onClick={closeDetail}><Icon name="back" />Back</button></header><div className="person-content" id="info-content" ref={detailContent}>{detailEvent && <><h2 id="info-title">{detailEvent.name}</h2><EventCard event={detailEvent} store={store} /><nav className="info-sources" aria-label="Sources"><ExternalLink href={data.sources.guide}>Hacker guide</ExternalLink><ExternalLink href={detailEvent.sourceUrl}>Official schedule</ExternalLink></nav></>}{detailSponsor && <><div className="info-identity"><SponsorIcon id={detailSponsor.id} /><h2 id="info-title">{detailSponsor.name}</h2></div><p className="info-focus">{detailSponsor.focus}</p>{detailSponsor.challenge && <section className="profile-section"><h3>Challenge</h3><p>{detailSponsor.challenge}</p></section>}<section className="profile-section"><h3>Where to meet</h3><p>{detailSponsor.careerFair ? 'Friday career fair · SU Key West' : 'Not attending the career fair'}</p></section><ExternalLink href={detailSponsor.website}>Visit {detailSponsor.name}</ExternalLink><div className="sponsor-sessions">{schedule.filter(event => event.sponsorIds.includes(detailSponsor.id)).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} />)}</div></>}</div></div></Modal>
