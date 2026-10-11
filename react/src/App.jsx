@@ -56,7 +56,7 @@ function HackyApp(){
  const style=useMemo(()=>hackyStyle(profile.hackyStyle),[profile.hackyStyle]);
  const plan=useMemo(()=>planFromIntake(session.eventMe.intake),[session.eventMe.intake]);
  const [planRevision,setPlanRevision]=useState(0),[onboarding,setOnboarding]=useState(()=>opensWelcome({search:location.search,hash:location.hash,intake:session.eventMe.intake,welcomed:readStore(welcomedKey(profile.userId,session.slug),false)})),[customizing,setCustomizing]=useState(false),[theme,setTheme]=useState(document.documentElement.dataset.theme||'light'),[notice,setNotice]=useState('');
- const events=useEvents(plan,()=>setOnboarding(true));
+ const events=useEvents(plan);
  useEffect(()=>{const params=new URLSearchParams(location.search);if(params.has('onboarding')){params.delete('onboarding');history.replaceState(null,'',location.pathname+(params.size?'?'+params:'')+location.hash);}},[]);
  // Seen once is enough: a refresh, or another tab, doesn't open it on its own again.
  useEffect(()=>{if(onboarding)writeStore(welcomedKey(profile.userId,session.slug),true);},[onboarding,profile.userId,session.slug]);
