@@ -331,6 +331,7 @@ export default function Conversation({
                 activeId={opened ? current : null}
                 onOpen={openConversation}
                 onProfile={(handle) => setProfile({ handle })}
+                onHide={(id) => { if (current === id) setCurrent(null); }}
               />
             </div>
             <section className="dm" aria-label="Selected conversation">

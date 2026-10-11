@@ -1,7 +1,7 @@
 // The main pane: Hacky's brief, the agent chat, local event answers and the
 // onboarding plan, in one thread above one composer.
 //
-// Local exchanges (event/sponsor questions, the plan) never reach the agent.
+// Explicit schedule/reminder controls and the plan stay local. Questions reach the agent.
 // Each records how many chat messages existed when it was made, so it stays
 // in place as the chat grows.
 import { memo, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
@@ -14,6 +14,7 @@ import { CardActions, MessagePart, isVisiblePart } from './cards.jsx';
 import Brief from './Brief.jsx';
 import { FIRST_MS, GAP_MS, showingOrder } from './reveal.js';
 import { useReveal } from './useReveal.js';
+import { displayMessages, isLocalCommand } from './presentation.js';
 import './hacky-chat.css';
 
 const PLAN_COMMAND = /^(change my plan|plan my hackathon|show my plan)$/i;
@@ -150,7 +151,8 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   // New replies appear in a short sequence (typing, message, cards); history shows at once.
   const reduced = useMedia('(prefers-reduced-motion: reduce)');
   const loadedAll = chat.loaded && chat.messages.length >= (chat.historyCount ?? 0);
-  const reveal = useReveal({ key: slug, loaded: loadedAll, messages: chat.messages, status: chat.status, paused, reduced, visible: isVisiblePart });
+  const displayed = useMemo(() => displayMessages(chat.messages, { active: chatBusy, eventSlug: slug }), [chat.messages, chatBusy, slug]);
+  const reveal = useReveal({ key: slug, loaded: loadedAll, messages: displayed, status: chat.status, paused, reduced, visible: isVisiblePart });
   const [grown, grow] = useReducer((n) => n + 1, 0);
 
   const addLocal = (entry) => {
@@ -158,8 +160,9 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     const item = { id: ++nextId.current, at: chat.loaded ? chat.messages.length : null, ...entry };
     setLocals((list) => [...list, item]);
   };
-  // Event, sponsor and reminder questions come from the static guide.
+  // Only explicit schedule/reminder commands are local; questions go to the agent.
   const askLocal = (text) => {
+    if (!isLocalCommand(text)) return false;
     const { events, chat } = latest.current;
     const answer = events.answer(text);
     if (!answer) return false;
@@ -294,7 +297,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
       rows.push(<LocalRow key={`local-${entry.id}`} entry={entry} onOpenPanel={events.openPanel} reduced={reduced} paused={paused} onGrow={grow} />);
     }
   };
-  chat.messages.forEach((message, i) => {
+  displayed.forEach((message, i) => {
     addLocalsUpTo(i);
     const last = i === chat.messages.length - 1;
     const { from, shown } = reveal.view(message);
@@ -327,7 +330,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
           aria-live="polite"
           aria-label="Conversation with Hacky"
         >
-          <Brief style={style} onStart={stable.start} onLocal={stable.local} />
+          <Brief style={style} onStart={stable.start} />
           {rows}
           {chat.failed && (
             <div className="msg message-arrival assistant" role="alert">

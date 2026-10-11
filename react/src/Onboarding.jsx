@@ -5,7 +5,7 @@ import {useMedia} from './storage';
 import './Onboarding.css';
 
 // [choice, label, intake motivation id]
-const goals = [
+export const goals = [
   ['Build a project', 'Build something', 'build'],
   ['Learn new skills', 'Learn something', 'learn'],
   ['Meet people', 'Meet my people', 'meet'],

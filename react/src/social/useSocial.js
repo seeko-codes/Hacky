@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { api, onChanged } from '../api.js';
 import { useSession } from '../session.jsx';
+import { useHiddenChats } from './useHiddenChats.js';
 import { createLive } from './live.js';
 import {
   bumpConversation,
@@ -242,6 +243,7 @@ function useLive(slug, handlers) {
 export function useSocial({ activeId }) {
   const { slug, event, eventMe, me } = useSession();
   const selfId = me?.profile?.userId;
+  const hidden = useHiddenChats(selfId, slug);
   const role = eventMe?.role;
   const helpOn = role === 'hacker' || role === 'mentor';
 
@@ -318,12 +320,13 @@ export function useSocial({ activeId }) {
 
   const split = useMemo(() => splitRequests(requests.data || []), [requests.data]);
   const unreadTotal = (conversations.data || []).reduce(
-    (n, c) => n + (c.id === activeId && visible ? 0 : c.unreadCount), 0);
+    (n, c) => n + (hidden.ids.includes(c.id) || (c.id === activeId && visible) ? 0 : c.unreadCount), 0);
 
   const open = useCallback((id) => {
+    hidden.restore(id);
     if (!latest.current.conversations?.some((c) => c.id === id)) conversations.refetch();
     threads.load(id);
-  }, []);
+  }, [hidden.restore]);
 
   const accept = async (id) => {
     const { request } = await api(`/api/requests/${id}/accept`, { method: 'POST' });
@@ -368,6 +371,10 @@ export function useSocial({ activeId }) {
     role,
     verified: Boolean(eventMe?.verified),
     selfId,
+    hiddenChats: hidden.ids,
+    hideChat: hidden.hide,
+    restoreChat: hidden.restore,
+    hideChatError: hidden.error,
     requests: { ...requests, ...split },
     conversations,
     help,

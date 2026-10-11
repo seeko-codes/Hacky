@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon, Modal, PersonAvatar, focusQuietly } from "./ui.jsx";
 import ProfileEditor from "./ProfileEditor.jsx";
+import { goals } from "./Onboarding.jsx";
 import { api, notifyChanged } from "./api.js";
 import { useSession } from "./session.jsx";
 import { friendly } from "./social/useSocial.js";
@@ -10,7 +11,7 @@ import { skillLabel } from "./labels.js";
 
 const AVAILABILITY = { available: "Available now", busy: "Busy", offline: "Offline" };
 
-function Chips({ title, items }) {
+function Chips({ title, items, format = skillLabel }) {
   if (!items?.length) return null;
   return (
     <section className="profile-section">
@@ -18,7 +19,7 @@ function Chips({ title, items }) {
       <div className="social-chips">
         {items.map((item) => (
           <span key={item} className="social-tag">
-            {skillLabel(item)}
+            {format(item)}
           </span>
         ))}
       </div>
@@ -320,6 +321,8 @@ export default function People({ profile, onClose, onMessage, onCustomize, onBlo
                 /> : <>
                   <Text title="About">{p.bio || p.summary}</Text>
                   <Chips title="Skills" items={p.skills} />
+                  <Chips title="Hackathon goals" items={goals.filter(([, , id]) => p.motivations?.includes(id)).map(([, label]) => label)} format={label => label} />
+                  <Text title="Interests & ideas">{p.idea}</Text>
                 </>}
               </>
             )}

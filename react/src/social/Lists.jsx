@@ -122,8 +122,9 @@ function preview(c, selfId, draft) {
   return (m.senderId === selfId ? 'You: ' : '') + m.body;
 }
 
-function ChatRow({ c, selfId, draft, unread, onOpen }) {
+function ChatRow({ c, selfId, draft, unread, onOpen, menuOpen, onMenu, onHide }) {
   return (
+    <div className="contact-row">
     <button type="button" className="contact" data-contact={c.id} onClick={() => onOpen(c.id)}>
       <PersonAvatar person={c.peer} />
       <span className="info">
@@ -145,6 +146,9 @@ function ChatRow({ c, selfId, draft, unread, onOpen }) {
         </span>
       )}
     </button>
+    <button type="button" className="icon contact-options" aria-label={`Options for ${c.peer.name}`} aria-expanded={menuOpen} onClick={onMenu} onKeyDown={e => { if (e.key === 'Escape' && menuOpen) onMenu(); }}><span aria-hidden="true">⋯</span></button>
+    {menuOpen && <div className="contact-actions"><button type="button" className="toggle" onClick={onHide}>Hide chat on this device</button></div>}
+    </div>
   );
 }
 
@@ -199,11 +203,21 @@ function Availability() {
 }
 
 // Requests, the mentor queue or your help requests, then chats.
-export function ChatLists({ social, drafts, activeId, onOpen, onProfile }) {
+export function ChatLists({ social, drafts, activeId, onOpen, onProfile, onHide }) {
   const { requests, help, conversations } = social;
   const mentor = social.role === 'mentor';
   const mine = social.role === 'hacker' ? help.data?.mine || [] : [];
-  const chats = conversations.data || [];
+  const [menu, setMenu] = useState(null);
+  const [lastHidden, setLastHidden] = useState(null);
+  const chats = (conversations.data || []).filter(c => !social.hiddenChats.includes(c.id));
+  const hidden = (conversations.data || []).filter(c => social.hiddenChats.includes(c.id));
+  const hide = c => {
+    if (!social.hideChat(c.id)) return;
+    setLastHidden(c);
+    setMenu(null);
+    onHide?.(c.id);
+  };
+  const restore = id => { if (social.restoreChat(id)) setLastHidden(null); };
   const anyRequests = requests.incoming.length + requests.hidden.length + requests.outgoing.length > 0;
   return (
     <div className="contacts social-lists">
@@ -279,14 +293,20 @@ export function ChatLists({ social, drafts, activeId, onOpen, onProfile }) {
             draft={drafts[c.id]}
             unread={c.id === activeId ? 0 : c.unreadCount}
             onOpen={onOpen}
+            menuOpen={menu === c.id}
+            onMenu={() => setMenu(menu === c.id ? null : c.id)}
+            onHide={() => hide(c)}
           />
         ))}
         {!chats.length && (
           <p className="social-note">
-            {conversations.loaded ? 'No chats yet. Ask Hacky to find someone.' : 'Loading chats…'}
+            {!conversations.loaded ? 'Loading chats…' : hidden.length ? 'Your chats are hidden on this device. Restore one below.' : 'No chats yet. Ask Hacky to find someone.'}
           </p>
         )}
         {conversations.error && <p className="social-note" role="status">{conversations.error}</p>}
+        {social.hideChatError && <p className="social-note social-error" role="alert">{social.hideChatError}</p>}
+        {lastHidden && social.hiddenChats.includes(lastHidden.id) && <div className="social-hide-notice" role="status"><span>{lastHidden.peer.name} hidden on this device.</span><button type="button" className="toggle" onClick={() => restore(lastHidden.id)}>Undo</button></div>}
+        {hidden.length > 0 && <details className="social-hidden"><summary>Hidden chats on this device ({hidden.length})</summary>{hidden.map(c => <div className="social-restore" key={c.id}><span>{c.peer.name}</span><button type="button" className="toggle" onClick={() => restore(c.id)} aria-label={`Restore chat with ${c.peer.name}`}>Restore</button></div>)}</details>}
       </section>
     </div>
   );

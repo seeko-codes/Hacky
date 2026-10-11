@@ -6,7 +6,7 @@ import { api, ApiError, notifyChanged } from '../api.js';
 import { Group, Icon, Modal, PersonAvatar } from '../ui.jsx';
 import { choiceLabel, skillLabel } from '../labels.js';
 import { boldRuns, textBlocks, orderedEventNames } from './rich.js';
-import { EventChoice, EventChoices } from '../Events.jsx';
+import { EventChoice, EventChoices, Sponsors } from '../Events.jsx';
 import { findEvents } from '../event-model.js';
 
 // { slug, busy, viewProfile({ handle, reason }), contactTeam(team), openConversation(id), openDetail(type, id, origin) }
@@ -531,7 +531,8 @@ function Chips({ part, onAnswer, closed = false }) {
   const shownAnswer = list(options).includes(answer) ? choiceLabel(answer) : answer;
   return (
     <>
-      {question && <div className="msg assistant">{say && <p className="hc-text">{say}</p>}<p className="hc-text">{question}</p></div>}
+      {say && <div className="msg assistant"><p className="hc-text">{say}</p></div>}
+      {question && <div className="msg assistant"><p className="hc-text">{question}</p></div>}
       {answer
         ? <div className="msg user" data-anchor=""><p className="hc-text">{shownAnswer}</p></div>
         : part.state === 'input-available' && !closed && (
@@ -562,6 +563,7 @@ const toolName = (part) => (part.type?.startsWith('tool-') ? part.type.slice(5) 
 
 // Whether a part shows anything. Unknown tools (update_profile, ...) never do.
 export function isVisiblePart(part) {
+  if (part.type === 'sponsor-directory') return true;
   if (part.type === 'text') return Boolean(part.text?.trim());
   const name = toolName(part);
   if (name === 'ask_with_options') return part.state !== 'input-streaming' && Boolean(part.input);
@@ -569,6 +571,7 @@ export function isVisiblePart(part) {
 }
 
 export function MessagePart({ part, onAnswer, closed, explanation }) {
+  if (part.type === 'sponsor-directory') return <SponsorDirectory part={part} />;
   if (part.type === 'text') {
     return part.text?.trim() ? <div className="msg assistant"><p className="hc-text"><Rich text={part.text} /></p></div> : null;
   }
@@ -580,4 +583,9 @@ export function MessagePart({ part, onAnswer, closed, explanation }) {
   if (part.state === 'input-streaming' || part.state === 'input-available') return <CardSkeleton />;
   if (part.state !== 'output-available') return null;
   return <CardBoundary><Card data={part.output} explanation={explanation} /></CardBoundary>;
+}
+
+function SponsorDirectory({ part }) {
+  const { openDetail } = useContext(CardActions);
+  return <Sponsors sponsors={part.sponsors} openDetail={openDetail} />;
 }

@@ -30,9 +30,8 @@ function ShortcutArt({ kind }) {
 // never the mentor flow: findingRules in server/agent/prompts.ts quotes this exact text.
 export const FIND_HACKERS = 'Help me find hackers';
 
-// The opening card. Hackers and mentors go to the Hacky agent; event and
-// sponsor questions are answered from the static guide.
-function Brief({ style, onStart, onLocal }) {
+// Every starting point reaches Hacky, with the saved profile and conversation.
+function Brief({ style, onStart }) {
   // The opening mascot stays on the dragon; use a plain pet only if its clip fails.
   const [noClip, setNoClip] = useState(false);
   const film = !noClip;
@@ -52,7 +51,7 @@ function Brief({ style, onStart, onLocal }) {
           <Avatar id="mika" />
           Find hackers
         </button>
-        <button className="suggestion" data-prompt="What can you tell me about the events?" onClick={() => onLocal('What can you tell me about the events?')}>
+        <button className="suggestion" data-prompt="Which events would help me with my hackathon goals?" onClick={() => onStart('Which events would help me with my hackathon goals?')}>
           <ShortcutArt kind="event" />
           Event questions
         </button>
@@ -69,7 +68,7 @@ function Brief({ style, onStart, onLocal }) {
             </span>
           </span>
         </button>
-        <button className="suggestion" data-prompt="Which sponsors are here?" onClick={() => onLocal('Which sponsors are here?')}>
+        <button className="suggestion" data-prompt="Which sponsors could help with my project, and why?" onClick={() => onStart('Which sponsors could help with my project, and why?')}>
           <ShortcutArt kind="sponsor" />
           Sponsor questions
         </button>

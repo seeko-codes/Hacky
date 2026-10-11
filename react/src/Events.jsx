@@ -38,7 +38,7 @@ export function EventChoice({ event, openDetail, reason, selected = false }) {
 export function EventChoices({ events, openDetail, label, reasons }) {
   return events.length ? <Group label={label || `${events.length} events`}>{events.map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons?.[event.id]} />)}</Group> : null;
 }
-function Sponsors({ sponsors = data.sponsors, openDetail }) {
+export function Sponsors({ sponsors = data.sponsors, openDetail }) {
   return sponsors.length ? <Group label={`${sponsors.length} sponsors`}>{sponsors.map(sponsor => <div className="sponsor-entry" key={sponsor.id}><button type="button" className="detail-choice" data-sponsor-detail={sponsor.id} aria-haspopup="dialog" onClick={e => openDetail('sponsor', sponsor.id, e.currentTarget)}><SponsorIcon id={sponsor.id} /><span>{sponsor.name}</span><Icon name="back" /></button></div>)}</Group> : null;
 }
 function GuidanceError({ error }) { return error ? <p className="guidance-note guidance-error" role="alert">{error}</p> : null; }

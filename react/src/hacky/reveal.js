@@ -6,10 +6,10 @@ const ASK = 'tool-ask_with_options';
 const TOOL = /^tool-/;
 
 // About 300 ms of typing before the message (time spent waiting for the reply counts toward it),
-// then 120 ms between parts, and never more than 600 ms of gaps in one reply.
+// then 350 ms between bubbles/cards, with at most 1.05 seconds of added gaps per reply.
 export const FIRST_MS = 300;
-export const GAP_MS = 120;
-export const CAP_MS = 600;
+export const GAP_MS = 350;
+export const CAP_MS = 1050;
 
 // Part indexes in showing order. In each run of parts up to a question (ask_with_options), the
 // text comes first and the cards after it, so the explanation always leads its results, even

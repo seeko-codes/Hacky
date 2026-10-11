@@ -4,3 +4,8 @@
 .profile-editor textarea:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .profile-editor .profile-editor-hint{margin:-6px 0 2px;font-size:12px;line-height:1.5;color:var(--muted)}
 .profile-editor .social-footer-actions{margin-top:4px}
+.profile-preferences{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:4px}
+.profile-preferences-hint{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.profile-goals{grid-auto-rows:minmax(48px,auto);min-height:0}
+.profile-goals legend{margin-bottom:10px;font-size:14px;font-weight:600;color:var(--ink)}
+.profile-goals .companion-option{min-height:48px}

@@ -1,6 +1,13 @@
 /* Chats sidebar and profile dialog: requests, help, DMs. Existing variables only. */
 .social-lists section + section .label { margin-top:24px }
 .social-lists .contact { position:relative }
+.contact-row{display:flex;align-items:center;flex-wrap:wrap}
+.contact-row>.contact{flex:1;min-width:0;width:auto}
+.contact-options{flex-shrink:0;margin-right:8px;font-size:24px}
+.contact-actions{flex-basis:100%;padding:0 12px 8px;text-align:right}
+.social-hide-notice,.social-restore{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;font-size:13px;color:var(--muted)}
+.social-hide-notice{background:var(--wash);border-radius:10px;margin:8px}
+.social-hide-notice .toggle,.social-restore .toggle{color:var(--blue);flex-shrink:0}
 .contact.social-card { align-items:flex-start; cursor:default }
 /* A request or help card isn't a button: tapping Accept or Claim presses only that button, not the card. */
 .contact.social-card:is(:hover,:active) { background:transparent }

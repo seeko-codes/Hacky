@@ -7,6 +7,7 @@ import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useReveal } from '../src/hacky/useReveal.js';
 import { CAP_MS, FIRST_MS, GAP_MS, showingOrder } from '../src/hacky/reveal.js';
+import { displayMessages } from '../src/hacky/presentation.js';
 
 // Just enough of a page for react-dom to run a component that renders nothing.
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -99,7 +100,27 @@ test('a new reply: typing, the message about 300 ms after the request, then its 
   assert.deepEqual(onScreen(probe.out, done), ['text'], 'the message at 300 ms');
   assert.equal(probe.out.waiting, false);
   await probe.wait(GAP_MS);
-  assert.deepEqual(onScreen(probe.out, done), ['text', 'cards'], 'its cards 120 ms later');
+  assert.deepEqual(onScreen(probe.out, done), ['text', 'cards'], 'its cards follow after the brief gap');
+  await probe.unmount();
+});
+
+test('a streamed explanation shows before the suggestion, and continuing the stream never replays it', async (t) => {
+  const probe = setup(t, { messages: [] });
+  await probe.set({});
+  await probe.set({ messages: [ask], status: 'submitted' });
+  await probe.wait(1000); // model latency already exceeds the initial visual delay
+  const shown = (value, state) => displayMessages([ask, reply('a1', [text(value, state)])]);
+  const early = shown('Figma is a design tool.\n\nFor your project,', 'streaming');
+  await probe.set({ messages: early, status: 'streaming' });
+  assert.deepEqual(onScreen(probe.out, early[1]), ['text'], 'the finished explanation shows immediately');
+  await probe.wait(100);
+  const done = shown('Figma is a design tool.\n\nFor your project, sketch one screen.', 'done');
+  await probe.set({ messages: done, status: 'ready' });
+  await probe.wait(GAP_MS - 101);
+  assert.deepEqual(onScreen(probe.out, done[1]), ['text']);
+  await probe.wait(1);
+  assert.deepEqual(onScreen(probe.out, done[1]), ['text', 'text']);
+  assert.equal(probe.out.view(done[1]).version, 2, 'each bubble appeared exactly once');
   await probe.unmount();
 });
 

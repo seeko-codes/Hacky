@@ -163,7 +163,7 @@ describe("buildInstructions", () => {
       // The other starting points keep their own wording and flows.
       assert.ok(prompt.includes('"Find a mentor"'));
       assert.ok(prompt.includes('"Show me open teams I can join"'));
-      assert.ok(prompt.includes("find a teammate, find an open team, or get a mentor") || !complete);
+      assert.ok(prompt.includes("help with their project, finding people, or choosing useful event activities") || !complete);
     }
     // Mentors see the same chip; for them too it searches hackers.
     const mentor = buildInstructions(fakeContext("mentor", true), [], guide);
@@ -196,6 +196,30 @@ describe("buildInstructions", () => {
 // ---------------------------------------------------------------------------
 // Event recommendations
 // ---------------------------------------------------------------------------
+
+describe("answering beyond the event directory", () => {
+  test("general help works in every mode, including without an event guide", () => {
+    for (const { ctx } of MODES) {
+      for (const guide of [null, FIXTURE]) {
+        const prompt = buildInstructions(ctx, [], guide);
+        assert.ok(prompt.includes("Use your general knowledge for these explanations"));
+        assert.ok(prompt.includes("Answer their actual question in their language"));
+        assert.ok(prompt.includes("their newest message and conversation first"));
+        assert.ok(prompt.includes("two short paragraphs separated by a blank line"));
+        assert.ok(prompt.includes("General knowledge about a company is not evidence that it sponsors this event"));
+        assert.ok(prompt.includes("Don't force an event suggestion when none fits"));
+        if (guide) assert.ok(prompt.includes("Answer only from the event guide above."));
+        else assert.ok(prompt.includes(FALLBACK));
+      }
+    }
+  });
+
+  test("incomplete intake doesn't gate project help or general explanations", () => {
+    const prompt = buildInstructions(fakeContext("hacker", false), [], null);
+    assert.ok(prompt.includes("don't require intake or a search before helping"));
+    assert.ok(prompt.includes("Don't ask for information already in the profile or conversation"));
+  });
+});
 
 describe("event recommendations", () => {
   const guide = eventGuide("test-hacks", [dir]);
