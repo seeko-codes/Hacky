@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   askWithOptions,
   DraftCard,
+  EventPicks,
   Experience,
   HackGoal,
   Handle,
@@ -36,6 +37,7 @@ import {
   type ChatContext,
   type IntakeChanges,
 } from "./data.js";
+import { eventGuide } from "./prompts.js";
 
 /**
  * A tool failure the model and the person may see. The model gets
@@ -84,7 +86,7 @@ export function buildTools(ctx: ChatContext) {
     // Client-side: no execute. The UI shows chips and returns { answer }.
     ask_with_options: tool({
       description:
-        "Ask the person ONE short question with 2-6 tappable answer chips (they can also type their own answer). Use for intake questions and other clear choices. Always fill `say` with one short line answering what they just said; it shows above the question. Don't use this when they just asked you to find, search or draft something: do that first. Their answer arrives as the tool result { answer }.",
+        "Ask the person ONE short question with 2-6 tappable answer chips (they can also type their own answer). Use for intake questions and other clear choices. Always fill `say` with one short line answering what they just said; it shows above the question. For a vague request, ask the missing choice first, following the finding rules (Find hackers offers teammate or open team). A specific search or draft request goes straight to its tool; seeing open teams also searches right away. Their answer arrives as the tool result { answer }.",
       inputSchema: askWithOptions.input,
       outputSchema: askWithOptions.output,
     }),
@@ -266,6 +268,19 @@ export function buildTools(ctx: ChatContext) {
           helpRequests: output.helpRequests.map((h) => ({ title: h.title, status: h.status, mentor: h.mentor?.handle ?? null })),
         },
       }),
+    }),
+
+    // Read-only. The web app draws the cards from its own schedule, so it never shows a time
+    // or room the model typed. Names the guide doesn't have are dropped.
+    show_events: tool({
+      description:
+        "Show the events you recommend as tappable cards (with their time and room) under your message. Whenever you recommend events, call it first, once, with the 1-3 event names exactly as the event guide's schedule writes them, then write your recommendation.",
+      inputSchema: z.object({ names: z.array(z.string().trim().min(1).max(120)).min(1).max(3) }),
+      outputSchema: EventPicks,
+      execute: async ({ names }) => {
+        const guide = eventGuide(ctx.event.slug)?.toLowerCase() ?? "";
+        return { names: names.filter((name) => guide.includes(name.toLowerCase())) };
+      },
     }),
   };
 }

@@ -25,7 +25,7 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from 'ai';
 
 const CARDS = { search_people: PeopleCards, get_profile: PersonCard, draft_intro: DraftCard,
-  draft_help_request: HelpRequestCard, my_status: StatusCard }; // name → your component
+  draft_help_request: HelpRequestCard, my_status: StatusCard, show_events: EventCards }; // name → your component
 
 // Auto-send only after a question was answered (the stock helper alone loops after server tools).
 function answeredAsk({ messages }) {
@@ -108,7 +108,7 @@ Tool part states: `input-streaming` → `input-available` → `output-available`
 
 - **Same origin.** `/api` is on the app's own domain (Vite proxies it in dev), so the Better Auth cookie is sent with the default `credentials: 'same-origin'`. Never hardcode `http://localhost:8787`.
 - **Streaming.** `status` goes `submitted` (show typing dots) → `streaming` (text grows) → `ready`. Only send when ready. Memoize message rows; `throttle` caps re-renders.
-- **Pending questions.** Never `sendMessage` while an `ask_with_options` is unanswered. The model call fails on a tool call with no result. Route typed text through `addToolOutput` as shown.
+- **Pending questions.** Typed replies and answer chips use `addToolOutput` as shown. A new starting point (Find hackers, Find a mentor, Contact team or the dashboard’s Join a team) uses `start()` / `sendMessage`: the server closes the old question as skipped before calling the model. Hacky may ask a different question for the new request; it must not repeat the skipped question.
 - **Free Gemini tier.** It's rate-limited per minute. A 429 or a mid-stream failure shows up as `error`. Keep the user's draft and let them retry. Never start chat requests from effects or loops.
 - **Never render raw tool JSON.** No `JSON.stringify(part.output)`, no input dumps. Errors get one friendly line.
 - **The server owns history.** Don't edit or reorder `messages` locally, and don't call `regenerate`.

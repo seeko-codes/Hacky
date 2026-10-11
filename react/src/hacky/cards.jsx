@@ -4,8 +4,12 @@
 import { Component, createContext, Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { api, ApiError, notifyChanged } from '../api.js';
 import { Group, Icon, Modal, PersonAvatar } from '../ui.jsx';
+import { choiceLabel, skillLabel } from '../labels.js';
+import { boldRuns, textBlocks, orderedEventNames } from './rich.js';
+import { EventChoice, EventChoices } from '../Events.jsx';
+import { findEvents } from '../event-model.js';
 
-// { slug, busy, viewProfile({ handle, reason }), contactTeam(team), openConversation(id) }
+// { slug, busy, viewProfile({ handle, reason }), contactTeam(team), openConversation(id), openDetail(type, id, origin) }
 export const CardActions = createContext(null);
 
 const ROLE = { hacker: 'Hacker', mentor: 'Mentor', sponsor: 'Sponsor', organizer: 'Organizer' };
@@ -26,7 +30,8 @@ const WHY_MAX = 38; // characters: one line on a card 2 across (about 280px of t
 
 // "React", "React + UI", "React, UI + Figma", "React, UI + 2 more": every name
 // while it fits in room characters, else the first one or two and a count.
-function skillText(skills, room) {
+function skillText(tags, room) {
+  const skills = tags.map(skillLabel);
   const name = (shown) => (shown.length === skills.length
     ? `${shown.slice(0, -1).join(', ')}${shown.length > 1 ? ' + ' : ''}${shown.at(-1)}`
     : `${shown.join(', ')} + ${skills.length - shown.length} more`);
@@ -48,7 +53,7 @@ function personWhy({ evidence: e = {}, skills, reason }, closest) {
   const matched = list(e.matchedSkills), own = list(skills), interests = list(e.sharedInterests);
   const extras = [
     e.sameTrack && e.track && `also on ${e.track}`,
-    interests.length > 0 && `also into ${interests[0]}`,
+    interests.length > 0 && `also into ${skillLabel(interests[0])}`,
     e.sameGoal && e.goal && `also wants to ${e.goal}`,
   ];
   if (matched.length) return why(`Knows ${skillText(matched, WHY_MAX - 6)}`, extras);
@@ -101,7 +106,7 @@ function SkillTags({ skills, matched, label }) {
   if (!shown.length) return null;
   return (
     <ul className="hc-tags" aria-label={label}>
-      {shown.map((skill) => <li key={skill} className={hit.has(skill.toLowerCase()) ? 'matched' : undefined}>{skill}</li>)}
+      {shown.map((skill) => <li key={skill} className={hit.has(skill.toLowerCase()) ? 'matched' : undefined}>{skillLabel(skill)}</li>)}
     </ul>
   );
 }
@@ -228,7 +233,7 @@ function TeamDialog({ team, open, onClose }) {
             {list(t.wantedSkills).length > 0 && (
               <section className="profile-section">
                 <h3>Looking for</h3>
-                <div className="social-chips">{list(t.wantedSkills).map((skill) => <span key={skill} className="social-tag">{skill}</span>)}</div>
+                <div className="social-chips">{list(t.wantedSkills).map((skill) => <span key={skill} className="social-tag">{skillLabel(skill)}</span>)}</div>
               </section>
             )}
             <section className="profile-section">
@@ -268,7 +273,7 @@ function TeamDialog({ team, open, onClose }) {
   );
 }
 
-const NOUNS = { hacker: ['person', 'people'], team: ['team', 'teams'], mentor: ['mentor', 'mentors'] };
+const NOUNS = { hacker: ['hacker', 'hackers'], team: ['team', 'teams'], mentor: ['mentor', 'mentors'] };
 
 // status: matches (strong fits), closest (no strong fit: a note on what's
 // missing, then the nearest few, each tagged), or noMatch (one line).
@@ -477,12 +482,24 @@ function StatusCard({ data }) {
   );
 }
 
+// show_events: the events Hacky recommended, drawn from the app's own schedule (times and rooms
+// never come from the model). Names that match nothing show nothing.
+function EventsCard({ data, explanation }) {
+  const { openDetail } = useContext(CardActions);
+  const events = findEvents(orderedEventNames(list(data?.names), explanation));
+  if (!events.length) return null;
+  return events.length === 1
+    ? <EventChoice event={events[0]} openDetail={openDetail} />
+    : <EventChoices events={events} openDetail={openDetail} />;
+}
+
 const CARDS = {
   search_people: SearchCards,
   get_profile: ProfileCard,
   draft_intro: DraftCard,
   draft_help_request: HelpRequestCard,
   my_status: StatusCard,
+  show_events: EventsCard,
 };
 
 // One bad stored result shouldn't take the whole chat down.
@@ -501,22 +518,26 @@ function CardSkeleton() {
   );
 }
 
-function Chips({ part, onAnswer }) {
+// closed: a newer message followed this question without answering it, so the server closed it
+// as skipped; it shows like a skipped one (no chips) instead of disabled chips that look stuck.
+function Chips({ part, onAnswer, closed = false }) {
   if (part.state === 'input-streaming' || !part.input) return null; // input is still partial
   const { say, question, options } = part.input;
   // A skipped question (they sent a new message instead) shows no answer bubble.
   const answer = part.state === 'output-available' && !part.output?.skipped
     ? (typeof part.output === 'string' ? part.output : part.output?.answer)
     : null;
+  // A tapped chip's answer reads like the chip did; a typed answer shows as typed.
+  const shownAnswer = list(options).includes(answer) ? choiceLabel(answer) : answer;
   return (
     <>
       {question && <div className="msg assistant">{say && <p className="hc-text">{say}</p>}<p className="hc-text">{question}</p></div>}
       {answer
-        ? <div className="msg user" data-anchor=""><p className="hc-text">{answer}</p></div>
-        : part.state === 'input-available' && (
+        ? <div className="msg user" data-anchor=""><p className="hc-text">{shownAnswer}</p></div>
+        : part.state === 'input-available' && !closed && (
           <div className="hc-chips" role="group" aria-label={question || 'Answers'}>
             {list(options).map((option) => (
-              <button key={option} type="button" className="hc-chip" disabled={!onAnswer} onClick={() => onAnswer(option)}>{option}</button>
+              <button key={option} type="button" className="hc-chip" disabled={!onAnswer} onClick={() => onAnswer(option)}>{choiceLabel(option)}</button>
             ))}
           </div>
         )}
@@ -524,11 +545,17 @@ function Chips({ part, onAnswer }) {
   );
 }
 
-// **bold** is the only markup kept; everything else shows as typed.
+// **bold** and "- " bullets are the only markup kept (rich.js); everything else shows as typed.
+// A list stays inside the one bubble paragraph as block spans, so the bubble keeps its shape.
+const bold = (text) => boldRuns(text).map((run, i) => (
+  run.bold ? <strong key={i}>{run.text}</strong> : <Fragment key={i}>{run.text}</Fragment>
+));
 function Rich({ text }) {
-  return text.split(/(\*\*[^*\n]+\*\*)/).map((piece, i) => (
-    /^\*\*[^*\n]+\*\*$/.test(piece) ? <strong key={i}>{piece.slice(2, -2)}</strong> : <Fragment key={i}>{piece}</Fragment>
-  ));
+  const blocks = textBlocks(text);
+  if (!blocks.some((block) => block.type === 'list')) return bold(text);
+  return blocks.map((block, i) => (block.type === 'list'
+    ? <span key={i} className="hc-list" role="list">{block.items.map((item, j) => <span key={j} className="hc-item" role="listitem">{bold(item)}</span>)}</span>
+    : <span key={i} className="hc-para">{bold(block.text)}</span>));
 }
 
 const toolName = (part) => (part.type?.startsWith('tool-') ? part.type.slice(5) : null);
@@ -541,16 +568,16 @@ export function isVisiblePart(part) {
   return Boolean(CARDS[name]);
 }
 
-export function MessagePart({ part, onAnswer }) {
+export function MessagePart({ part, onAnswer, closed, explanation }) {
   if (part.type === 'text') {
     return part.text?.trim() ? <div className="msg assistant"><p className="hc-text"><Rich text={part.text} /></p></div> : null;
   }
   const name = toolName(part);
-  if (name === 'ask_with_options') return <Chips part={part} onAnswer={onAnswer} />;
+  if (name === 'ask_with_options') return <Chips part={part} onAnswer={onAnswer} closed={closed} />;
   const Card = CARDS[name];
   if (!Card) return null; // step-start, reasoning, unknown tools
   if (part.state === 'output-error') return <p className="hc-line">Couldn’t load that. Try again.</p>;
   if (part.state === 'input-streaming' || part.state === 'input-available') return <CardSkeleton />;
   if (part.state !== 'output-available') return null;
-  return <CardBoundary><Card data={part.output} /></CardBoundary>;
+  return <CardBoundary><Card data={part.output} explanation={explanation} /></CardBoundary>;
 }

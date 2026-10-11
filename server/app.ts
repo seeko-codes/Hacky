@@ -62,6 +62,23 @@ app.use("*", async (c, next) => {
   await next();
 });
 
+// The web app sends X-Hacky-User: the person the page loaded as. One browser holds one session, so
+// after another tab signs in as someone else, an older tab's requests would act as (and show) the
+// new person. Refuse them instead; the page sees X-Hacky-User-Changed and reloads as the new person.
+// Requests without the header (demo portal, curl, Better Auth) are unaffected.
+app.use("*", async (c, next) => {
+  const pageUser = c.req.header("x-hacky-user");
+  const user = c.get("user");
+  if (pageUser && user && pageUser !== user.id && !c.req.path.startsWith("/api/demo/")) {
+    c.header("X-Hacky-User-Changed", "1");
+    return c.json<ApiError>(
+      { error: { code: "conflict", message: "You’re signed in as someone else in another tab. Reload to continue." } },
+      409,
+    );
+  }
+  await next();
+});
+
 app.get("/health", async (c) => {
   const result = await db.execute<{ now: string }>(sql`select now() as now`);
   return c.json({ ok: true, databaseTime: result.rows[0]?.now ?? null });

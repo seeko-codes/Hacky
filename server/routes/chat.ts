@@ -35,6 +35,16 @@ const MAX_STEPS = 5;
 // A failed draft doesn't count, so the model can still recover.
 const draftReady: StopCondition<HackyTools> = ({ steps }) =>
   steps.at(-1)?.toolResults.some((result) => result.toolName === "draft_intro") ?? false;
+// Event cards with their recommendation text in the same step end the reply too. The prompt asks
+// for the cards first (the model skips a tool call it's told to make after its text); that step
+// has no text, so the reply goes on for one more step that says why. The web app shows the text
+// above the cards either way (showingOrder in react/src/hacky/reveal.js).
+const showedEvents = (step: { toolResults: readonly { toolName: string }[] }) =>
+  step.toolResults.some((result) => result.toolName === "show_events");
+const eventsShown: StopCondition<HackyTools> = ({ steps }) => {
+  const last = steps.at(-1);
+  return last !== undefined && last.text.trim() !== "" && showedEvents(last);
+};
 const MAX_USER_TEXT = 2000;
 const RATE_LIMITED_TEXT = "Hacky is getting a lot of questions right now. Try again in a few seconds.";
 const SNAG_TEXT = "Hacky hit a snag. Try again in a few seconds.";
@@ -80,7 +90,7 @@ const textOf = (message: { parts: readonly { type: string; text?: unknown }[] })
  * or the stored assistant message with the client's answer to its pending
  * question. `incoming` is the message to persist before streaming.
  */
-function mergeNewest(
+export function mergeNewest(
   history: UIMessage[],
   raw: unknown,
 ): { messages: UIMessage[]; incoming: UIMessage; continuation: boolean; closed?: UIMessage } {
@@ -297,20 +307,21 @@ export const chatRoutes = new Hono<AppEnv>()
     await saveMessage(userId, eventId, incoming, new Date());
 
     let rateLimited = false;
+    // A new starting point skips the old question, but may need its own choices.
+    // The prompt prevents repeating the skipped question; keep ask_with_options available.
+    const allowed = Object.keys(tools) as (keyof HackyTools)[];
     const result = streamText({
       model: chatModel,
       instructions: buildInstructions(ctx, skipped),
       messages: await convertToModelMessages(fromFirstUser(messages), { tools, ignoreIncompleteToolCalls: true }),
       tools,
-      // Right after a skipped question, no new question: reply to what they said instead.
-      ...(skipped.length > 0
-        ? { activeTools: (Object.keys(tools) as (keyof HackyTools)[]).filter((name) => name !== "ask_with_options") }
-        : {}),
       maxRetries: 1, // free tier: don't burn the per-minute quota on retries
-      stopWhen: [isStepCount(MAX_STEPS), draftReady],
+      stopWhen: [isStepCount(MAX_STEPS), draftReady, eventsShown],
       // Rebuilt every step: update_profile can complete the intake mid-turn. The last step must talk.
-      prepareStep: ({ stepNumber }) => ({
+      // Event cards show once per reply: after show_events, the next step writes the text.
+      prepareStep: ({ stepNumber, steps }) => ({
         instructions: buildInstructions(ctx, skipped),
+        ...(steps.some(showedEvents) ? { activeTools: allowed.filter((name) => name !== "show_events") } : {}),
         ...(stepNumber === MAX_STEPS - 1 ? { toolChoice: "none" as const } : {}),
       }),
     });

@@ -85,6 +85,46 @@ export function recommendEvents(intake, now = Date.now()) {
   return picks.sort((a, b) => Date.parse(a.event.startDateTime) - Date.parse(b.event.startDateTime));
 }
 
+// "What event do you recommend for me?", "what should I go to?", "any events for me?", "suggest something":
+// a personal pick, which Hacky's AI makes from the saved profile and the chat. These never go to the
+// local guide search below, which only finds events by name, time and place.
+const RECOMMEND = [
+  /\brecommend/,
+  /\bsuggest/,
+  /\bwhat should i (go|attend|check out|do|join|see|hit)\b/,
+  /\bshould i (go|attend|check out|join)\b/,
+  /\bworth (going|attending|checking out)\b/,
+  /\b(events?|workshops?|sessions?|talks?|socials?|activities|anything|something)\b.*\bfor me\b/,
+  /\b(events?|workshops?|sessions?|talks?|socials?)\b.*\b(would|will|might) i (like|enjoy)\b/,
+];
+export const isRecommendationQuestion = question => RECOMMEND.some(pattern => pattern.test(String(question).toLowerCase()));
+
+// Hacky's show_events names (as the event guide writes them) → schedule entries. The guide and this
+// schedule word a few names differently ("(Sprout Track)" vs "- Sprout Track", "Merch Market, session 2"
+// vs "Merch Market (second session)"), so names are compared by their words, and an entry has to share
+// at least half of them. One that hasn't ended beats one that has (late Sunday, "Merch Market" is the
+// second session); then the entry sharing the most words wins.
+const nameWords = text => new Set(String(text).toLowerCase().match(/[a-z0-9]+/g) || []);
+function nameFit(a, b) {
+  let shared = 0;
+  for (const word of a) if (b.has(word)) shared++;
+  return shared / (a.size + b.size - shared || 1);
+}
+export function findEvents(names = [], now = Date.now()) {
+  const found = [];
+  for (const name of names) {
+    const words = nameWords(name);
+    if (!words.size) continue;
+    const ended = event => Date.parse(event.endDateTime || event.startDateTime) <= now;
+    const best = schedule
+      .map(event => ({ event, fit: nameFit(words, nameWords(event.name)) }))
+      .filter(item => item.fit >= 0.5)
+      .sort((a, b) => ended(a.event) - ended(b.event) || b.fit - a.fit)[0]?.event;
+    if (best && !found.includes(best)) found.push(best);
+  }
+  return found;
+}
+
 // A direct answer to "when/where is X": day, time and zone, then the place. A deadline keeps its
 // source note instead, since the guide and Devpost disagree and the reader should see both.
 export function describeEvent(event) {

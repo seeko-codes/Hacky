@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Icon, Modal, PersonAvatar } from "./ui.jsx";
 import { api, notifyChanged } from "./api.js";
 import { useSession } from "./session.jsx";
 import { friendly } from "./social/useSocial.js";
 import { introProblem } from "./social/messages.js";
 import { RoleChip, firstName } from "./social/parts.jsx";
+import { skillLabel } from "./labels.js";
 
 const AVAILABILITY = { available: "Available now", busy: "Busy", offline: "Offline" };
 
@@ -16,7 +17,7 @@ function Chips({ title, items }) {
       <div className="social-chips">
         {items.map((item) => (
           <span key={item} className="social-tag">
-            {item}
+            {skillLabel(item)}
           </span>
         ))}
       </div>
@@ -34,15 +35,20 @@ function Text({ title, children }) {
 }
 
 // Starts as one button so the profile fits on screen; the intro form opens when tapped.
-function RequestForm({ person, onSent }) {
+// onConflict: the server refused it as a repeat (a request already went out, say from another
+// tab or the chat), so the profile reloads where you stand and shows "Request sent".
+function RequestForm({ person, onSent, onConflict }) {
   const { slug } = useSession();
   const [writing, setWriting] = useState(false);
   const [intro, setIntro] = useState("");
   const [state, setState] = useState({ busy: false, error: "", tried: false });
+  const sending = useRef(false); // a second tap before "Sending…" renders sends nothing
   const problem = introProblem(intro);
   const send = async (e) => {
     e.preventDefault();
+    if (sending.current) return;
     if (problem) return setState((s) => ({ ...s, tried: true }));
+    sending.current = true;
     setState({ busy: true, error: "", tried: true });
     try {
       const { request } = await api(`/api/events/${slug}/requests`, {
@@ -52,6 +58,9 @@ function RequestForm({ person, onSent }) {
       onSent(request);
     } catch (error) {
       setState({ busy: false, error: friendly(error), tried: true });
+      if (error.status === 409) onConflict?.();
+    } finally {
+      sending.current = false;
     }
   };
   const shown = state.error || (state.tried || /https?:\/\/|www\./i.test(intro) ? problem : "");
@@ -86,7 +95,7 @@ function RequestForm({ person, onSent }) {
   );
 }
 
-function Actions({ person, relation, setRelation, onMessage }) {
+function Actions({ person, relation, setRelation, onMessage, onConflict }) {
   const [state, setState] = useState({ busy: false, error: "", hidden: false });
   const run = async (fn) => {
     setState((s) => ({ ...s, busy: true, error: "" }));
@@ -111,10 +120,18 @@ function Actions({ person, relation, setRelation, onMessage }) {
       </button>
     );
   } else if (relation.state === "outgoing") {
+    // One request per person: while it's pending there's nothing to send again. A plain
+    // disabled control (no handler, no busy state), so repeated taps do nothing.
     body = (
-      <button className="profile-message" disabled>
-        Request sent
-      </button>
+      <>
+        <button className="profile-message profile-sent" disabled aria-describedby="person-sent-note">
+          <Icon name="check" />
+          Request sent
+        </button>
+        <p id="person-sent-note" className="social-done">
+          Waiting for {first} to accept.
+        </p>
+      </>
     );
   } else if (relation.state === "incoming") {
     body = (
@@ -154,6 +171,7 @@ function Actions({ person, relation, setRelation, onMessage }) {
     body = (
       <RequestForm
         person={person}
+        onConflict={onConflict}
         onSent={(request) => {
           setRelation({
             state: request.status === "accepted" ? "accepted" : "outgoing",
@@ -210,6 +228,13 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
 
   const p = load.person;
   const self = p && p.userId === me?.profile?.userId;
+  // Where you stand with them, fresh from the server (after a send it refused as a repeat).
+  const refreshRelation = () => {
+    if (!handle) return;
+    api(`/api/events/${slug}/people/${encodeURIComponent(handle)}`)
+      .then((person) => { if (person.handle === handle) setRelation(person.relation); })
+      .catch(() => {});
+  };
   const block = async () => {
     setBlocking((b) => ({ ...b, busy: true, error: "" }));
     try {
@@ -333,7 +358,7 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
                   )}
                 </>
               ) : (
-                relation && <Actions person={p} relation={relation} setRelation={setRelation} onMessage={onMessage} />
+                relation && <Actions person={p} relation={relation} setRelation={setRelation} onMessage={onMessage} onConflict={refreshRelation} />
               )}
             </footer>
           )}

@@ -1,12 +1,28 @@
 /* Hacky agent chat: one turn per reply, chips for questions, cards by tool name. */
 .hc-turn{display:flex;flex-direction:column;gap:12px;min-width:0;container:hc-turn/inline-size}
 .hc-text{white-space:pre-line}
+/* Bulleted replies (event recommendations): block spans inside the one bubble paragraph. */
+.hc-para,.hc-list{display:block}
+.hc-list{margin:4px 0}
+.hc-item{display:block;position:relative;padding-left:16px}
+.hc-item+.hc-item{margin-top:4px}
+.hc-item::before{content:"\2022";position:absolute;left:3px;color:var(--muted)}
+/* New replies (useReveal.js): each part fades in as it's revealed, and the cards in a list follow
+   120 ms apart, capped at 480 ms. Stored history renders without .hc-reveal, so it never replays. */
+.hc-part{display:contents}
+.hc-reveal>*,.hc-reveal :is(.matches,.recommendation-choices)>*{animation:hc-reveal 220ms var(--ease) both}
+.hc-reveal :is(.matches,.recommendation-choices)>:nth-child(2){animation-delay:120ms}
+.hc-reveal :is(.matches,.recommendation-choices)>:nth-child(3){animation-delay:240ms}
+.hc-reveal :is(.matches,.recommendation-choices)>:nth-child(4){animation-delay:360ms}
+.hc-reveal :is(.matches,.recommendation-choices)>:nth-child(n+5){animation-delay:480ms}
+@keyframes hc-reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.hc-reveal>*,.hc-reveal :is(.matches,.recommendation-choices)>*{animation:none}}
 .hc-line{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
 .hc-turn .recommendation-group{margin:0}
 
 .hc-chips{display:flex;flex-wrap:wrap;gap:8px}
 .hc-chip{min-height:var(--control-height);padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:var(--blue);font-size:14px;font-weight:700;line-height:1.3;text-align:left}
-.hc-chip:hover:not(:disabled){background:var(--hover);border-color:var(--focus)}
+@media (hover:hover){.hc-chip:hover:not(:disabled){background:var(--hover);border-color:var(--focus)}}
 .hc-chip:active:not(:disabled){transform:scale(.97)}
 .hc-chip:disabled{color:var(--muted);opacity:.6}
 
@@ -34,7 +50,7 @@
 .hc-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:auto}
 .hc-actions .hk-button{min-height:40px;padding:8px 16px}
 .hc-link{min-height:40px;padding:0 2px;border:0;border-radius:6px;background:none;color:var(--link);font-size:14px;font-weight:700;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.hc-link:hover{color:var(--link-hover);text-decoration-thickness:2px}
+@media (hover:hover){.hc-link:hover{color:var(--link-hover);text-decoration-thickness:2px}}
 /* "Closest fit": a search with no strong match. Quieter than the name. */
 .hc-closest{display:inline-flex;align-items:center;padding:1px 7px;border:1px dashed var(--line);border-radius:5px;color:var(--muted);font-size:12px;line-height:18px;font-weight:700;white-space:nowrap}
 
@@ -98,7 +114,9 @@
 .team-facts { margin:4px 0 0; color:var(--muted); font-size:14px }
 .team-members { list-style:none; margin:0; padding:0; display:grid; gap:4px }
 .team-member { display:flex; align-items:center; gap:12px; width:100%; padding:8px; border:0; border-radius:12px; background:transparent; color:var(--ink); font:inherit; text-align:left; cursor:pointer }
-.team-member:hover, .team-member:focus-visible { background:var(--wash) }
+/* Keyboard focus only: after a tap (data-input=pointer, ui.jsx) a row focused by script stays plain. */
+:root:not([data-input=pointer]) .team-member:focus-visible { background:var(--wash) }
+@media (hover:hover) { .team-member:hover { background:var(--wash) } }
 .team-member .avatar { width:40px; height:40px; flex:0 0 40px }
 .team-member .name { flex:1; font-weight:600 }
 .team-cta { padding:8px 0 4px }

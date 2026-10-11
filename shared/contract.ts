@@ -223,6 +223,17 @@ export type EventInfo = z.infer<typeof EventInfo>;
 export const EventMe = Membership.extend({ intake: Intake });
 export type EventMe = z.infer<typeof EventMe>;
 
+// The team the signed-in user leads or is on in this event (the event dashboard's team line).
+// Joining isn't built, so only seeded teams have members. size counts the owner.
+export const MyTeam = z.object({
+  id: Uuid,
+  name: z.string(),
+  isOwner: z.boolean(),
+  size: z.number().int().min(1),
+  maxSize: z.number().int().min(1),
+});
+export type MyTeam = z.infer<typeof MyTeam>;
+
 // Partial update. role and verified are not editable here.
 export const UpdateEventMeBody = z
   .object({ ...intakeFields, availability: Availability, looking: z.boolean() })
@@ -538,12 +549,21 @@ export const StatusCard = z.object({
 });
 export type StatusCard = z.infer<typeof StatusCard>;
 
+// show_events: the events Hacky just recommended, by their names in the event guide. The web
+// app shows them as event cards from its own schedule, so times and rooms come from there.
+// The server keeps only names the guide has, so the list can come back empty.
+export const EventPicks = z.object({
+  names: z.array(z.string().trim().min(1).max(120)).max(3),
+});
+export type EventPicks = z.infer<typeof EventPicks>;
+
 export const toolOutputs = {
   search_people: SearchResult,
   get_profile: PersonDetail,
   draft_intro: DraftCard,
   draft_help_request: HelpRequestCard,
   my_status: StatusCard,
+  show_events: EventPicks,
 } as const;
 
 // Client-side tool: the UI shows chips and returns the tapped (or typed) answer.
@@ -622,7 +642,7 @@ const SlugParams = z.object({ slug: Slug });
 const IdParams = z.object({ id: Uuid });
 
 type Endpoint = {
-  method: "GET" | "POST" | "PATCH";
+  method: "GET" | "POST" | "PATCH" | "DELETE";
   path: `/api/${string}`;
   params?: z.ZodType;
   query?: z.ZodType;
@@ -653,6 +673,13 @@ export const endpoints = {
     params: SlugParams,
     body: UpdateEventMeBody,
     response: EventMe,
+  },
+  // null when they lead or belong to no team here.
+  myTeam: {
+    method: "GET",
+    path: "/api/events/:slug/me/team",
+    params: SlugParams,
+    response: z.object({ team: MyTeam.nullable() }),
   },
   person: {
     method: "GET",
@@ -718,6 +745,15 @@ export const endpoints = {
     params: IdParams,
     body: SendMessageBody,
     response: z.object({ message: Message }),
+  },
+  // Unsend for everyone: only the sender, never a system message. 403 for
+  // someone else's message, 404 when it's already gone (treat it as deleted).
+  // There's no live event for it; open chats drop it on their next catch-up.
+  deleteMessage: {
+    method: "DELETE",
+    path: "/api/conversations/:id/messages/:messageId",
+    params: z.object({ id: Uuid, messageId: Uuid }),
+    response: Ok,
   },
   markRead: {
     method: "POST",

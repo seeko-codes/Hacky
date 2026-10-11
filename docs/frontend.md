@@ -33,11 +33,15 @@ How `react/` talks to the backend. Every route and shape is in `shared/contract.
 2. Pick the event: `events[0].slug` (`knighthacks-ix`). `demo-hacks` is the second event for the theme switch.
 3. `GET /api/events/:slug` returns the name, `theme` (turn it into CSS variables) and `tracks`. It's public.
 4. `GET /api/events/:slug/me` returns your membership plus `intake` (skills, goal, motivations, idea, `complete`, ...).
+5. One person per page: after `/api/me`, every request sends `X-Hacky-User: <profile.userId>` (`react/src/api.js`). If another tab has since signed in as someone else, the API refuses with 409 and `X-Hacky-User-Changed`. The page rechecks `/api/me` then, and whenever the tab gets focus or becomes visible again; a different person, or nobody, stops the page with a reload notice (`switched` in `react/src/session.jsx`).
+
+The event dashboard (`/`, `react/src/Dashboard.jsx`) boots the same way, so it and Hacky show the same person and event. Then it loads that person's `GET /api/events/:slug/requests`, `/conversations` and `/me/team` (the team they lead or are on, or `null`).
 
 ## 2. Onboarding and avatar (replace the localStorage versions)
 
-- **When to show onboarding:** when `intake.motivations` is empty and `intake.idea` is null, meaning they've never answered.
-- **On complete:** `PATCH /api/events/:slug/me` with `{ motivations, idea }`.
+- **Entry link:** `/index.html?onboarding=1` is the one link into Hacky from outside: the event dashboard's "Use Hacky" and a "Try Hacky" post (Discord, email). Add `&event=<slug>` to pick the event (`hackyUrl` in `react/src/entry.js` builds it). It opens the welcome ("Hey, I'm Hacky. What brings you here?") for whoever is signed in, with their saved goals checked. Signed out, the session gate shows instead. Hacky removes the param once read, so a refresh doesn't reopen it.
+- **When to show onboarding:** always from the entry link. Otherwise only once, for someone with nothing saved for the event yet, and the browser remembers it per person and event, so Skip or a refresh never brings it back (`react/src/welcome.js`). In the app it opens on request (Edit my answers).
+- **On complete** (an explicit Continue: **That's me**, then **Let's go**): `PATCH /api/events/:slug/me` with `{ motivations, idea }`.
 
   | Onboarding choice | `motivations` id |
   |---|---|
@@ -68,6 +72,9 @@ Cards are chosen by tool name. The shapes are in `contract.ts` under `toolOutput
 - **`draft_help_request`:** a `HelpRequestCard`. **Request help** calls `POST /api/events/:slug/help-requests` with `{ title, details, skillsNeeded }`. It returns 429 when they already have 3 waiting.
 - **`my_status`:** a `StatusCard` showing incoming and outgoing requests, connection count, team, and help requests.
 - **`get_profile`:** a `PersonDetail`, the same shape as the people route.
+- **`show_events`:** `{ names }`, the events Hacky just recommended, by their names in the event guide (names the guide lacks are dropped on the server). Show them as event cards from the app's own schedule (`findEvents` in `react/src/event-model.js`), so times and rooms never come from the model.
+
+In a reply, show the text before the cards it explains, even though the model writes it after its tool calls (`showingOrder` in `react/src/hacky/reveal.js`). A new reply appears in a short sequence: typing, the message, then its cards; stored history shows at once.
 
 The agent never sends anything. Only these buttons do.
 
@@ -84,11 +91,12 @@ The agent never sends anything. Only these buttons do.
 - **Load messages:**
   - Open a chat with `GET /api/conversations/:id/messages?limit=30`. Messages come oldest first, with `hasMore`.
   - On scroll up: `?before=<oldest id>`.
-  - To catch up: `?after=<newest id>`.
+  - To catch up: the newest page again (`?limit=30`). It brings new messages and drops saved ones it no longer has (deleted). If it shares no message with the screen, more than a page arrived: page with `?after=<newest id>` first. A cursor that returns 400 was deleted: drop it and use the one before.
 - **Send:** `POST /api/conversations/:id/messages` with `{ clientId: crypto.randomUUID(), body }`.
   - Show it right away. Replace it when the response, or a live `message-new` with the same `clientId`, arrives.
   - Retrying with the same `clientId` is safe; it won't duplicate.
   - 403 means you can't message this person.
+- **Delete (unsend):** `DELETE /api/conversations/:id/messages/:messageId`, offered only on your own saved messages, never system ones. It's removed for everyone in the chat. Confirm first; 404 means it's already gone, so drop it either way. There's no live event for it: the other person's open chat drops it on its next catch-up.
 - **Mark read:** `POST /api/conversations/:id/read` while the chat is open and the tab is visible.
 - **System messages:** `kind: 'system'` (with `senderId: null`), such as "resolved". Render them centered, not as a bubble.
 - Memoize message rows.
@@ -124,7 +132,7 @@ The agent never sends anything. Only these buttons do.
    - **Token expiry:** tokens last 10 minutes. Swap in a fresh token and socket about 60 s before `expiresAt`.
    - **Silence:** with no frame at all for 40 s, the socket is dead even if `close` never fired. Close it and reconnect.
 5. On every `open`, and when the tab regains focus:
-   - fetch `?after=<newest id>` for the open chat;
+   - catch up the open chat (section 5);
    - refetch requests, conversations and the help queue.
 
    Live updates only notify. The API is the truth.

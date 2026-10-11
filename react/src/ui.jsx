@@ -55,13 +55,36 @@ export function Group({label,children,className='recommendation-choices'}) {
   const [open,setOpen]=useState(true);
   return <details className="hk-disclosure recommendation-group" open={open} onToggle={e=>setOpen(e.currentTarget.open)}><summary>{open?'Hide':'Show'} {label}</summary><div className={className}>{children}</div></details>;
 }
+// The last input, as <html data-input="keyboard|pointer">. After touch or a mouse, focus that script
+// moves (a dialog returning focus to the button that opened it) shows no ring (hacky-primitives.css):
+// WebKit would otherwise ring the tapped button, so it looks stuck or selected. Keyboard users keep it.
+if(typeof window!=='undefined'){
+  const input=value=>{document.documentElement.dataset.input=value;};
+  // A touch screen starts as pointer, so focus moved before the first tap shows no ring either.
+  if(window.matchMedia?.('(hover:none) and (pointer:coarse)').matches)input('pointer');
+  // Typing into a field (the iPhone keyboard's keys too) isn't keyboard navigation; Tab and Escape are.
+  const typing=e=>e.key!=='Tab'&&e.key!=='Escape'&&e.target?.matches?.('textarea,select,[contenteditable],input:not([type=checkbox],[type=radio],[type=button],[type=submit])');
+  window.addEventListener('keydown',e=>{if(!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing(e))input('keyboard');},true);
+  window.addEventListener('pointerdown',()=>input('pointer'),true);
+}
+// Focus moved by script without scrolling. The ring rule above decides whether it shows; focusVisible
+// says the same to browsers that support that option.
+export function focusQuietly(el){el?.focus({preventScroll:true,focusVisible:document.documentElement.dataset.input==='keyboard'});}
 export function Modal({open,onClose,id,className,labelledBy,label,children,initialFocus}) {
   const ref=useRef(null), origin=useRef(null), closeRef=useRef(onClose);
   closeRef.current=onClose;
   useLayoutEffect(()=>{
     const node=ref.current;
-    if(open&&!node.open){origin.current=document.activeElement;node.showModal();if(initialFocus)node.querySelector(initialFocus)?.focus({preventScroll:true});}
-    else if(!open&&node.open){node.close();if(origin.current?.isConnected)origin.current.focus({preventScroll:true});}
+    if(open&&!node.open){origin.current=document.activeElement;node.showModal();if(initialFocus)focusQuietly(node.querySelector(initialFocus));}
+    else if(!open&&node.open){node.close();if(origin.current?.isConnected)focusQuietly(origin.current);}
   },[open,initialFocus]);
-  return createPortal(<dialog ref={ref} id={id} className={className} aria-labelledby={labelledBy} aria-label={label} onCancel={e=>{e.preventDefault();closeRef.current?.();}} onClose={()=>{if(open)closeRef.current?.();}} onClick={e=>{if(e.target!==e.currentTarget)return;const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeRef.current?.();}}>{children}</dialog>,document.body);
+  // A tap on the dimmed backdrop closes. The listener sits on the dialog itself, not React's root:
+  // iOS Safari can skip the click for a tap on an element with no click listener of its own.
+  useEffect(()=>{
+    const node=ref.current;
+    const backdrop=e=>{if(e.target!==node)return;const r=node.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeRef.current?.();};
+    node.addEventListener('click',backdrop);
+    return()=>node.removeEventListener('click',backdrop);
+  },[]);
+  return createPortal(<dialog ref={ref} id={id} className={className} aria-labelledby={labelledBy} aria-label={label} onCancel={e=>{e.preventDefault();closeRef.current?.();}} onClose={()=>{if(open)closeRef.current?.();}}>{children}</dialog>,document.body);
 }
