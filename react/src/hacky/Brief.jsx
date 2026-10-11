@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
 import HackyFilm, { CHAT_CLIP } from '../HackyFilm.jsx';
-import { Avatar, WorkingPet } from '../ui.jsx';
+import { Avatar, Pet } from '../ui.jsx';
 
 function ShortcutArt({ kind }) {
   return (
@@ -32,10 +32,10 @@ export const FIND_HACKERS = 'Help me find hackers';
 
 // The opening card. Hackers and mentors go to the Hacky agent; event and
 // sponsor questions are answered from the static guide.
-function Brief({ style, working, onStart, onLocal }) {
-  // Hacky's chat clip; the still pet while working or if the clip can't load.
+function Brief({ style, onStart, onLocal }) {
+  // The opening mascot stays on the dragon; use a plain pet only if its clip fails.
   const [noClip, setNoClip] = useState(false);
-  const film = !working && !noClip;
+  const film = !noClip;
   return (
     <div id="hacky-brief" className="msg assistant hacky-brief hacky-task">
       {film ? (
@@ -43,7 +43,7 @@ function Brief({ style, working, onStart, onLocal }) {
           <HackyFilm clip={CHAT_CLIP} onUnavailable={() => setNoClip(true)} />
         </span>
       ) : (
-        <WorkingPet style={style} state={working ? 'working' : 'listening'} />
+        <span className="working-hacky listening"><Pet style={style} /></span>
       )}
       <p>What can I help you with?</p>
       <p className="brief-guidance">Pick a starting point, or tell me what you’re trying to do.</p>

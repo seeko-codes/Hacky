@@ -7,7 +7,7 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Dots, SelfAvatar, WorkingPet } from '../ui.jsx';
 import HackyFilm, { THINKING_CLIP } from '../HackyFilm.jsx';
-import { replyDelay, useMedia } from '../storage.js';
+import { useMedia } from '../storage.js';
 import { useSession } from '../session.jsx';
 import { useHackyChat } from './useHackyChat.js';
 import { CardActions, MessagePart, isVisiblePart } from './cards.jsx';
@@ -66,14 +66,6 @@ const recovered = (parts, i) => parts[i].state === 'output-error'
   && parts.slice(i + 1).some((p) => p.type === parts[i].type && p.state === 'output-available');
 
 const LocalRow = memo(function LocalRow({ entry, onOpenPanel, reduced, paused, onGrow }) {
-  if (entry.kind === 'plan-pending') {
-    return (
-      <div className="msg message-arrival assistant plan-reply plan-pending">
-        <Dots />
-        <p>Hacky is putting your recommendations together…</p>
-      </div>
-    );
-  }
   if (entry.kind === 'plan-done') {
     return (
       <div className="msg message-arrival assistant event-answer plan-reply" data-anchor="">
@@ -141,7 +133,6 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   const chat = useHackyChat(slug);
   const [input, setInput] = useState(''),
     [locals, setLocals] = useState([]),
-    [planBusy, setPlanBusy] = useState(false),
     [planReady, setPlanReady] = useState(Boolean(plan)),
     [newReply, setNewReply] = useState(false),
     [start, setStart] = useState(startFromUrl);
@@ -155,7 +146,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     lastSent = useRef(''),
     latest = useRef({});
   const chatBusy = chat.status === 'submitted' || chat.status === 'streaming';
-  const busy = planBusy || !chat.ready;
+  const busy = !chat.ready;
   // New replies appear in a short sequence (typing, message, cards); history shows at once.
   const reduced = useMedia('(prefers-reduced-motion: reduce)');
   const loadedAll = chat.loaded && chat.messages.length >= (chat.historyCount ?? 0);
@@ -169,18 +160,18 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   };
   // Event, sponsor and reminder questions come from the static guide.
   const askLocal = (text) => {
-    const { events, chat, planBusy } = latest.current;
+    const { events, chat } = latest.current;
     const answer = events.answer(text);
     if (!answer) return false;
-    if (planBusy || chat.status === 'submitted' || chat.status === 'streaming') return true;
+    if (chat.status === 'submitted' || chat.status === 'streaming') return true;
     pinned.current = true;
     setPlanReady(false);
     addLocal({ kind: 'answer', question: text, text: answer.text, content: answer.content });
     return true;
   };
   const askHacky = (text) => {
-    const { chat, planBusy } = latest.current;
-    if (planBusy || !chat.answer(text)) return false;
+    const { chat } = latest.current;
+    if (!chat.answer(text)) return false;
     lastSent.current = text;
     pinned.current = true;
     setPlanReady(false);
@@ -188,35 +179,23 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   };
   // A new request, never an answer to the open question (see useHackyChat start()).
   const startHacky = (text) => {
-    const { chat, planBusy } = latest.current;
-    if (planBusy || !chat.start(text)) return false;
+    const { chat } = latest.current;
+    if (!chat.start(text)) return false;
     lastSent.current = text;
     pinned.current = true;
     setPlanReady(false);
     return true;
   };
-  const completePlan = () => {
-    const el = feed.current;
-    pinned.current = !el || atBottom(el, 80);
-    const { chat } = latest.current;
-    const item = { id: ++nextId.current, at: chat.loaded ? chat.messages.length : null, kind: 'plan-done' };
-    setLocals((list) => [...list.filter((l) => l.kind !== 'plan-pending'), item]);
-    latest.current.planBusy = false;
-    setPlanBusy(false);
-    setPlanReady(true);
-    latest.current.events.setAttention(true);
-  };
+  // Recommendations are already derived locally from the saved answers.
   const buildPlan = () => {
-    const { plan, planBusy, chat } = latest.current;
-    if (!plan || planBusy || chat.status === 'submitted' || chat.status === 'streaming') return;
-    latest.current.planBusy = true;
-    setPlanBusy(true);
-    setPlanReady(true);
+    const { plan, chat, events } = latest.current;
+    if (!plan || chat.status === 'submitted' || chat.status === 'streaming') return;
     scroll.current = 'top';
-    addLocal({ kind: 'plan-pending' });
-    setTimeout(completePlan, replyDelay(plan.goal));
+    addLocal({ kind: 'plan-done' });
+    setPlanReady(true);
+    events.setAttention(true);
   };
-  latest.current = { chat, plan, planBusy, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky, startHacky };
+  latest.current = { chat, plan, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky, startHacky };
 
   const submit = () => {
     const text = input.trim();
@@ -266,10 +245,10 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     history.replaceState(history.state, '', location.pathname + (params.size ? `?${params}` : '') + location.hash);
   }, []);
   useEffect(() => {
-    if (!start || paused || planBusy || !chat.ready) return;
+    if (!start || paused || !chat.ready) return;
     setStart(null);
     latest.current.startHacky(start);
-  }, [start, paused, planBusy, chat.ready]);
+  }, [start, paused, chat.ready]);
   // Keep the failed text so the person can retry it.
   useEffect(() => {
     if (chat.error && lastSent.current) setInput((text) => text || lastSent.current);
@@ -288,7 +267,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     const action = scroll.current;
     scroll.current = null;
     const lastMessage = chat.messages.at(-1), lastLocal = locals.at(-1);
-    const marker = `${lastMessage?.role === 'assistant' ? lastMessage.id : ''}:${lastLocal && lastLocal.kind !== 'plan-pending' ? lastLocal.id : ''}`;
+    const marker = `${lastMessage?.role === 'assistant' ? lastMessage.id : ''}:${lastLocal ? lastLocal.id : ''}`;
     const arrived = marker !== seen.current;
     seen.current = marker;
     if (action === 'top') {
@@ -319,7 +298,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     addLocalsUpTo(i);
     const last = i === chat.messages.length - 1;
     const { from, shown } = reveal.view(message);
-    rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready && !planBusy ? stable.hacky : null} />);
+    rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready ? stable.hacky : null} />);
   });
   addLocalsUpTo(Infinity);
   const working = reveal.waiting;
@@ -348,7 +327,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
           aria-live="polite"
           aria-label="Conversation with Hacky"
         >
-          <Brief style={style} working={planBusy} onStart={stable.start} onLocal={stable.local} />
+          <Brief style={style} onStart={stable.start} onLocal={stable.local} />
           {rows}
           {chat.failed && (
             <div className="msg message-arrival assistant" role="alert">
