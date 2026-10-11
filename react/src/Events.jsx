@@ -4,6 +4,9 @@ import { data } from './event-data.js';
 import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn, isRecommendationQuestion } from './event-model.js';
 import { Icon, Modal, Group, ExternalLink, focusQuietly } from './ui.jsx';
 import { readStore, writeStore, useMedia } from './storage.js';
+import { useSession } from './session.jsx';
+import { sponsorDirectory, sponsorMatch } from './sponsor-model.js';
+import './Events.css';
 
 const guidanceKey = 'hacky-guidance-khix-2026-v1';
 function createGuidanceStore() {
@@ -25,8 +28,9 @@ function createGuidanceStore() {
 }
 function useGuidance(store) { return useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot); }
 function SponsorIcon({ id }) {
-  const ext = ['codex','figma','hugging-face'].includes(id) ? 'svg' : 'png';
-  return <img className={`recommendation-icon sponsor-icon sponsor-${id}`} src={`/assets/brand/${id}.${ext}`} alt="" width="28" height="28" />;
+  const sponsor = data.sponsors.find(item => item.id === id);
+  if (!sponsor?.logo) return <span className="recommendation-icon sponsor-monogram" aria-hidden="true">{(sponsor?.name || id).split(/\s+/).map(word => word[0]).slice(0, 2).join('')}</span>;
+  return <img className={`recommendation-icon sponsor-icon sponsor-${id}`} src={`/assets/brand/${sponsor.logo}`} alt="" width="28" height="28" />;
 }
 function EventIcon({ event }) {
   return event.sponsorIds?.length ? <SponsorIcon id={event.sponsorIds[0]} /> : <svg className="recommendation-icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4m8-4v4M4 10h16m-9 5h3" /></svg>;
@@ -39,7 +43,22 @@ export function EventChoices({ events, openDetail, label, reasons }) {
   return events.length ? <Group label={label || `${events.length} events`}>{events.map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons?.[event.id]} />)}</Group> : null;
 }
 export function Sponsors({ sponsors = data.sponsors, openDetail }) {
-  return sponsors.length ? <Group label={`${sponsors.length} sponsors`}>{sponsors.map(sponsor => <div className="sponsor-entry" key={sponsor.id}><button type="button" className="detail-choice" data-sponsor-detail={sponsor.id} aria-haspopup="dialog" onClick={e => openDetail('sponsor', sponsor.id, e.currentTarget)}><SponsorIcon id={sponsor.id} /><span>{sponsor.name}</span><Icon name="back" /></button></div>)}</Group> : null;
+  const { me, eventMe } = useSession();
+  const entries = sponsorDirectory(sponsors, me?.profile, eventMe?.intake);
+  const matched = entries.filter(entry => entry.highlighted).length;
+  return entries.length ? <Group label={`${sponsors.length === data.sponsors.length ? 'all ' : ''}${sponsors.length} sponsors`} className="sponsor-directory">
+    <p className="sponsor-directory-note" role="status">{matched ? `${matched} ${matched === 1 ? 'match' : 'matches'} for your saved profile. Matching names are underlined.` : 'No clear profile matches yet. Explore the sponsors below or update your profile.'}</p>
+    <div className="sponsor-grid">{entries.map(({ sponsor, highlighted, reason }) => <div className="sponsor-entry" key={sponsor.id}>
+      <button type="button" className="detail-choice" data-sponsor-detail={sponsor.id} data-profile-match={highlighted || undefined} aria-haspopup="dialog" onClick={e => openDetail('sponsor', sponsor.id, e.currentTarget)}>
+        <SponsorIcon id={sponsor.id} /><span><span className="sponsor-name">{sponsor.name}</span>{highlighted && <small className="sponsor-match-label">Profile match</small>}<small className="choice-reason">{reason || sponsor.focus || 'Event sponsor · details in the hacker guide'}</small></span><Icon name="back" />
+      </button>
+    </div>)}</div>
+  </Group> : null;
+}
+function SponsorFit({ sponsor }) {
+  const { me, eventMe } = useSession();
+  const { evidence } = sponsorMatch(sponsor, me?.profile, eventMe?.intake);
+  return evidence.length ? <section className="profile-section sponsor-fit"><h3>Why it fits your profile</h3><ul>{evidence.map((item, index) => <li key={index}>{item.reason}</li>)}</ul></section> : null;
 }
 function GuidanceError({ error }) { return error ? <p className="guidance-note guidance-error" role="alert">{error}</p> : null; }
 function Reminder({ event, store }) {
@@ -136,7 +155,7 @@ export function useEvents(plan) {
       <div id="event-panel-content" className="event-panel-content"><div id="your-events" hidden={view !== 'recommendations'}><p className="guidance-note" id="your-events-intro">{intro}</p><div id="recommended-events">{shown.slice(safePage * size, (safePage + 1) * size).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons[event.id]} selected={event.id === selectedEventId} />)}</div></div><div id="event-essentials" hidden={view !== 'essentials'}><div className="essential-content"><p className="essentials-timezone">All times EDT</p><div className="essential-rows">{essentials.slice(safePage * size, (safePage + 1) * size).map(event => { const id = event.id.replace('khix-', ''); return <div className="essential-row" key={event.id}><button type="button" className="essential-choice" data-event-detail={event.id} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><span className="essential-label">{essentialNames[id]}</span><span className="essential-time">{data.days[event.day].short} · {event.time}{id === 'submission' ? ' · Verify time' : Date.parse(event.endDateTime || event.startDateTime) < now ? ' · Past' : ''}</span><Icon name="back" /></button></div>; })}</div></div></div></div>
       <footer className="event-panel-footer"><nav id="event-pager" className="event-pager" aria-label="Event pages" hidden={total === 1}><button type="button" id="event-prev" className="toggle" aria-label="Previous page" disabled={safePage === 0} onClick={() => setPage(safePage - 1)}>Back</button><span id="event-page-count" aria-live="polite">{safePage + 1} of {total}</span><button type="button" id="event-next" className="toggle" aria-label="Next page" disabled={safePage === total - 1} onClick={() => setPage(safePage + 1)}>Next</button></nav><nav className="event-links" aria-label="Event resources"><button type="button" id="event-panel-switch" className="event-source event-panel-switch" onClick={switchView}>{view === 'recommendations' ? 'Essentials' : 'Events'}</button><ExternalLink href={data.sources.agenda}>Schedule</ExternalLink><ExternalLink href={data.sources.guide}>Guide</ExternalLink></nav></footer>
     </Modal>
-    <Modal open={!!activeDetail} onClose={closeDetail} id="info-dialog" className="person-dialog info-dialog" labelledBy="info-title" initialFocus=".person-sheet"><div className="person-sheet" tabIndex={-1}><header className="person-toolbar"><button type="button" className="toggle" id="close-info" onClick={closeDetail}><Icon name="back" />Back</button></header><div className="person-content" id="info-content" ref={detailContent}>{detailEvent && <><h2 id="info-title">{detailEvent.name}</h2><EventCard event={detailEvent} store={store} /><nav className="info-sources" aria-label="Sources"><ExternalLink href={data.sources.guide}>Hacker guide</ExternalLink><ExternalLink href={detailEvent.sourceUrl}>Official schedule</ExternalLink></nav></>}{detailSponsor && <><div className="info-identity"><SponsorIcon id={detailSponsor.id} /><h2 id="info-title">{detailSponsor.name}</h2></div><p className="info-focus">{detailSponsor.focus}</p>{detailSponsor.challenge && <section className="profile-section"><h3>Challenge</h3><p>{detailSponsor.challenge}</p></section>}<section className="profile-section"><h3>Where to meet</h3><p>{detailSponsor.careerFair ? 'Friday career fair · SU Key West' : 'Not attending the career fair'}</p></section><ExternalLink href={detailSponsor.website}>Visit {detailSponsor.name}</ExternalLink><div className="sponsor-sessions">{schedule.filter(event => event.sponsorIds.includes(detailSponsor.id)).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} />)}</div></>}</div></div></Modal>
+    <Modal open={!!activeDetail} onClose={closeDetail} id="info-dialog" className="person-dialog info-dialog" labelledBy="info-title" initialFocus=".person-sheet"><div className="person-sheet" tabIndex={-1}><header className="person-toolbar"><button type="button" className="toggle" id="close-info" onClick={closeDetail}><Icon name="back" />Back</button></header><div className="person-content" id="info-content" ref={detailContent}>{detailEvent && <><h2 id="info-title">{detailEvent.name}</h2><EventCard event={detailEvent} store={store} /><nav className="info-sources" aria-label="Sources"><ExternalLink href={data.sources.guide}>Hacker guide</ExternalLink><ExternalLink href={detailEvent.sourceUrl}>Official schedule</ExternalLink></nav></>}{detailSponsor && <><div className="info-identity"><SponsorIcon id={detailSponsor.id} /><h2 id="info-title">{detailSponsor.name}</h2></div><p className="info-focus">{detailSponsor.focus || 'Event sponsor · more details in the hacker guide.'}</p><SponsorFit sponsor={detailSponsor} />{detailSponsor.challenge && <section className="profile-section"><h3>Challenge</h3><p>{detailSponsor.challenge}</p></section>}<section className="profile-section"><h3>Where to meet</h3><p>{detailSponsor.careerFair === true ? 'Friday career fair · SU Key West' : detailSponsor.careerFair === false ? 'Not attending the career fair' : 'Check the hacker guide for meeting details.'}</p></section><ExternalLink href={detailSponsor.website || detailSponsor.sourceUrl}>{detailSponsor.website ? `Visit ${detailSponsor.name}` : 'View in hacker guide'}</ExternalLink><div className="sponsor-sessions">{schedule.filter(event => event.sponsorIds.includes(detailSponsor.id)).map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} />)}</div></>}</div></div></Modal>
   </>;
   const nudgeEvent = guidance.muted ? null : schedule.find(event => { const state = guidance.events[event.id], start = Date.parse(event.startDateTime); return state?.saved && !state.dismissed && start > now && start - now <= 15 * 60000; });
   const nudge = nudgeEvent ? <ReminderNudge token={nudgeEvent.id}><aside id="event-nudge" data-token={nudgeEvent.id}><div className="nudge-copy"><p>{nudgeEvent.name} starts {data.days[nudgeEvent.day].label}, {data.days[nudgeEvent.day].short} at {nudgeEvent.time} EDT · {nudgeEvent.place}</p><button type="button" className="toggle" id="nudge-open" onClick={e => openDetail('event', nudgeEvent.id, e.currentTarget)}>View event</button><GuidanceError error={error} /></div><button type="button" className="icon" id="nudge-dismiss" aria-label="Dismiss event reminder" onClick={() => store.update(nudgeEvent.id, { dismissed: true })}><Icon name="close" /></button></aside></ReminderNudge> : null;

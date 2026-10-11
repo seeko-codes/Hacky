@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { displayMessages, isLocalCommand, textBubbles } from '../src/hacky/presentation.js';
 import { nextPart } from '../src/hacky/reveal.js';
+import { data } from '../src/event-data.js';
 
 test('open questions reach the model, while explicit schedule/reminder controls stay local', () => {
   for (const text of ['what is figma', 'find a sponsor', 'What can you tell me about the events?', 'Which event should I attend?', 'When is the deadline?', 'How do I use AWS?', '¿Qué es Figma?', 'Ayúdame con mi proyecto', '¿Qué evento me sirve?']) assert.equal(isLocalCommand(text), false, text);
@@ -23,14 +24,15 @@ test('a question lead-in becomes its own timed bubble without changing the API m
   assert.equal(displayMessages([{ ...source, parts: [{ ...ask, state: 'input-streaming' }] }])[0].parts.length, 1);
 });
 
-test('sponsor cards follow the model explanation without inventing a canned question', () => {
+test('all sponsors follow the model explanation, including ones it did not name', () => {
   const source = [
     { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'find a sponsor' }] },
     { id: 'a1', role: 'assistant', parts: [{ type: 'text', text: 'For your UI project, Figma could help you explore your design.' }] },
   ];
   const last = options => displayMessages(source, { eventSlug: 'knighthacks-ix', ...options }).at(-1).parts;
   assert.deepEqual(last().map(p => p.type), ['text', 'sponsor-directory']);
-  assert.deepEqual(last()[1].sponsors.map(s => s.id), ['figma']);
+  assert.deepEqual(last()[1].sponsors.map(s => s.id), data.sponsors.map(s => s.id));
+  assert.ok(last()[1].sponsors.some(s => s.id === 'neon'));
   assert.equal(last({ active: true }).length, 1, 'wait for the complete model reply');
   assert.equal(last({ eventSlug: 'another-event' }).length, 1, 'do not offer the wrong event’s sponsors');
   assert.equal(source[1].parts.length, 1, 'presentation parts never enter model history');
@@ -42,6 +44,10 @@ test('sponsor cards follow the model explanation without inventing a canned ques
   assert.equal(continued.at(-1).parts.filter(p => p.type === 'sponsor-followup').length, 0, 'do not repeat the broad question after they narrowed their request');
   source[1].parts[0].text += ' What are you designing?';
   assert.equal(last().filter(p => p.type === 'sponsor-followup').length, 0, 'do not ask a second question');
+  source[1].parts[0].text = 'You can explore the sponsors in the guide.';
+  assert.equal(last()[1].sponsors.length, data.sponsors.length, 'the directory does not depend on a named sponsor');
+  source[0].parts[0].text = '¿Qué patrocinadores encajan con mi proyecto?';
+  assert.equal(last()[1].sponsors.length, data.sponsors.length);
 });
 
 test('an explanation arrives before its suggestion finishes streaming, with stable indexes', () => {

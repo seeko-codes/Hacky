@@ -38,13 +38,9 @@ export function displayMessages(messages, { active = false, eventSlug } = {}) {
     const asking = parts.some(p => p.type === 'tool-ask_with_options');
     const aboutSponsors = /\bsponsors?\b|patrocinador/i.test(request);
     if (finished && eventSlug === 'knighthacks-ix' && aboutSponsors && text.trim() && !asking) {
-      const named = data.sponsors.filter(s => {
-        const names = s.id === 'codex' ? [s.name, 'OpenAI', 'Codex'] : [s.name];
-        return names.some(name => new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text));
-      });
-      if (named.length) {
-        parts.push({ type: 'sponsor-directory', sponsors: named });
-      }
+      // Keep the whole guide available, even when the answer only names one sponsor.
+      // The rendered directory derives highlights from the current saved profile.
+      parts.push({ type: 'sponsor-directory', sponsors: data.sponsors });
     }
     return { ...message, parts };
   });

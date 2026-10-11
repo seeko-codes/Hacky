@@ -36,7 +36,7 @@ const GOAL_TOPICS = {
   compete: [['prizes'], 'Connected to a prize you can compete for.'],
   fun: [['social'], 'A chance to take a break and enjoy the weekend.'],
 };
-const topicsIn = text => TOPIC_WORDS.filter(([, words]) => words.test(String(text).toLowerCase())).map(([topic]) => topic);
+export const topicsIn = text => TOPIC_WORDS.filter(([, words]) => words.test(String(text).toLowerCase())).map(([topic]) => topic);
 // An event's topics: its own plus what its tag says.
 const eventTopics = event => [...event.topics, ...(/workshop/i.test(event.tag) ? ['workshop'] : []), ...(event.tag === 'Social' ? ['social'] : []), ...(event.tag === 'Career fair' ? ['career', 'networking'] : [])];
 

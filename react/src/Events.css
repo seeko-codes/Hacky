@@ -1,0 +1,13 @@
+.sponsor-directory .sponsor-directory-note { margin: 0 0 14px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.sponsor-directory .sponsor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.sponsor-directory .detail-choice { align-items: flex-start; padding: 16px; }
+.sponsor-directory .sponsor-name { display: inline; }
+.sponsor-directory [data-profile-match=true] .sponsor-name { text-decoration: underline; text-decoration-color: var(--action); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.sponsor-directory .sponsor-match-label { display: block; margin-top: 8px; color: var(--action); font-size: 12px; font-weight: 600; }
+.sponsor-directory .choice-reason { margin-top: 7px; line-height: 1.5; }
+.sponsor-monogram.recommendation-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; border-radius: 8px; background: var(--wash); color: var(--ink); font-size: 12px; font-weight: 700; font-style: normal; }
+.sponsor-fit ul { margin: 0; padding-left: 20px; color: var(--muted); }
+.sponsor-fit li { margin: 8px 0; line-height: 1.5; }
+@media (max-width: 600px) {
+  .sponsor-directory .sponsor-grid { grid-template-columns: minmax(0, 1fr); }
+}
