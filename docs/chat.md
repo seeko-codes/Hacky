@@ -107,12 +107,20 @@ Tool part states: `input-streaming` → `input-available` → `output-available`
 ## Gotchas
 
 - **Same origin.** `/api` is on the app's own domain (Vite proxies it in dev), so the Better Auth cookie is sent with the default `credentials: 'same-origin'`. Never hardcode `http://localhost:8787`.
-- **Streaming.** `status` goes `submitted` (show typing dots) → `streaming` (text grows) → `ready`. Only send when ready. Memoize message rows; `throttle` caps re-renders.
+- **Streaming.** `status` goes `submitted` (show typing dots immediately) → `streaming` → `ready`. The presentation layer shows complete bubbles in sequence; a finished first paragraph can appear while the suggestion is still streaming. Only send when ready. Memoize message rows; `throttle` caps re-renders.
 - **Pending questions.** Typed replies and answer chips use `addToolOutput` as shown. A new starting point (Find hackers, Find a mentor, Contact team or the dashboard’s Join a team) uses `start()` / `sendMessage`: the server closes the old question as skipped before calling the model. Hacky may ask a different question for the new request; it must not repeat the skipped question.
 - **Free Gemini tier.** It's rate-limited per minute. A 429 or a mid-stream failure shows up as `error`. Keep the user's draft and let them retry. Never start chat requests from effects or loops.
 - **Never render raw tool JSON.** No `JSON.stringify(part.output)`, no input dumps. Errors get one friendly line.
 - **The server owns history.** Don't edit or reorder `messages` locally, and don't call `regenerate`.
 - **Dependency.** The web app imports from `ai` (`DefaultChatTransport`, `lastAssistantMessageIsCompleteWithToolCalls`), but `ai` is only a transitive dependency of `@ai-sdk/react`. Add `ai` at the same version to `react/package.json`.
+
+## Conversational replies and pacing
+
+General questions go to the model, including tools, companies and project advice. Only explicit schedule/reminder controls stay local. The [server instructions](../server/agent/prompts.ts) ask for a brief explanation in the person's language, followed when useful by a project step or verified event recommendation, using the current message, history and saved profile. General knowledge may explain a tool; attendance, sponsors, times, rooms and prizes must be grounded in the event guide. Missing event details don't prevent general help.
+
+[presentation.js](../react/src/hacky/presentation.js) makes display-only copies: an `ask_with_options` lead-in and its question become separate bubbles; an explanation and suggestion separated by a blank line become two bubbles. Lists and code blocks stay intact. These copies never enter the API payload or saved history. Sponsor cards can follow the model's explanation, but the UI doesn't invent a generic follow-up question.
+
+Timing values live in [reveal.js](../react/src/hacky/reveal.js). The initial minimum counts time already spent waiting for the model, gaps are capped per reply, and history and reduced-motion mode add no artificial wait. This is an app pacing choice, not a measured ChatGPT or Apple Messages interval. [Apple's responsiveness guidance](https://developer.apple.com/documentation/xcode/improving-app-responsiveness) concerns prompt interaction feedback and avoiding main-thread hangs. [OpenAI's latency guidance](https://developers.openai.com/api/docs/guides/latency-optimization) recommends streaming/chunking and visible loading states; it doesn't prescribe a fixed delay between chat bubbles. Hacky applies those principles with immediate typing feedback and early display of a complete first paragraph.
 
 ## Server shape (for agents in `server/`)
 
