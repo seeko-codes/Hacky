@@ -1,13 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { people } from './people';
-import { colors, defaults } from './mascot-data';
+import { defaults, recolors, recolorMatrix, recolorFilter } from './mascot-data';
 import symbols from './symbols.svg?raw';
 import { useSession } from './session';
 import './session.css';
 
 // Trusted, static SVG symbols copied from the approved source, never user markup.
-export function Symbols() { return <div aria-hidden="true" style={{display:'contents'}} dangerouslySetInnerHTML={{__html:symbols}} />; }
+// Plus the Hacky color filters (url(#hacky-color-<id>), see recolorFilter), built from the swatches in mascot-data.js.
+export function Symbols() { return <><div aria-hidden="true" style={{display:'contents'}} dangerouslySetInnerHTML={{__html:symbols}} /><svg aria-hidden="true" style={{position:'absolute',width:0,height:0}}><defs>{recolors.map(([id,,hex])=><filter key={id} id={'hacky-color-'+id} colorInterpolationFilters="sRGB"><feColorMatrix type="matrix" values={recolorMatrix(hex)}/></filter>)}</defs></svg></>; }
 export function Icon({ name, ...props }) { return <svg aria-hidden="true" {...props}><use href={'#'+name}/></svg>; }
 export function Avatar({ id }) {
   const [failed, setFailed] = useState(false);
@@ -16,25 +17,27 @@ export function Avatar({ id }) {
   if (id === 'team') return <span className="avatar team-portraits" aria-hidden="true"><Avatar id="kai"/><Avatar id="lena"/></span>;
   return <span className={'avatar portrait person-photo '+(id==='self'?'self-portrait':'')} data-role={person.kind} aria-hidden="true"><span className="photo-initials">{person.name.split(/\s+/).map(w=>w[0]).slice(0,2).join('')}</span>{person.photoUrl&&!failed&&<img src={person.photoUrl} alt="" decoding="async" onError={()=>setFailed(true)}/>}</span>;
 }
-// Knit avatar art exists for exactly these hackyStyle values (public/assets/mascots/avatars).
-const KNIT_COLORS=['original','berry','mint','sunset','rose','ice'], KNIT_FLAIRS=['none','stars','hearts'];
+// Knit avatar art for each flair (public/assets/mascots/avatars). It's the original color; PersonAvatar recolors it
+// with the same filter as the Customizer preview (recolorFilter), so the two always match.
+const KNIT_FLAIRS=['none','stars','hearts'];
 export function knitAvatarUrl(style) {
   const flair=style?.flair==='sparks'?'stars':style?.flair; // 'sparks' is the old name for stars
-  return `/assets/mascots/avatars/knit-${KNIT_COLORS.includes(style?.color)?style.color:'original'}-${KNIT_FLAIRS.includes(flair)?flair:'none'}.webp`;
+  return `/assets/mascots/avatars/knit-original-${KNIT_FLAIRS.includes(flair)?flair:'none'}.webp`;
 }
 const initials=(name)=>String(name||'').trim().split(/\s+/).filter(Boolean).map(w=>Array.from(w)[0]).slice(0,2).join('').toUpperCase();
-// A person's avatar: their photo, else a knit Hacky in their hackyStyle color and flair, else initials.
+// A person's avatar: their photo (unless they chose their Hacky, hackyStyle.avatar 'hacky'), else a knit
+// Hacky in their hackyStyle color and flair, else initials.
 // Each image that fails to load falls through to the next. Decorative: the name is always shown beside it.
 // person: any API person (PersonSummary, PublicProfile, PersonDetail, me.profile). photoUrl may be missing.
 export function PersonAvatar({ person }) {
-  const photo=typeof person?.photoUrl==='string'&&person.photoUrl?person.photoUrl:null;
+  const photo=person?.hackyStyle?.avatar!=='hacky'&&typeof person?.photoUrl==='string'&&person.photoUrl?person.photoUrl:null;
   const sources=[photo&&['photo',photo],['knit',knitAvatarUrl(person?.hackyStyle)]].filter(Boolean);
   const key=sources.map(s=>s[1]).join(' ');
   const [failed,setFailed]=useState({key,count:0});
   const count=failed.key===key?failed.count:0; // a new person or photo starts over
   const [kind,src]=sources[count]||['initials'];
   const fail=()=>setFailed(f=>{const c=f.key===key?f.count:0;return c===count?{key,count:c+1}:f;});
-  return <span className="avatar portrait person-avatar" data-role={person?.role} data-avatar={kind} aria-hidden="true">{src?<img key={src} src={src} alt="" loading="lazy" decoding="async" onError={fail}/>:<span className="avatar-initials">{initials(person?.name)}</span>}</span>;
+  return <span className="avatar portrait person-avatar" data-role={person?.role} data-avatar={kind} aria-hidden="true">{src?<img key={src} src={src} alt="" loading="lazy" decoding="async" onError={fail} style={kind==='knit'?{filter:recolorFilter(person?.hackyStyle?.color)}:undefined}/>:<span className="avatar-initials">{initials(person?.name)}</span>}</span>;
 }
 // The signed-in person's avatar.
 export function SelfAvatar() {
@@ -43,7 +46,7 @@ export function SelfAvatar() {
 }
 export function Pet({ style=defaults, extra='', animated=false, intro=false }) {
   const state={...defaults,...style};
-  const filter=colors.find(c=>c[0]===state.color)?.[3]||'none';
+  const filter=recolorFilter(state.color);
   return <span className={'hacky-pet '+extra} role="img" aria-label="Your customized Hacky" data-flair={state.flair} data-move={state.move} data-animated={animated?'':undefined} data-intro-dance={intro?'':undefined} style={{'--pet-filter':filter}}><span className="pet-sprite"/><span className="pet-flair" aria-hidden="true">{[0,1,2].map(n=><i key={n}><Icon name={state.flair==='hearts'?'heart':'star'}/></i>)}</span></span>;
 }
 export function WorkingPet({style,state='working'}) {
