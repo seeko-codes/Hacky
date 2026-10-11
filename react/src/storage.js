@@ -12,7 +12,3 @@ export function useMedia(query) {
   useEffect(() => { const media = matchMedia(query); const update = () => setMatches(media.matches); update(); media.addEventListener('change', update); return () => media.removeEventListener('change', update); }, [query]);
   return matches;
 }
-export function replyDelay(text = '') {
-  const words = String(text).trim().split(/\s+/).filter(Boolean).length;
-  return Math.min(6500, 2400 + words * 100);
-}
