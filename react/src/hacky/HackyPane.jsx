@@ -7,7 +7,7 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { SelfAvatar, WorkingPet } from '../ui.jsx';
 import HackyFilm, { THINKING_CLIP } from '../HackyFilm.jsx';
-import { useMedia } from '../storage.js';
+import { readStore, useMedia, writeStore } from '../storage.js';
 import { useSession } from '../session.jsx';
 import { useHackyChat } from './useHackyChat.js';
 import { CardActions, MessagePart, isVisiblePart } from './cards.jsx';
@@ -25,6 +25,10 @@ const STARTS = { team: 'Show me open teams I can join' };
 const startFromUrl = () => STARTS[new URLSearchParams(location.search).get('start')] ?? null;
 const atBottom = (el, slack) => el.scrollHeight - el.clientHeight - el.scrollTop < slack;
 const textOf = (message) => message.parts.filter((p) => p.type === 'text').map((p) => p.text).join('\n').trim();
+const readCleared = (key) => {
+  const ids = readStore(key, []);
+  return new Set(Array.isArray(ids) ? ids.filter(id => typeof id === 'string') : []);
+};
 
 export function HackyEventName() {
   return useSession().event?.name ?? null;
@@ -124,8 +128,13 @@ function ThinkingHacky({ style }) {
 
 // paused: the pane is hidden (onboarding is open), so a handed-over request waits.
 export default function HackyPane({ plan, planRevision, style, events, paused = false, onPreferences, onProfile, onOpenConversation, renderComposer }) {
-  const { slug } = useSession();
+  const { slug, me } = useSession();
   const chat = useHackyChat(slug);
+  // Hide messages only in this browser; keep useChat and the server's memory intact.
+  const viewKey = `hacky-cleared-messages:${me.profile.userId}:${slug}`;
+  const [cleared, setCleared] = useState(() => ({ key: viewKey, ids: readCleared(viewKey), saved: true }));
+  const view = useMemo(() => cleared.key === viewKey ? cleared : { key: viewKey, ids: readCleared(viewKey), saved: true }, [cleared, viewKey]);
+  const pending = view.ids.has(chat.messages.at(-1)?.id) ? null : chat.pending;
   const [input, setInput] = useState(''),
     [customAsk, setCustomAsk] = useState(null),
     [locals, setLocals] = useState([]),
@@ -147,8 +156,23 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   const reduced = useMedia('(prefers-reduced-motion: reduce)');
   const loadedAll = chat.loaded && chat.messages.length >= (chat.historyCount ?? 0);
   const displayed = useMemo(() => displayMessages(chat.messages, { active: chatBusy, eventSlug: slug }), [chat.messages, chatBusy, slug]);
-  const reveal = useReveal({ key: slug, loaded: loadedAll, messages: displayed, status: chat.status, paused, reduced, visible: isVisiblePart });
+  const visibleMessages = useMemo(() => displayed.filter(message => !view.ids.has(message.id)), [displayed, view.ids]);
+  const reveal = useReveal({ key: viewKey, loaded: loadedAll, messages: visibleMessages, status: chat.status, paused, reduced, visible: isVisiblePart });
   const [grown, grow] = useReducer((n) => n + 1, 0);
+
+  const clearView = () => {
+    if (!chat.ready) return;
+    const ids = new Set([...view.ids, ...chat.messages.map(message => message.id)]);
+    const saved = writeStore(viewKey, [...ids]);
+    setCleared({ key: viewKey, ids, saved });
+    setLocals([]);
+    setInput('');
+    setCustomAsk(null);
+    setNewReply(false);
+    setPlanReady(false);
+    lastSent.current = '';
+    scroll.current = 'top';
+  };
 
   const addLocal = (entry) => {
     const { chat } = latest.current;
@@ -168,8 +192,10 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     return true;
   };
   const askHacky = (text) => {
-    const { chat } = latest.current;
-    if (!chat.answer(text)) return false;
+    const { chat, pending } = latest.current;
+    // A cleared question must not consume the first message in the fresh view.
+    const send = chat.pending && !pending ? chat.start : chat.answer;
+    if (!send(text)) return false;
     lastSent.current = text;
     pinned.current = true;
     setPlanReady(false);
@@ -193,7 +219,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     setPlanReady(true);
     events.setAttention(true);
   };
-  latest.current = { chat, plan, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky, startHacky };
+  latest.current = { chat, pending, plan, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky, startHacky };
 
   const submit = () => {
     const text = input.trim();
@@ -205,16 +231,16 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
       return;
     }
     // While Hacky waits on a question, typed text answers it.
-    if ((!chat.pending && askLocal(text)) || askHacky(text)) setInput('');
+    if ((!pending && askLocal(text)) || askHacky(text)) setInput('');
   };
 
   const stable = useMemo(() => ({
     hacky: (text) => latest.current.askHacky(text),
     choose: (text) => {
-      const { chat, askHacky } = latest.current;
+      const { chat, pending, askHacky } = latest.current;
       // This chip opens free text; the question stays pending until they send their words.
-      if (/^something else$/i.test(text.trim()) && chat.pending && chat.ready) {
-        setCustomAsk(chat.pending.toolCallId);
+      if (/^something else$/i.test(text.trim()) && pending && chat.ready) {
+        setCustomAsk(pending.toolCallId);
         document.getElementById('finder-input')?.focus();
         return true;
       }
@@ -274,7 +300,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
     if (!el) return;
     const action = scroll.current;
     scroll.current = null;
-    const lastMessage = chat.messages.at(-1), lastLocal = locals.at(-1);
+    const lastMessage = visibleMessages.at(-1), lastLocal = locals.at(-1);
     const marker = `${lastMessage?.role === 'assistant' ? lastMessage.id : ''}:${lastLocal ? lastLocal.id : ''}`;
     const arrived = marker !== seen.current;
     seen.current = marker;
@@ -290,7 +316,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
         el.scrollTop = Math.max(el.scrollTop, Math.min(end, top));
       }
     } else if (arrived) setNewReply(true);
-  }, [chat.messages, chat.status, chat.error, locals, reveal.tick, grown]);
+  }, [visibleMessages, chat.status, chat.error, locals, reveal.tick, grown]);
 
   // Local exchanges sit after the chat messages that existed when they were made.
   const place = (entry) => entry.at ?? chat.historyCount ?? Infinity;
@@ -304,6 +330,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   };
   displayed.forEach((message, i) => {
     addLocalsUpTo(i);
+    if (view.ids.has(message.id)) return;
     const last = i === chat.messages.length - 1;
     const { from, shown } = reveal.view(message);
     rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready ? stable.choose : null} />);
@@ -313,7 +340,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
 
   return (
     <CardActions.Provider value={actions}>
-      <div className="hc-toolbar"><RestartChat /></div>
+      <div className="hc-toolbar"><RestartChat disabled={busy} onClear={clearView} /></div>
       <div
         ref={feed}
         className={`feed has-conversation${planReady ? ' plan-ready' : ''}`}
@@ -337,6 +364,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
           aria-label="Conversation with Hacky"
         >
           <Brief style={style} onStart={stable.start} />
+          {!view.saved && <p role="status">Messages cleared for this visit. This browser couldn’t save the change for your next visit.</p>}
           {rows}
           {chat.failed && (
             <div className="msg message-arrival assistant" role="alert">
@@ -350,7 +378,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
               <p>Let me check…</p>
             </div>
           )}
-          {chat.error && !chatBusy && (
+          {chat.error && !chatBusy && !view.ids.has(chat.messages.at(-1)?.id) && (
             <div className="msg message-arrival assistant" role="alert">
               <p>Hacky is busy. Try again in a few seconds.</p>
             </div>
@@ -371,7 +399,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
         >
           New reply
         </button>
-        {renderComposer({ value: input, onChange: setInput, onSubmit: submit, busy, placeholder: chat.pending && customAsk === chat.pending.toolCallId ? 'Type your specific request…' : 'Ask Hacky…' })}
+        {renderComposer({ value: input, onChange: setInput, onSubmit: submit, busy, placeholder: pending && customAsk === pending.toolCallId ? 'Type your specific request…' : 'Ask Hacky…' })}
         <p className="demo-note">Hacky drafts. You decide what gets sent.</p>
       </div>
     </CardActions.Provider>
