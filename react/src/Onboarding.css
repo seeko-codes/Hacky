@@ -91,3 +91,4 @@
 /* Supplied animation footage is the performance, without extra CSS puppetry. */
 .hacky-film{position:relative;width:100%;height:100%;overflow:visible;background:transparent}
 .hacky-film img{display:block;width:125%;max-width:none;height:100%;margin-left:-12.5%;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.hacky-film video{display:block;width:100%;height:100%;object-fit:contain;user-select:none}

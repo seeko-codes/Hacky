@@ -1,11 +1,10 @@
+import {useEffect, useRef} from 'react';
 import {useMedia} from './storage';
 
-// Supplied character performances, each with a still poster frame. The clips are animated
-// WebP: it keeps alpha in every browser, iOS Safari included, which ignores HEVC alpha.
+// Supplied character performances. WebP clips retain their transparent backgrounds.
 export const ONBOARDING_CLIP = {
-  webp: '/assets/mascots/video/hacky-onboarding.webp',
-  poster: '/assets/mascots/video/hacky-onboarding-transparent.png',
-  label: 'Hacky floats, smiles, and gestures to welcome you',
+  video: '/assets/mascots/video/hacky-match-dance.mp4',
+  label: 'Hacky dances to welcome you',
 };
 export const CHAT_CLIP = {
   webp: '/assets/mascots/video/hacky-chat.webp',
@@ -21,7 +20,15 @@ export const THINKING_CLIP = {
 // onUnavailable runs when the clip can't load, so the caller can show the still Hacky instead.
 export default function HackyFilm({clip = ONBOARDING_CLIP, onUnavailable}) {
   const reduced = useMedia('(prefers-reduced-motion: reduce)');
+  const video = useRef(null);
+  useEffect(() => {
+    if (!video.current) return;
+    if (reduced) video.current.pause();
+    else video.current.play().catch(() => {});
+  }, [reduced, clip.video]);
   return <div className="hacky-film">
-    <img src={reduced ? clip.poster : clip.webp} alt={clip.label} decoding="async" draggable={false} onError={onUnavailable}/>
+    {clip.video
+      ? <video ref={video} src={clip.video} autoPlay={!reduced} muted loop playsInline preload="auto" aria-label={clip.label} onError={onUnavailable}/>
+      : <img src={reduced ? clip.poster : clip.webp} alt={clip.label} decoding="async" draggable={false} onError={onUnavailable}/>}
   </div>;
 }
