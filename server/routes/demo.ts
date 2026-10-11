@@ -1,7 +1,7 @@
 // Demo portal (DEMO_MODE=true only; 404 otherwise):
 //   GET  /api/demo/people   seeded demo people and their events
 //   POST /api/demo/sign-in  starts a real Better Auth session for one of them
-//   GET  /api/demo/portal   a stand-in "KnightHacks portal" page
+//   GET  /api/demo/portal   Hacky’s demo user picker
 import { asc, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { DemoSignInBody, type DemoPerson, type HackyStyle } from "../../shared/contract.js";

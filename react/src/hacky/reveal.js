@@ -5,9 +5,9 @@
 const ASK = 'tool-ask_with_options';
 const TOOL = /^tool-/;
 
-// About 300 ms of typing before the message (time spent waiting for the reply counts toward it),
+// At least two seconds of thinking before a new reply (network time counts toward it),
 // then 120 ms between parts, and never more than 600 ms of gaps in one reply.
-export const FIRST_MS = 300;
+export const FIRST_MS = 2000;
 export const GAP_MS = 120;
 export const CAP_MS = 600;
 

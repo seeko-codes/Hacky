@@ -46,13 +46,13 @@ test('parts already on screen (history, or before an answered question) are skip
   assert.equal(nextPart(parts, { from: parts.length, shown: new Set(), visible, finished: true }), null);
 });
 
-test('timing: about 300 ms after the request, waiting counts, then short gaps with a cap', () => {
+test('timing: two seconds of thinking, network time counts, then short gaps with a cap', () => {
   const t0 = 1_000_000;
   assert.equal(revealAt({ now: t0 + 50, startedAt: t0, firstAt: null, lastAt: null }), t0 + FIRST_MS, 'fast reply waits a moment');
-  assert.equal(revealAt({ now: t0 + 2000, startedAt: t0, firstAt: null, lastAt: null }), t0 + 2000, 'a slow reply shows at once');
-  assert.equal(revealAt({ now: t0 + 310, startedAt: t0, firstAt: t0 + 300, lastAt: t0 + 300 }), t0 + 300 + GAP_MS, 'cards follow 120 ms apart');
-  assert.equal(revealAt({ now: t0 + 880, startedAt: t0, firstAt: t0 + 300, lastAt: t0 + 860 }), t0 + 300 + CAP_MS, 'gaps stop at the cap');
-  assert.equal(revealAt({ now: t0 + 950, startedAt: t0, firstAt: t0 + 300, lastAt: t0 + 940 }), t0 + 950, 'past the cap: right away');
-  assert.ok(GAP_MS >= 100 && GAP_MS <= 150 && FIRST_MS >= 250 && FIRST_MS <= 400 && CAP_MS <= 800);
+  assert.equal(revealAt({ now: t0 + FIRST_MS + 100, startedAt: t0, firstAt: null, lastAt: null }), t0 + FIRST_MS + 100, 'a slow reply shows at once');
+  assert.equal(revealAt({ now: t0 + FIRST_MS + 10, startedAt: t0, firstAt: t0 + FIRST_MS, lastAt: t0 + FIRST_MS }), t0 + FIRST_MS + GAP_MS, 'cards follow 120 ms apart');
+  assert.equal(revealAt({ now: t0 + FIRST_MS + 580, startedAt: t0, firstAt: t0 + FIRST_MS, lastAt: t0 + FIRST_MS + 560 }), t0 + FIRST_MS + CAP_MS, 'gaps stop at the cap');
+  assert.equal(revealAt({ now: t0 + FIRST_MS + 650, startedAt: t0, firstAt: t0 + FIRST_MS, lastAt: t0 + FIRST_MS + 640 }), t0 + FIRST_MS + 650, 'past the cap: right away');
+  assert.ok(GAP_MS >= 100 && GAP_MS <= 150 && FIRST_MS === 2000 && CAP_MS <= 800);
   assert.equal(revealAt({ now: t0 + 10, startedAt: t0, firstAt: null, lastAt: null, reduced: true }), t0 + 10, 'reduced motion: right away');
 });

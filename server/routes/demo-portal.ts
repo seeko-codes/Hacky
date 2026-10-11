@@ -1,6 +1,6 @@
-// The demo stand-in for the hackathon's own portal (served at /api/demo/portal,
-// DEMO_MODE only). Each "Find your Hacker" button signs in as that demo person
-// and opens the web app (/) in a new tab, the way the real portal's button will.
+// Hacky's demo user picker (served at /api/demo/portal, DEMO_MODE only).
+// The homepage opens this picker; choosing a person signs them in and opens
+// Hacky's onboarding for the selected event in a new tab.
 // Open it from the web app's origin (locally http://127.0.0.1:5173/api/demo/portal)
 // so the session cookie lands where the app runs.
 //
@@ -14,7 +14,7 @@ export const portalHtml = /* html */ `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>KnightHacks Portal (demo)</title>
+<title>Hacky · Choose a demo user</title>
 <style>
   :root {
     --bg: #0d0f14; --panel: #161a22; --panel-2: #1d222c; --line: #2a303c;
@@ -67,19 +67,15 @@ export const portalHtml = /* html */ `<!doctype html>
 <body>
 <header>
   <div class="brand">
-    <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true">
-      <path d="M13 1 2 5v8c0 7 4.7 11.7 11 14 6.3-2.3 11-7 11-14V5L13 1Z" fill="#f2c14e"/>
-      <path d="M9 20v-2.5l2-1.5-1-3 2.5-3.5L16 8l1 4-2 1.5 2 2V20H9Z" fill="#0d0f14"/>
-    </svg>
-    KnightHacks <small>Portal</small>
+    <img src="/assets/mascots/avatars/knit-original-none.webp" width="36" height="36" alt="">
+    Hacky <small>Demo</small>
   </div>
   <span class="pill">Demo</span>
 </header>
 <main>
-  <h1>Find your Hacker</h1>
-  <p class="lede">This page stands in for the hackathon's portal. Pick a demo person:
-    the button signs in as them and opens Hacky in a new tab. One browser holds one person,
-    so use another browser profile or device to be two people at once.</p>
+  <h1>Choose a demo user</h1>
+  <p class="lede">Pick someone to explore Hacky as. You'll start with their welcome and onboarding in a new tab.
+    To try two people at once, use separate browser profiles or devices.</p>
   <div id="events" aria-busy="true"><p class="empty">Loading people…</p></div>
 </main>
 <div id="status" role="status" aria-live="polite" hidden></div>
@@ -102,7 +98,7 @@ export const portalHtml = /* html */ `<!doctype html>
     if (link) {
       statusBox.appendChild(document.createTextNode(" "));
       var a = el("a", "", "Open Hacky");
-      a.href = "/"; a.target = "_blank"; a.rel = "noopener";
+      a.href = link; a.target = "_blank"; a.rel = "noopener";
       statusBox.appendChild(a);
     }
     statusBox.hidden = false;
@@ -121,7 +117,10 @@ export const portalHtml = /* html */ `<!doctype html>
     return h;
   }
 
-  async function launch(person, button) {
+  async function launch(person, membership, button) {
+    var params = new URLSearchParams({ onboarding: "1" });
+    if (membership) params.set("event", membership.slug);
+    var destination = "/index.html?" + params.toString();
     // Open the tab inside the click so popup blockers allow it, then point it at the app.
     var tab = window.open("", "_blank");
     button.disabled = true;
@@ -138,10 +137,10 @@ export const portalHtml = /* html */ `<!doctype html>
       }
       if (tab) {
         tab.opener = null;
-        tab.location.replace("/");
+        tab.location.replace(destination);
         setStatus("Signed in as " + person.name + ". Hacky opened in a new tab.");
       } else {
-        setStatus("Signed in as " + person.name + ".", false, true);
+        setStatus("Signed in as " + person.name + ".", false, destination);
       }
     } catch (error) {
       if (tab) tab.close();
@@ -172,10 +171,10 @@ export const portalHtml = /* html */ `<!doctype html>
       if (membership.verified && membership.role === "mentor") meta.appendChild(el("span", "verified", "✓ verified"));
     }
     who.appendChild(meta);
-    var button = el("button", "", "Find your Hacker");
+    var button = el("button", "", "Continue as " + person.name.split(/\\s+/)[0]);
     button.type = "button";
-    button.setAttribute("aria-label", "Find your Hacker as " + person.name);
-    button.addEventListener("click", function () { launch(person, button); });
+    button.setAttribute("aria-label", "Continue as " + person.name);
+    button.addEventListener("click", function () { launch(person, membership, button); });
     item.append(avatar, who, button);
     return item;
   }
