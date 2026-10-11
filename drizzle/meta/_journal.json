@@ -36,6 +36,20 @@
       "when": 1791648872376,
       "tag": "0004_teams_search_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791658618626,
+      "tag": "0005_idea_2000",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791670832624,
+      "tag": "0006_profile_photo_url",
+      "breakpoints": true
     }
   ]
 }

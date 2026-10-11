@@ -113,7 +113,4 @@
 
 /* Supplied animation footage is the performance, without extra CSS puppetry. */
 .hacky-film{position:relative;width:100%;height:100%;overflow:visible;background:transparent}
-.hacky-film video{display:block;width:125%;max-width:none;height:100%;margin-left:-12.5%;object-fit:contain}
-.hacky-film-toggle{position:absolute;right:6px;bottom:6px;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:var(--wash);color:var(--muted);cursor:pointer;opacity:.7;transition:opacity .2s}
-.hacky-film-toggle:hover,.hacky-film-toggle:focus-visible{opacity:1;color:var(--ink)}
-.hacky-film-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.hacky-film img{display:block;width:125%;max-width:none;height:100%;margin-left:-12.5%;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}

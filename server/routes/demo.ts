@@ -25,6 +25,7 @@ export const demoRoutes = new Hono<AppEnv>()
         handle: profiles.handle,
         name: profiles.name,
         hackyStyle: profiles.hackyStyle,
+        photoUrl: profiles.photoUrl,
         slug: events.slug,
         eventName: events.name,
         role: eventMembers.role,
@@ -45,6 +46,7 @@ export const demoRoutes = new Hono<AppEnv>()
           handle: row.handle,
           name: row.name,
           hackyStyle: row.hackyStyle as HackyStyle,
+          photoUrl: row.photoUrl,
           events: [],
         };
         people.set(row.userId, person);

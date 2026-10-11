@@ -131,9 +131,12 @@ export const profiles = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     handle: text("handle").notNull().unique(),
     name: text("name").notNull(),
-    // The person's customized Hacky character, shown as their avatar.
-    // Options are still being designed, so the app validates the shape (Zod).
+    // The avatar is the profile photo when there is one, else the Hacky
+    // character picked from hackyStyle. Options are still being designed, so
+    // the app validates the shape (Zod).
     hackyStyle: jsonb("hacky_style").$type<Record<string, unknown>>().notNull().default({}),
+    // A site path (/assets/...) or an https URL. No uploads yet.
+    photoUrl: text("photo_url"),
     bio: text("bio"),
     links: jsonb("links").$type<Record<string, string>>().notNull().default({}),
     isDemo: boolean("is_demo").notNull().default(false),
@@ -145,6 +148,7 @@ export const profiles = pgTable(
     check("profiles_name_length", sql`char_length(${t.name}) between 1 and 80`),
     check("profiles_bio_length", sql`char_length(${t.bio}) <= 500`),
     check("profiles_hacky_style_object", sql`jsonb_typeof(${t.hackyStyle}) = 'object'`),
+    check("profiles_photo_url_format", sql`${t.photoUrl} ~ '^(/assets/|https://)'`),
     check("profiles_links_object", sql`jsonb_typeof(${t.links}) = 'object'`),
   ],
 );
@@ -222,7 +226,7 @@ export const memberProfiles = pgTable(
       foreignColumns: [eventMembers.eventId, eventMembers.userId],
     }).onDelete("cascade"),
     index("member_profiles_search_idx").using("gin", t.searchTsv),
-    check("member_profiles_idea_length", sql`char_length(${t.idea}) <= 1000`),
+    check("member_profiles_idea_length", sql`char_length(${t.idea}) <= 2000`),
     check("member_profiles_summary_length", sql`char_length(${t.summary}) <= 1000`),
     check(
       "member_profiles_motivations_allowed",

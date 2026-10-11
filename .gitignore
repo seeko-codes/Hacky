@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+# build output (Vite builds react/ into dist/)
+dist/
+
 # Next.js
 .next/
 out/

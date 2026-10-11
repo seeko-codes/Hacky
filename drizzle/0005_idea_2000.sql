@@ -1,0 +1,2 @@
+ALTER TABLE "member_profiles" DROP CONSTRAINT "member_profiles_idea_length";--> statement-breakpoint
+ALTER TABLE "member_profiles" ADD CONSTRAINT "member_profiles_idea_length" CHECK (char_length("member_profiles"."idea") <= 2000);

@@ -29,6 +29,7 @@ export function toPublicProfile(row: ProfileRow): PublicProfile {
     handle: row.handle,
     name: row.name,
     hackyStyle: row.hackyStyle,
+    photoUrl: row.photoUrl,
     bio: row.bio,
     links: publicLinks(row.links),
     isDemo: row.isDemo,

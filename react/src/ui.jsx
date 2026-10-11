@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { people } from './people';
 import { colors, defaults } from './mascot-data';
 import symbols from './symbols.svg?raw';
+import { useSession } from './session';
+import './session.css';
 
 // Trusted, static SVG symbols copied from the approved source, never user markup.
 export function Symbols() { return <div aria-hidden="true" style={{display:'contents'}} dangerouslySetInnerHTML={{__html:symbols}} />; }
@@ -13,6 +15,31 @@ export function Avatar({ id }) {
   useEffect(() => setFailed(false), [id, person.photoUrl]);
   if (id === 'team') return <span className="avatar team-portraits" aria-hidden="true"><Avatar id="kai"/><Avatar id="lena"/></span>;
   return <span className={'avatar portrait person-photo '+(id==='self'?'self-portrait':'')} data-role={person.kind} aria-hidden="true"><span className="photo-initials">{person.name.split(/\s+/).map(w=>w[0]).slice(0,2).join('')}</span>{person.photoUrl&&!failed&&<img src={person.photoUrl} alt="" decoding="async" onError={()=>setFailed(true)}/>}</span>;
+}
+// Knit avatar art exists for exactly these hackyStyle values (public/assets/mascots/avatars).
+const KNIT_COLORS=['original','berry','mint','sunset','rose','ice'], KNIT_FLAIRS=['none','stars','hearts'];
+export function knitAvatarUrl(style) {
+  const flair=style?.flair==='sparks'?'stars':style?.flair; // 'sparks' is the old name for stars
+  return `/assets/mascots/avatars/knit-${KNIT_COLORS.includes(style?.color)?style.color:'original'}-${KNIT_FLAIRS.includes(flair)?flair:'none'}.webp`;
+}
+const initials=(name)=>String(name||'').trim().split(/\s+/).filter(Boolean).map(w=>Array.from(w)[0]).slice(0,2).join('').toUpperCase();
+// A person's avatar: their photo, else a knit Hacky in their hackyStyle color and flair, else initials.
+// Each image that fails to load falls through to the next. Decorative: the name is always shown beside it.
+// person: any API person (PersonSummary, PublicProfile, PersonDetail, me.profile). photoUrl may be missing.
+export function PersonAvatar({ person }) {
+  const photo=typeof person?.photoUrl==='string'&&person.photoUrl?person.photoUrl:null;
+  const sources=[photo&&['photo',photo],['knit',knitAvatarUrl(person?.hackyStyle)]].filter(Boolean);
+  const key=sources.map(s=>s[1]).join(' ');
+  const [failed,setFailed]=useState({key,count:0});
+  const count=failed.key===key?failed.count:0; // a new person or photo starts over
+  const [kind,src]=sources[count]||['initials'];
+  const fail=()=>setFailed(f=>{const c=f.key===key?f.count:0;return c===count?{key,count:c+1}:f;});
+  return <span className="avatar portrait person-avatar" data-role={person?.role} data-avatar={kind} aria-hidden="true">{src?<img key={src} src={src} alt="" loading="lazy" decoding="async" onError={fail}/>:<span className="avatar-initials">{initials(person?.name)}</span>}</span>;
+}
+// The signed-in person's avatar.
+export function SelfAvatar() {
+  const session = useSession();
+  return <PersonAvatar person={session.me?.profile} />;
 }
 export function Pet({ style=defaults, extra='', animated=false, intro=false }) {
   const state={...defaults,...style};

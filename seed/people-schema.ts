@@ -9,6 +9,7 @@ import {
   Handle,
   Intake,
   MemberRole,
+  PhotoUrl,
   ProfileLinks,
   Slug,
   Tag,
@@ -61,6 +62,9 @@ export const SeedPerson = z.object({
   bio: z.string().trim().max(500).nullable(),
   links: ProfileLinks,
   hackyStyle: SeedHackyStyle,
+  // A synthetic portrait from react/public/assets/people/. Without one, the
+  // avatar is the Hacky character.
+  photoUrl: PhotoUrl.optional(),
   memberships: z.array(SeedMembership).min(1),
 });
 export type SeedPerson = z.infer<typeof SeedPerson>;

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-10T16:32:44.107Z",
-  "model": "gemini-3.8-flash",
+  "generatedAt": "2026-10-11T02:37:30.387Z",
+  "model": "gemini-3.8-flash + gemini-3.5-flash-lite",
   "events": [
     {
       "slug": "knighthacks-ix",
@@ -113,6 +113,7 @@
         "flair": "stars",
         "move": "bounce"
       },
+      "photoUrl": "/assets/people/iris.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -217,6 +218,7 @@
         "flair": "hearts",
         "move": "dance"
       },
+      "photoUrl": "/assets/people/ren.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -269,6 +271,7 @@
         "flair": "stars",
         "move": "bounce"
       },
+      "photoUrl": "/assets/people/mika.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -320,6 +323,7 @@
         "flair": "none",
         "move": "hype"
       },
+      "photoUrl": "/assets/people/noah.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -373,6 +377,7 @@
         "flair": "hearts",
         "move": "bounce"
       },
+      "photoUrl": "/assets/people/aya.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -425,6 +430,7 @@
         "flair": "none",
         "move": "dance"
       },
+      "photoUrl": "/assets/people/jules.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -476,6 +482,7 @@
         "flair": "stars",
         "move": "idle"
       },
+      "photoUrl": "/assets/people/kai.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -927,6 +934,7 @@
         "flair": "stars",
         "move": "idle"
       },
+      "photoUrl": "/assets/people/lena.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -1674,6 +1682,7 @@
         "flair": "none",
         "move": "idle"
       },
+      "photoUrl": "/assets/people/theo.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -1721,6 +1730,7 @@
         "flair": "hearts",
         "move": "dance"
       },
+      "photoUrl": "/assets/people/sam.webp",
       "memberships": [
         {
           "event": "knighthacks-ix",
@@ -1775,7 +1785,7 @@
           "event": "knighthacks-ix",
           "role": "mentor",
           "verified": true,
-          "availability": "busy",
+          "availability": "available",
           "looking": false,
           "intake": {
             "skills": [
@@ -1822,7 +1832,7 @@
           "event": "knighthacks-ix",
           "role": "mentor",
           "verified": true,
-          "availability": "offline",
+          "availability": "available",
           "looking": false,
           "intake": {
             "skills": [
@@ -2543,6 +2553,6474 @@
           }
         }
       ]
+    },
+    {
+      "handle": "yusuf_ai",
+      "name": "Yusuf Adeyemi",
+      "bio": "I am fine-tuning open-weight language models for this hackathon. Let us build something epic together.",
+      "links": {
+        "website": "https://example.com/yusuf_ai"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "PyTorch",
+              "Hugging Face",
+              "LoRA",
+              "LLMs",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React",
+              "accessibility"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "language models",
+              "deep learning",
+              "nlp"
+            ],
+            "idea": "An AI that turns lecture recordings into personal study plans, with an accessible web app.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Yusuf Adeyemi is an advanced AI hacker skilled in Python, PyTorch, and LLMs, looking for frontend and React teammates to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "lena_speech",
+      "name": "Lena Hartmann",
+      "bio": "I focus on speech recognition and audio ML. Excited to build cool voice-powered tools.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Python",
+              "speech-to-text",
+              "NLP",
+              "PyTorch",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React",
+              "accessibility"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "speech tech",
+              "audio ml",
+              "voice interfaces"
+            ],
+            "idea": "An AI that turns lecture recordings into personal study plans, with an accessible web app.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Lena Hartmann is an intermediate AI hacker specializing in speech-to-text and PyTorch, already building NoteCast with Yusuf.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "omar_rag",
+      "name": "Omar Haddad",
+      "bio": "I build RAG chatbots and vector search tools. Looking to team up and ship a solid prototype.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "mint",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "LangChain",
+              "vector databases",
+              "embeddings",
+              "prompt engineering"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "TypeScript"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "search",
+              "knowledge graphs",
+              "ai agents"
+            ],
+            "idea": "An automated study buddy that queries personal lecture notes using local vector search.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Omar Haddad is an intermediate AI hacker skilled in Python and LangChain, seeking frontend help to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "bianca_agents",
+      "name": "Bianca Moretti",
+      "bio": "I build AI agents with tool calling in TypeScript. Ready to create a smart workflow helper.",
+      "links": {
+        "website": "https://example.com/bianca_agents"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "TypeScript",
+              "Next.js",
+              "LLM agents",
+              "prompt engineering",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "backend",
+              "Python"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "automation",
+              "workflow tools",
+              "web agents"
+            ],
+            "idea": "An autonomous research agent that finds and synthesizes web sources into a report.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Bianca Moretti is an intermediate AI hacker with TypeScript and Next.js skills, looking for Python help.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ezra_ai",
+      "name": "Ezra Goldfarb",
+      "bio": "Sophomore learning how to hook up LLM APIs to simple scripts. Eager to learn from experienced hackers.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "mint",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "prompt engineering",
+              "Git"
+            ],
+            "skillsWanted": [
+              "Python",
+              "advanced ML",
+              "frontend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "llm APIs",
+              "automation",
+              "beginner projects"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Ezra Goldfarb is a beginner AI hacker with basic Python skills, seeking mentorship and experience.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ruth_robotics",
+      "name": "Ruth Kincaid",
+      "bio": "I work on reinforcement learning for robot simulations. Let us build an adaptive agent.",
+      "links": {
+        "website": "https://example.com/ruth_robotics"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "sunset",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "PyTorch",
+              "reinforcement learning",
+              "Gymnasium",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "simulation",
+              "UI"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "reinforcement learning",
+              "robotics",
+              "simulation"
+            ],
+            "idea": "A simulated drone navigation agent trained using reinforcement learning algorithms.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Ruth Kincaid is an advanced AI hacker skilled in PyTorch and reinforcement learning, looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "valentina_nlp",
+      "name": "Valentina Ochoa",
+      "bio": "I do NLP for low-resource languages and speak Spanish and English. Excited to build multilingual tools.",
+      "links": {
+        "website": "https://example.com/valentina_nlp"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "ice",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "spaCy",
+              "NLP",
+              "Hugging Face",
+              "Spanish"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "TypeScript"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "multilingual nlp",
+              "low resource languages",
+              "translation"
+            ],
+            "idea": "A real-time translation and summarization tool tailored for regional dialects.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Valentina Ochoa is an intermediate AI hacker skilled in NLP and Spanish, looking to build multilingual apps.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "xiaowen_linguistics",
+      "name": "Xiaowen Zhou",
+      "bio": "Linguistics major learning NLP, speaks Mandarin and English. Excited to explore text processing.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "NLTK",
+              "Mandarin"
+            ],
+            "skillsWanted": [
+              "Python",
+              "frontend",
+              "backend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "computational linguistics",
+              "text analysis",
+              "mandarin processing"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Xiaowen Zhou is a beginner AI hacker with NLTK and Mandarin skills, looking for an idea and teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "theo_prototypes",
+      "name": "Theo Lindgren",
+      "bio": "I rapidly prototype AI products using Streamlit. Let us test some wild ideas this weekend.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "original",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "Streamlit",
+              "LLMs",
+              "prompt engineering",
+              "product"
+            ],
+            "skillsWanted": [
+              "backend",
+              "design",
+              "ML"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "rapid prototyping",
+              "ai products",
+              "ux"
+            ],
+            "idea": "A rapid prototype tool that generates interactive mockups from text descriptions.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Theo Lindgren is an intermediate AI hacker skilled in Streamlit and LLMs, looking to ship a product.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "grace_mlops",
+      "name": "Grace Achterberg",
+      "bio": "I build MLOps pipelines and containerized infrastructure. Let us make sure our models do not crash.",
+      "links": {
+        "website": "https://example.com/grace_mlops"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Docker",
+              "Kubernetes",
+              "MLflow",
+              "Python",
+              "CI/CD",
+              "DevOps"
+            ],
+            "skillsWanted": [
+              "ML",
+              "frontend"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "mlops",
+              "infrastructure",
+              "deployment"
+            ],
+            "idea": "An automated deployment pipeline for fast model benchmarking and evaluation.",
+            "motivations": [
+              "build",
+              "career"
+            ],
+            "summary": "Grace Achterberg is an advanced AI hacker specializing in MLOps and DevOps, looking to ship robust infra.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "imani_evals",
+      "name": "Imani Calloway",
+      "bio": "I test and red-team LLM applications to catch failures early. Let us build secure models.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "mint",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "LLM evals",
+              "prompt engineering",
+              "data labeling"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "model safety",
+              "ai alignment",
+              "testing"
+            ],
+            "idea": "A benchmarking dashboard for evaluating hallucination rates in language models.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Imani Calloway is an intermediate AI hacker focused on LLM evals and prompt engineering, aiming to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "diego_bootcamp",
+      "name": "Diego Paredes",
+      "bio": "Coding bootcamp grad eager to connect LLM APIs to nice interfaces. Let us build something fun.",
+      "links": {
+        "website": "https://example.com/diego_bootcamp"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "mint",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "JavaScript",
+              "React",
+              "LLM APIs"
+            ],
+            "skillsWanted": [
+              "Python",
+              "backend",
+              "ML"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "web apps",
+              "ai integration",
+              "full stack"
+            ],
+            "idea": null,
+            "motivations": [
+              "build",
+              "learn",
+              "fun"
+            ],
+            "summary": "Diego Paredes is a beginner AI hacker with JavaScript and React skills, looking for backend teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "shira_mentor",
+      "name": "Shira Kaplan",
+      "bio": "Applied AI engineer happy to help with LLMs, RAG systems, NLP, and data science challenges.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "berry",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "LLMs",
+              "RAG",
+              "NLP",
+              "LangChain",
+              "Python",
+              "pandas",
+              "data science",
+              "prompt engineering"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "applied ai",
+              "data science",
+              "nlp"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Shira Kaplan is an industry mentor specializing in applied AI, LLMs, and data science, ready to help hackers.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "astrid_cv",
+      "name": "Astrid Bergqvist",
+      "bio": "Building a real-time vision model for sign language. Let us win this hackathon!",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "OpenCV",
+              "PyTorch",
+              "YOLO",
+              "computer vision",
+              "Python",
+              "ML"
+            ],
+            "skillsWanted": [
+              "mobile",
+              "iOS",
+              "Swift"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "computer vision",
+              "accessibility",
+              "deep learning"
+            ],
+            "idea": "A phone app that translates sign language with the camera in real time.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced AI hacker specializing in computer vision, OpenCV, and PyTorch, looking for iOS and mobile devs to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "tomasz_drone",
+      "name": "Tomasz Wierzbicki",
+      "bio": "Working on autonomous drone navigation and spatial tracking. Excited to ship a cool project!",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "original",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "OpenCV",
+              "ROS",
+              "Python",
+              "C++",
+              "computer vision",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "Python",
+              "hardware"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "robotics",
+              "drones",
+              "automation"
+            ],
+            "idea": "An autonomous drone navigation system using computer vision.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Intermediate AI hacker with skills in OpenCV, ROS, and C++, aiming to ship a robotics project.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "celeste_geo",
+      "name": "Celeste Arnaud",
+      "bio": "Analyzing satellite data to track environmental shifts and spot early wildfire signs.",
+      "links": {
+        "website": "https://example.com/celeste_geo"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "PyTorch",
+              "GIS",
+              "remote sensing",
+              "computer vision",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "wildfires",
+              "remote sensing"
+            ],
+            "idea": "A satellite imagery monitoring tool for early wildfire detection.",
+            "motivations": [
+              "build",
+              "compete",
+              "learn"
+            ],
+            "summary": "Intermediate Sustainability hacker skilled in Python, PyTorch, and remote sensing, looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "malik_learns",
+      "name": "Malik Ferguson",
+      "bio": "Just finished my first deep learning course and ready to try image classification.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "rose",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "NumPy",
+              "Jupyter",
+              "ML"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend",
+              "mobile"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "image processing",
+              "neural networks",
+              "education"
+            ],
+            "idea": "An image classification tool for sorting recycling materials.",
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Beginner AI hacker with Python and Jupyter skills, eager to learn from experienced teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ines_gestures",
+      "name": "Ines Carvalho",
+      "bio": "Exploring hand-tracking and touchless gesture controls for desktop and mobile games.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "OpenCV",
+              "MediaPipe",
+              "Unity",
+              "game dev"
+            ],
+            "skillsWanted": [
+              "C#",
+              "UI design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "gesture control",
+              "human interface"
+            ],
+            "idea": "A gesture-controlled platformer game using webcams.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Intermediate Games hacker focused on hand-tracking, OpenCV, and Unity, looking to ship a fun game.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "farhan_fraud",
+      "name": "Farhan Qureshi",
+      "bio": "Building robust models to catch financial fraud before it hits users. Let us take home the prize.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "original",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "pandas",
+              "scikit-learn",
+              "XGBoost",
+              "ML",
+              "data"
+            ],
+            "skillsWanted": [
+              "backend",
+              "FastAPI"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "personal finance",
+              "fraud detection",
+              "predictive modeling"
+            ],
+            "idea": "A real-time anomaly detection pipeline for credit card transactions.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced Fintech hacker skilled in scikit-learn, XGBoost, and pandas, aiming to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "gwen_analytics",
+      "name": "Gwen Halvorsen",
+      "bio": "Transforming messy financial datasets into clean, actionable dashboards.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "berry",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "SQL",
+              "dbt",
+              "Python",
+              "Tableau",
+              "data"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "business intelligence",
+              "data warehousing",
+              "fintech"
+            ],
+            "idea": "An automated analytics dashboard for micro-entrepreneurs.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Intermediate Fintech hacker specializing in SQL, dbt, and Tableau, looking to ship a data tool.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "thiago_climate",
+      "name": "Thiago Albuquerque",
+      "bio": "I speak Portuguese and English, and I love digging into climate and weather data.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "R",
+              "ggplot2",
+              "Python",
+              "pandas",
+              "data",
+              "Portuguese"
+            ],
+            "skillsWanted": [
+              "Python",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "meteorology",
+              "open data"
+            ],
+            "idea": "A visual data platform tracking regional temperature anomalies.",
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Intermediate Sustainability hacker and bilingual data analyst skilled in R, Python, and pandas.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "nora_stats",
+      "name": "Nora Kristiansen",
+      "bio": "Statistics major diving into AI and data science for my very first hackathon.",
+      "links": {
+        "website": "https://example.com/nora_stats"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "R",
+              "Excel",
+              "statistics",
+              "data"
+            ],
+            "skillsWanted": [
+              "Python",
+              "ML",
+              "backend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "applied statistics",
+              "data visualization",
+              "research"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Beginner AI hacker studying statistics with R and Excel skills, looking for an experienced team.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "jaewon_metrics",
+      "name": "Jae-won Seo",
+      "bio": "Analyzing player retention and gameplay telemetry to design better loops.",
+      "links": {
+        "website": "https://example.com/jaewon_metrics"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "SQL",
+              "Tableau",
+              "data",
+              "game dev"
+            ],
+            "skillsWanted": [
+              "Unity",
+              "C#"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "player metrics",
+              "game design"
+            ],
+            "idea": "An analytics overlay tool for indie game developers to track player drop-offs.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Intermediate Games hacker focused on player analytics, SQL, and Python, aiming to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "kenji_spatial",
+      "name": "Kenji Matsuda",
+      "bio": "Mapping environmental risks and urban heat islands using spatial databases.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "original",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "GeoPandas",
+              "PostGIS",
+              "scikit-learn",
+              "data"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "urban ecology",
+              "geospatial data",
+              "climate resilience"
+            ],
+            "idea": "An interactive map tracking urban heat islands and green spaces.",
+            "motivations": [
+              "build",
+              "career"
+            ],
+            "summary": "Advanced Sustainability hacker specializing in GeoPandas, PostGIS, and spatial data science.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "owen_react",
+      "name": "Owen Castellano",
+      "bio": "I love building fast interfaces with React and Tailwind. Let's make something amazing!",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "TypeScript",
+              "Tailwind CSS",
+              "Next.js",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "neural networks",
+              "generative art"
+            ],
+            "idea": "We are building an AI-powered code assistant for web developers.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Owen is an intermediate frontend developer skilled in React, TypeScript, and Next.js, looking to win the AI track by teaming up with backend and ML engineers.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "priya_viz",
+      "name": "Priya Raman",
+      "bio": "I build financial dashboards that make complex data easy to understand.",
+      "links": {
+        "website": "https://example.com/priya_viz"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "TypeScript",
+              "Redux",
+              "D3.js",
+              "data visualization",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "backend",
+              "data"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "personal finance",
+              "market trends"
+            ],
+            "idea": "We are creating a real-time portfolio risk analyzer with interactive charts.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Priya is an advanced frontend engineer specializing in data visualization and React, aiming to win the Fintech track with a strong backend teammate.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "felix_games",
+      "name": "Felix Okoro",
+      "bio": "Just starting out with web games and excited to learn how to code!",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "HTML",
+              "CSS",
+              "JavaScript"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "design"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "pixel art"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Felix is a beginner hacker focused on HTML, CSS, and JavaScript, looking to learn how to make browser games.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "hazel_maps",
+      "name": "Hazel Whitcombe",
+      "bio": "I build interactive web maps to help visualize environmental data.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Svelte",
+              "JavaScript",
+              "CSS",
+              "web maps",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "data",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "renewable energy"
+            ],
+            "idea": "We are building a community solar farm tracker using interactive web maps.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Hazel is an intermediate Svelte developer experienced in web maps, looking to ship a sustainability project with data and backend teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "arjun_angular",
+      "name": "Arjun Mehta",
+      "bio": "I speak Hindi and English, and I love building robust web apps with Angular.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "original",
+        "flair": "stars",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Angular",
+              "TypeScript",
+              "RxJS",
+              "frontend",
+              "Hindi"
+            ],
+            "skillsWanted": [
+              "backend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": null,
+            "interests": [
+              "developer tools",
+              "education"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Arjun is an intermediate Angular developer who speaks Hindi and English, looking to learn new technologies and meet people across tracks.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "daisy_web",
+      "name": "Daisy Fontaine",
+      "bio": "Self-taught web dev excited to dive into my first hackathon and build something cool.",
+      "links": {
+        "website": "https://example.com/daisy_web"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "berry",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "JavaScript",
+              "CSS"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "nlp",
+              "automation"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Daisy is a beginner self-taught web developer skilled in React and JavaScript, looking for experienced teammates to learn from in the AI track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "desmond_a11y",
+      "name": "Desmond Clarke",
+      "bio": "I make sure web apps are usable for everyone, focusing on accessible patient tools.",
+      "links": {
+        "website": "https://example.com/desmond_a11y"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "TypeScript",
+              "accessibility",
+              "WCAG",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "product",
+              "mobile"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "patient care"
+            ],
+            "idea": "We are building an accessible patient portal for booking appointments.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Desmond is an intermediate frontend developer focused on accessibility and WCAG, aiming to win the Health track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "sofia_alt",
+      "name": "Sofia Ibarra",
+      "bio": "Building tools to make the web more accessible through AI alt-text generation.",
+      "links": {
+        "website": "https://example.com/sofia_alt"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "JavaScript",
+              "ARIA",
+              "screen readers",
+              "accessibility"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "assistive tech",
+              "computer vision"
+            ],
+            "idea": "We are creating an AI tool that automatically generates descriptive alt-text for images.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Sofia is an intermediate accessibility-focused developer building an AI alt-text tool, looking to win the AI track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "gemma_ui",
+      "name": "Gemma Novak",
+      "bio": "I design clean, engaging interfaces and prototypes for indie games.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "rose",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "UI design",
+              "prototyping",
+              "game UI",
+              "design"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "retro design"
+            ],
+            "idea": "We are designing a cozy puzzle game with custom UI and inventory systems.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Gemma is an intermediate UI designer specializing in game interfaces, looking to ship a fun project in the Games track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "laila_ux",
+      "name": "Laila Rahimi",
+      "bio": "Product designer focused on creating intuitive financial apps.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "UX design",
+              "user research",
+              "design systems",
+              "design"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "fintech",
+              "user experience"
+            ],
+            "idea": "We are designing a budgeting app tailored for freelance workers.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Laila is an intermediate product designer skilled in UX and user research, aiming to win the Fintech track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "wren_design",
+      "name": "Wren Halloway",
+      "bio": "Graphic design student exploring the world of UX and sustainability.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "stars",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "Illustrator",
+              "design"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "conservation",
+              "eco design"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Wren is a beginner graphic design student learning UX, looking to join a sustainability team.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "zainab_ai_ux",
+      "name": "Zainab Oyelaran",
+      "bio": "I research and design user experiences specifically tailored for AI products.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "user research",
+              "UX design",
+              "prototyping",
+              "design"
+            ],
+            "skillsWanted": [
+              "ML",
+              "frontend"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "human ai interaction",
+              "ethics"
+            ],
+            "idea": "We are building an intuitive interface for querying large document stores.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Zainab is an advanced UX researcher and designer for AI products, looking to ship an innovative tool.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "damon_motion",
+      "name": "Damon Kuznetsov",
+      "bio": "Motion designer who loves adding slick CSS animations to web apps.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "After Effects",
+              "CSS",
+              "design"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "fintech",
+              "motion graphics"
+            ],
+            "idea": "We are building a sleek investment dashboard with custom micro-animations.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Damon is an intermediate motion and brand designer who writes CSS, looking to ship a Fintech project.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "minseo_ux",
+      "name": "Min-seo Park",
+      "bio": "Product designer fluent in Korean and English, passionate about design systems.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "mint",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Figma",
+              "UX design",
+              "design systems",
+              "design",
+              "Korean"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": null,
+            "interests": [
+              "design systems",
+              "global products"
+            ],
+            "idea": null,
+            "motivations": [
+              "compete",
+              "meet"
+            ],
+            "summary": "Min-seo is an intermediate product designer who speaks Korean and English, looking to win across any track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "margot_mentor",
+      "name": "Margot Ellison",
+      "bio": "I am here to help you refine your UI, UX, and accessibility features all weekend long.",
+      "links": {
+        "website": "https://example.com/margot_mentor"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Figma",
+              "UX design",
+              "UI design",
+              "design systems",
+              "accessibility",
+              "WCAG",
+              "user research"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "accessibility",
+              "design systems"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Margot is an experienced product designer and accessibility specialist volunteering as a mentor to help teams with UX and WCAG compliance.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "bruno_go",
+      "name": "Bruno Castillo",
+      "bio": "Building high-throughput financial systems with Go and Postgres this weekend.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Go",
+              "gRPC",
+              "Postgres",
+              "Redis",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "personal finance",
+              "algorithmic trading"
+            ],
+            "idea": "Building a real-time micro-transaction ledger using Go and gRPC.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Bruno is an advanced backend engineer skilled in Go, gRPC, Postgres, and Redis, looking to build fintech solutions.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "callum_rust",
+      "name": "Callum Reid",
+      "bio": "Excited to push Rust and WebAssembly to the limit for fast AI inference.",
+      "links": {
+        "website": "https://example.com/callum_rust"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Rust",
+              "Tokio",
+              "Postgres",
+              "WebAssembly",
+              "backend"
+            ],
+            "skillsWanted": [
+              "ML",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "neural networks",
+              "edge ai"
+            ],
+            "idea": "Building a browser-based AI model runner powered by WebAssembly and Rust.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Callum is an intermediate Rust backend developer experienced in Tokio, Postgres, and WebAssembly, seeking teammates to ship an AI project.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "andres_sust",
+      "name": "Andres Villalobos",
+      "bio": "I speak Spanish and English, ready to code some Python sustainability tools.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "FastAPI",
+              "Postgres",
+              "Docker",
+              "backend",
+              "Spanish"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "data"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "renewable energy"
+            ],
+            "idea": "Building a carbon footprint tracker API with FastAPI and Docker.",
+            "motivations": [
+              "build",
+              "meet"
+            ],
+            "summary": "Andres is an intermediate Python backend developer fluent in Spanish and English, skilled in FastAPI, Postgres, and Docker, looking to build sustainability apps.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "jonah_sockets",
+      "name": "Jonah Feldman",
+      "bio": "Making low-latency multiplayer game backends with Node and WebSockets.",
+      "links": {
+        "website": "https://example.com/jonah_sockets"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "berry",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Node.js",
+              "WebSockets",
+              "Redis",
+              "TypeScript",
+              "backend"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "netcode"
+            ],
+            "idea": "Building a real-time multiplayer browser game backend with WebSockets.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Jonah is an intermediate backend developer skilled in Node.js, WebSockets, Redis, and TypeScript, focusing on real-time game architecture.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "linh_java",
+      "name": "Linh Tran",
+      "bio": "I speak Vietnamese and English, building reliable backend services in Java.",
+      "links": {
+        "website": "https://example.com/linh_java"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Java",
+              "Spring Boot",
+              "MySQL",
+              "backend",
+              "Vietnamese"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Fintech",
+            "interests": [
+              "digital banking",
+              "microservices"
+            ],
+            "idea": "Building a secure payment gateway simulation using Java and Spring Boot.",
+            "motivations": [
+              "learn",
+              "build"
+            ],
+            "summary": "Linh is an intermediate Java backend developer fluent in Vietnamese and English, skilled in Spring Boot and MySQL, eager to learn new fintech patterns.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "kofi_js",
+      "name": "Kofi Mensah",
+      "bio": "Learning the ropes of JavaScript and Express at my first hackathon.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "JavaScript",
+              "Node.js",
+              "Express",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "full-stack"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "automation",
+              "ai agents"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Kofi is a beginner hacker with basic Express and JavaScript skills, looking for experienced teammates to learn AI integration.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "petra_flask",
+      "name": "Petra Novotna",
+      "bio": "Built my first Flask app recently and excited to ship something green.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "mint",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "Flask",
+              "SQLite",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "data"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "conservation",
+              "recycling"
+            ],
+            "idea": "Building a community recycling locator web app with Flask.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Petra is a beginner hacker who has built a Flask app, looking to ship a sustainability project with a friendly team.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "rahul_db",
+      "name": "Rahul Iyer",
+      "bio": "Optimizing queries and scaling databases for high-volume fintech platforms.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Postgres",
+              "SQL",
+              "Redis",
+              "data modeling",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "fintech",
+              "database internals"
+            ],
+            "idea": "Building a high-performance ledger engine with advanced query tuning.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Rahul is an advanced database engineer skilled in Postgres, SQL, query tuning, and Redis, aiming to win the fintech track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "selin_search",
+      "name": "Selin Aydin",
+      "bio": "Working on vector search and indexing to make AI apps respond faster.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "rose",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "MongoDB",
+              "Elasticsearch",
+              "vector search",
+              "Node.js",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "ML"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "information retrieval",
+              "knowledge graphs"
+            ],
+            "idea": "Building a semantic document search engine using vector embeddings.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Selin is an intermediate backend developer skilled in MongoDB, Elasticsearch, vector search, and Node.js, looking to ship an AI search tool.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "hugo_sql",
+      "name": "Hugo Lambert",
+      "bio": "Database design student eager to learn how to store game states efficiently.",
+      "links": {
+        "website": "https://example.com/hugo_sql"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "SQL",
+              "Postgres",
+              "database design",
+              "data"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "game logic",
+              "leaderboards"
+            ],
+            "idea": "Building a persistent high-score database system for retro arcade games.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Hugo is an intermediate data modeling student skilled in SQL and Postgres, looking to learn game architecture.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ayesha_cloud",
+      "name": "Ayesha Mirza",
+      "bio": "Automating infrastructure deployment with Terraform and Kubernetes.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "mint",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "AWS",
+              "Terraform",
+              "Docker",
+              "Kubernetes",
+              "CI/CD",
+              "DevOps"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "cloud architecture",
+              "green computing"
+            ],
+            "idea": "Building an automated green energy grid monitor dashboard.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Ayesha is an advanced cloud engineer skilled in AWS, Terraform, Docker, and Kubernetes, ready to ship resilient infrastructure.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "tobias_ops",
+      "name": "Tobias Engel",
+      "bio": "Setting up serverless workflows and Docker containers for rapid AI deployment.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "original",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Docker",
+              "GitHub Actions",
+              "serverless",
+              "Linux",
+              "DevOps"
+            ],
+            "skillsWanted": [
+              "backend",
+              "ML"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "automation",
+              "edge computing"
+            ],
+            "idea": "Building an automated serverless pipeline for rapid AI model inference.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Tobias is an intermediate DevOps engineer skilled in Docker, serverless, and GitHub Actions, looking to win the AI track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "danielle_aws",
+      "name": "Danielle Osei",
+      "bio": "Studying hard for my cloud certs and learning how Linux powers servers.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "AWS",
+              "Linux",
+              "Bash",
+              "DevOps"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Fintech",
+            "interests": [
+              "cloud computing",
+              "fintech security"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Danielle is a beginner studying cloud fundamentals, looking for experienced teammates to build a fintech tool.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "vera_sec",
+      "name": "Vera Sokolova",
+      "bio": "Locking down endpoints with JWT and OAuth. Security first in fintech.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "OAuth",
+              "JWT",
+              "auth",
+              "security",
+              "Node.js",
+              "penetration testing"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "backend"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "cryptography",
+              "zero trust"
+            ],
+            "idea": "Building a secure authentication proxy for decentralized financial apps.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Vera is an advanced security engineer specializing in OAuth, JWT, and penetration testing, aiming to win the fintech track.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "dmitri_ctf",
+      "name": "Dmitri Volkov",
+      "bio": "CTF competitor exploring reverse engineering and secure AI inputs.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "mint",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "reverse engineering",
+              "cryptography",
+              "CTF",
+              "security"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "adversarial ai",
+              "binary analysis"
+            ],
+            "idea": "Building an automated vulnerability scanner for machine learning models.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Dmitri is an intermediate CTF player skilled in reverse engineering and cryptography, looking to ship a security-focused AI tool.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "jasper_linux",
+      "name": "Jasper Quinlan",
+      "bio": "Exploring network packets and cybersecurity through hands-on CTF challenges.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Linux",
+              "Python",
+              "Wireshark",
+              "security"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Fintech",
+            "interests": [
+              "network security",
+              "packet analysis"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Jasper is a beginner learning cybersecurity and network analysis, looking for experienced teammates in fintech.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "roya_auth",
+      "name": "Roya Farahani",
+      "bio": "Experimenting with passwordless sign-in flows and modern TypeScript auth.",
+      "links": {
+        "website": "https://example.com/roya_auth"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "berry",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "OAuth",
+              "passwordless login",
+              "auth",
+              "TypeScript",
+              "security"
+            ],
+            "skillsWanted": [
+              "backend",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "sustainable tech",
+              "digital identity"
+            ],
+            "idea": "Building a passwordless access system for community solar projects.",
+            "motivations": [
+              "learn",
+              "build"
+            ],
+            "summary": "Roya is an intermediate security enthusiast focusing on OAuth and passwordless authentication for sustainability apps.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "hector_mentor",
+      "name": "Hector Salgado",
+      "bio": "I can help you design robust databases and write clean backend code in Go, Rust, or Python.",
+      "links": {
+        "website": "https://example.com/hector_mentor"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "backend",
+              "apis",
+              "Go",
+              "Rust",
+              "Java",
+              "Node.js",
+              "Python",
+              "Postgres"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "system architecture",
+              "database design",
+              "performance"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Hector is an industry mentor specializing in backend engineering, APIs, and multi-language development across Go, Rust, and Python.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "kendall_health",
+      "name": "Kendall Price",
+      "bio": "Building health apps for patients. I want to win this hackathon with a great tool.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "mint",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Swift",
+              "SwiftUI",
+              "HealthKit",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "vital signs",
+              "patient care",
+              "health tech"
+            ],
+            "idea": "We are building an iOS app to monitor vital signs and remind patients to take medication.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Kendall Price is an intermediate iOS developer skilled in Swift, SwiftUI, HealthKit, and mobile development, focusing on the Health track and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "youssef_fin",
+      "name": "Youssef Nasser",
+      "bio": "I love building android apps. I speak Arabic and English and enjoy fintech projects.",
+      "links": {
+        "website": "https://example.com/youssef_fin"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "sunset",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Kotlin",
+              "Jetpack Compose",
+              "Android",
+              "mobile",
+              "Arabic"
+            ],
+            "skillsWanted": [
+              "backend",
+              "product"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "digital payments",
+              "personal finance"
+            ],
+            "idea": "I am building a mobile budgeting app tailored for students managing shared expenses.",
+            "motivations": [
+              "build",
+              "learn",
+              "fun"
+            ],
+            "summary": "Youssef Nasser is an intermediate Android developer skilled in Kotlin, Jetpack Compose, Android, mobile, and Arabic, focusing on Fintech and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "isla_flutter",
+      "name": "Isla McAllister",
+      "bio": "Cross platform app builder. Let us build a greener future together.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Flutter",
+              "Dart",
+              "Firebase",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "backend",
+              "data"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "carbon tracking",
+              "renewable energy"
+            ],
+            "idea": "We are building a mobile application that tracks and suggests ways to reduce household carbon footprints.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Isla McAllister is an intermediate Flutter developer skilled in Flutter, Dart, Firebase, and mobile, focusing on Sustainability and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "casey_expo",
+      "name": "Casey Moreno",
+      "bio": "Just starting out with mobile development. Here to learn how to build fun games.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "JavaScript",
+              "React Native",
+              "Expo",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "design"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "arcade games",
+              "indie games"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Casey Moreno is a beginner React Native developer skilled in JavaScript, React Native, Expo, and mobile, focusing on Games and looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "jordan_ai",
+      "name": "Jordan Ellis",
+      "bio": "Shipping smart features on mobile devices. Excited to build an AI winner.",
+      "links": {
+        "website": "https://example.com/jordan_ai"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Swift",
+              "SwiftUI",
+              "Core ML",
+              "ML",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "design"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "generative ai",
+              "edge computing"
+            ],
+            "idea": "We are building an on-device AI assistant that helps users summarize handwritten notes instantly.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Jordan Ellis is an advanced iOS developer skilled in Swift, SwiftUI, Core ML, ML, and mobile, focusing on AI and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "taylor_nurse",
+      "name": "Taylor Brennan",
+      "bio": "Nursing student learning mobile dev. Looking for experienced teammates to build health tech.",
+      "links": {
+        "website": "https://example.com/taylor_nurse"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Flutter",
+              "Dart",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "backend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Health",
+            "interests": [
+              "patient care",
+              "nursing tech",
+              "wellness"
+            ],
+            "idea": "We are building a mobile app that helps nurses track patient mobility and vital signs.",
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Taylor Brennan is a beginner nursing student skilled in Flutter, Dart, and mobile, focusing on Health and looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "avery_mobile",
+      "name": "Avery Kwan",
+      "bio": "Cross platform mobile lead. Let us ship a great fintech product this weekend.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "berry",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React Native",
+              "TypeScript",
+              "Expo",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "backend",
+              "design"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "digital banking",
+              "microtransactions"
+            ],
+            "idea": "We are building a cross-platform mobile app for splitting bills and managing group savings.",
+            "motivations": [
+              "build",
+              "career"
+            ],
+            "summary": "Avery Kwan is an advanced cross-platform mobile lead skilled in React Native, TypeScript, Expo, and mobile, focusing on Fintech and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "logan_vr",
+      "name": "Logan Mercer",
+      "bio": "VR developer and gamer. Building immersive experiences in Unreal.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "mint",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Unreal Engine",
+              "C++",
+              "Blueprints",
+              "VR",
+              "game dev"
+            ],
+            "skillsWanted": [
+              "sound design",
+              "music production"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Games",
+            "interests": [
+              "virtual reality",
+              "rhythm games",
+              "indie games"
+            ],
+            "idea": "We are building a VR rhythm game that syncs fast-paced action with custom musical beats.",
+            "motivations": [
+              "build",
+              "compete",
+              "fun"
+            ],
+            "summary": "Logan Mercer is an advanced Unreal Engine VR developer skilled in Unreal Engine, C++, Blueprints, VR, and game dev, focusing on Games and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "skyler_art",
+      "name": "Skyler Okada",
+      "bio": "3D artist bringing virtual worlds to life. Excited to collaborate on a rhythm game.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Blender",
+              "Substance Painter",
+              "3D modeling",
+              "game dev"
+            ],
+            "skillsWanted": [
+              "programming",
+              "audio"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "3d art",
+              "virtual reality",
+              "indie games"
+            ],
+            "idea": "We are building a VR rhythm game that syncs fast-paced action with custom musical beats.",
+            "motivations": [
+              "build",
+              "meet",
+              "fun"
+            ],
+            "summary": "Skyler Okada is an intermediate 3D artist skilled in Blender, Substance Painter, 3D modeling, and game dev, focusing on Games and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "rafael_godot",
+      "name": "Rafael Monteiro",
+      "bio": "Godot developer making pixel art games. I speak Portuguese and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Godot",
+              "GDScript",
+              "pixel art",
+              "game dev",
+              "Portuguese"
+            ],
+            "skillsWanted": [
+              "audio",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "retro games",
+              "pixel art",
+              "indie games"
+            ],
+            "idea": "I am building a 2D platformer where players use light to navigate dark caves.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Rafael Monteiro is an intermediate Godot developer skilled in Godot, GDScript, pixel art, game dev, and Portuguese, focusing on Games and looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "riley_design",
+      "name": "Riley Donovan",
+      "bio": "Game design student hoping to learn Unity and make something fun.",
+      "links": {
+        "website": "https://example.com/riley_design"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "mint",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Unity",
+              "C#",
+              "game design"
+            ],
+            "skillsWanted": [
+              "programming",
+              "art"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "level design",
+              "indie games"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Riley Donovan is a beginner game design student skilled in Unity, C#, and game design, focusing on Games and looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "dakota_netcode",
+      "name": "Dakota Hale",
+      "bio": "Building multiplayer games in Unity. Let us build a competitive winner.",
+      "links": {
+        "website": "https://example.com/dakota_netcode"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "ice",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Unity",
+              "C#",
+              "netcode",
+              "game dev"
+            ],
+            "skillsWanted": [
+              "art",
+              "audio"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Games",
+            "interests": [
+              "multiplayer games",
+              "coop gaming"
+            ],
+            "idea": "We are building a cooperative multiplayer party game where players repair a spaceship together.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Dakota Hale is an intermediate Unity multiplayer developer skilled in Unity, C#, netcode, and game dev, focusing on Games and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "reese_ar",
+      "name": "Reese Kaur",
+      "bio": "Augmented reality enthusiast. Building interactive AR experiences.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "ice",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Unity",
+              "ARKit",
+              "ARCore",
+              "C#",
+              "AR"
+            ],
+            "skillsWanted": [
+              "design",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "augmented reality",
+              "spatial computing"
+            ],
+            "idea": "We are building an AR tool that projects furniture into rooms with real-time physics.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Reese Kaur is an intermediate augmented reality developer skilled in Unity, ARKit, ARCore, C#, and AR, focusing on AI and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "quinn_vr_rehab",
+      "name": "Quinn Alvarez",
+      "bio": "Building VR recovery tools. Looking forward to winning with a health tech app.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "original",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Unity",
+              "C#",
+              "VR",
+              "AR"
+            ],
+            "skillsWanted": [
+              "computer vision",
+              "ML",
+              "Python"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "physical therapy",
+              "health tech",
+              "virtual reality"
+            ],
+            "idea": "We are building VR physical therapy exercises that need pose tracking to count reps.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Quinn Alvarez is an intermediate VR developer skilled in Unity, C#, VR and AR, focusing on Health and looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "hayden_kinesiology",
+      "name": "Hayden Mbatha",
+      "bio": "Kinesiology student helping out with health research and data tracking.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "original",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "biomechanics",
+              "Excel",
+              "research"
+            ],
+            "skillsWanted": [
+              "programming",
+              "design"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Health",
+            "interests": [
+              "biomechanics",
+              "physical therapy",
+              "health tech"
+            ],
+            "idea": "We are building VR physical therapy exercises that need pose tracking to count reps.",
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Hayden Mbatha is a beginner kinesiology student skilled in biomechanics, Excel, and research, focusing on Health and looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "cameron_webxr",
+      "name": "Cameron Szabo",
+      "bio": "WebXR and 3D web developer. Let us build a sustainable virtual world.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "mint",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Three.js",
+              "WebXR",
+              "JavaScript",
+              "3D",
+              "VR"
+            ],
+            "skillsWanted": [
+              "backend",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "renewable energy",
+              "virtual reality",
+              "climate tech"
+            ],
+            "idea": "We are building an interactive WebXR visualization of local solar grid efficiency.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Cameron Szabo is an intermediate WebXR developer skilled in Three.js, WebXR, JavaScript, 3D and VR, focusing on Sustainability and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "frankie_blender",
+      "name": "Frankie Doyle",
+      "bio": "Blender hobbyist learning 3D modeling for indie games.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Blender",
+              "3D modeling"
+            ],
+            "skillsWanted": [
+              "programming",
+              "game dev"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "3d art",
+              "indie games"
+            ],
+            "idea": "I am building a cozy puzzle game with low-poly environment assets.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Frankie Doyle is a beginner Blender hobbyist skilled in Blender, 3D modeling, and game dev, focusing on Games and looking to ship.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "bastian_mentor",
+      "name": "Bastian Kruger",
+      "bio": "Game developer and XR engineer here to help you debug Unity, Unreal, and VR projects.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Unity",
+              "Unreal Engine",
+              "Godot",
+              "C#",
+              "C++",
+              "VR",
+              "AR",
+              "game dev"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "game development",
+              "virtual reality",
+              "spatial computing"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Bastian Kruger is an experienced game developer and XR engineer skilled in Unity, Unreal Engine, Godot, C#, C++, VR, AR, and game dev, mentoring hackers this weekend.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "magnus_iot",
+      "name": "Magnus Eriksen",
+      "bio": "I build ESP32 and LoRa sensor networks for smart agriculture.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "ESP32",
+              "C++",
+              "LoRa",
+              "MQTT",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "backend",
+              "Postgres",
+              "data visualization"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "agtech",
+              "climate tech",
+              "iot"
+            ],
+            "idea": "We are building soil sensors that need a backend and a dashboard to save farm water.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced hardware engineer with ESP32 and LoRa skills, focused on Sustainability, looking for backend help.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "haruto_bot",
+      "name": "Haruto Ishikawa",
+      "bio": "I am a robotics enthusiast who speaks Japanese and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "sunset",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "ROS 2",
+              "Python",
+              "C++",
+              "Raspberry Pi",
+              "robotics",
+              "Japanese"
+            ],
+            "skillsWanted": [
+              "computer vision",
+              "hardware"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "robotics",
+              "automation"
+            ],
+            "idea": "An autonomous helper robot that navigates indoor spaces.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Intermediate robotics hacker fluent in Japanese and English, skilled in ROS 2 and Python.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "neha_bio",
+      "name": "Neha Kulkarni",
+      "bio": "I am a biomedical engineering student passionate about wearable sensors.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Arduino",
+              "MATLAB",
+              "signal processing",
+              "sensors",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "mobile",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "biomedical engineering",
+              "wearables"
+            ],
+            "idea": "A wearable sensor system that tracks muscle fatigue in real time.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Intermediate biomedical engineering student skilled in MATLAB and sensors, looking for mobile teammates for health tech.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "zack_makes",
+      "name": "Zack Whitfield",
+      "bio": "I build custom game controllers and physical interfaces.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "ice",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Arduino",
+              "C++",
+              "3D printing",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "Unity"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "hardware",
+              "retrogaming"
+            ],
+            "idea": "A custom arcade controller paired with an indie puzzle game.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Intermediate hardware hacker building custom game controllers, looking for game devs.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "tessa_pi",
+      "name": "Tessa Marlowe",
+      "bio": "I am a Raspberry Pi beginner exploring IoT projects.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Raspberry Pi",
+              "Python"
+            ],
+            "skillsWanted": [
+              "hardware",
+              "sensors"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "smart home"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn"
+            ],
+            "summary": "Beginner hacker learning Raspberry Pi and Python, looking for an experienced teammate.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "bjorn_rust",
+      "name": "Bjorn Aasen",
+      "bio": "I love writing embedded Rust on microcontrollers.",
+      "links": {
+        "website": "https://example.com/bjorn_rust"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "ice",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Rust",
+              "embedded",
+              "STM32",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "sensors",
+              "IoT"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "embedded systems",
+              "sustainability"
+            ],
+            "idea": "A low-power weather station running on embedded Rust.",
+            "motivations": [
+              "learn",
+              "build"
+            ],
+            "summary": "Intermediate embedded Rust hacker focusing on microcontrollers and sustainability.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "orion_fpga",
+      "name": "Orion Blackwood",
+      "bio": "I work with FPGAs and TinyML for low-power edge AI.",
+      "links": {
+        "website": "https://example.com/orion_fpga"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "C",
+              "FPGA",
+              "Verilog",
+              "TinyML",
+              "embedded"
+            ],
+            "skillsWanted": [
+              "hardware",
+              "sensors"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "edge ai",
+              "hardware"
+            ],
+            "idea": "An FPGA-accelerated acoustic monitoring device for wildlife preservation.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced FPGA and TinyML engineer looking to ship an edge AI project.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "lucy_circuits",
+      "name": "Lucy Adair",
+      "bio": "I am an electrical engineering freshman eager to build things.",
+      "links": {
+        "website": "https://example.com/lucy_circuits"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "mint",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Arduino",
+              "C"
+            ],
+            "skillsWanted": [
+              "hardware",
+              "sensors"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "medical devices"
+            ],
+            "idea": "A simple pulse monitoring device for elderly care.",
+            "motivations": [
+              "learn"
+            ],
+            "summary": "Beginner electrical engineering student skilled in Arduino and C, looking to learn in health tech.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "darius_grid",
+      "name": "Darius Farrokh",
+      "bio": "I analyze energy and grid data to find efficiency gains.",
+      "links": {
+        "website": "https://example.com/darius_grid"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "rose",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "energy modeling",
+              "pandas",
+              "data"
+            ],
+            "skillsWanted": [
+              "visualization",
+              "frontend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "clean energy",
+              "smart grids"
+            ],
+            "idea": "A data dashboard predicting local power grid bottlenecks.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Intermediate data hacker focused on energy modeling and grid analytics.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "freya_carbon",
+      "name": "Freya Lund",
+      "bio": "I work with carbon accounting data and emissions modeling.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "ice",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "SQL",
+              "carbon accounting",
+              "data"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "visualization"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Sustainability",
+            "interests": [
+              "carbon tracking",
+              "sustainability"
+            ],
+            "idea": "A supply chain emissions calculator for small businesses.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced data hacker specializing in carbon accounting and sustainability analytics.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "chiara_gis",
+      "name": "Chiara Benedetti",
+      "bio": "I am an environmental studies student learning spatial analysis.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "berry",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Excel",
+              "GIS",
+              "QGIS"
+            ],
+            "skillsWanted": [
+              "Python",
+              "mapping"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Sustainability",
+            "interests": [
+              "conservation",
+              "gis"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn"
+            ],
+            "summary": "Beginner environmental studies student skilled in GIS, looking for an experienced technical teammate.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "malcolm_audio",
+      "name": "Malcolm Ashby",
+      "bio": "I am a music producer and audio programmer building web sound tools.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Ableton Live",
+              "Web Audio API",
+              "JavaScript",
+              "sound design",
+              "audio"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "UI"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Games",
+            "interests": [
+              "interactive audio",
+              "web audio",
+              "musictech"
+            ],
+            "idea": "A browser-based collaborative looper tool for jam sessions.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Intermediate audio programmer and producer skilled in Web Audio API and JavaScript.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "aria_sound",
+      "name": "Aria Song",
+      "bio": "I do audio ML research for procedural music generation.",
+      "links": {
+        "website": "https://example.com/aria_sound"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "berry",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "PyTorch",
+              "DSP",
+              "audio",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "audio"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "generative music",
+              "audio ml"
+            ],
+            "idea": "An AI ambient soundscape generator that adapts to the weather.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced ML engineer specializing in audio machine learning and PyTorch.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "juniper_ios",
+      "name": "Juniper Hayes",
+      "bio": "I am building a music therapy iOS app.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Swift",
+              "AVFoundation",
+              "audio",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "UI design",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "music therapy",
+              "ios"
+            ],
+            "idea": "An iOS app providing guided sound therapy for anxiety relief.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Intermediate mobile developer building a health-focused iOS audio app in Swift.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "nate_plugin",
+      "name": "Nate Gorski",
+      "bio": "I am a guitarist learning to write my own audio plugins.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "C++",
+              "JUCE",
+              "audio"
+            ],
+            "skillsWanted": [
+              "DSP",
+              "UI"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "guitar pedals",
+              "audio plugins"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Beginner audio programmer learning JUCE and C++ to build guitar effects.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "huy_mentor",
+      "name": "Huy Pham",
+      "bio": "I can help with hardware, embedded systems, microcontrollers, and robotics projects.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Arduino",
+              "ESP32",
+              "Raspberry Pi",
+              "embedded C",
+              "robotics",
+              "ROS",
+              "PCB design",
+              "hardware"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "robotics",
+              "hardware"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Hardware and robotics engineer volunteering as a mentor for embedded systems.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "corinne_audio",
+      "name": "Corinne Lavoie",
+      "bio": "I mentor hackers on audio programming, DSP, and music tech applications.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "mint",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "DSP",
+              "Web Audio API",
+              "JUCE",
+              "C++",
+              "audio",
+              "music production",
+              "sound design"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "audio tech",
+              "music production"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Audio engineer and mentor specializing in DSP, JUCE, and Web Audio.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "amelie_climate",
+      "name": "Amelie Girard",
+      "bio": "I am a climate tech data engineer who speaks French and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "ice",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "GIS",
+              "Python",
+              "energy data",
+              "climate modeling",
+              "PostGIS",
+              "data",
+              "French"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "climate data",
+              "gis"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "learn"
+            ],
+            "summary": "Climate tech data engineer and mentor speaking French and English, ready to help with GIS and energy data.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "kwame_solidity",
+      "name": "Kwame Ofori",
+      "bio": "Building transparent crypto tools this weekend.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "mint",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Solidity",
+              "Ethereum",
+              "Hardhat",
+              "smart contracts",
+              "TypeScript",
+              "web3",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React",
+              "UI design"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "decentralized finance",
+              "microdonations",
+              "fintech"
+            ],
+            "idea": "We are building a transparent student micro-donation platform tracked entirely on-chain.",
+            "motivations": [
+              "build",
+              "compete",
+              "learn"
+            ],
+            "summary": "Advanced Fintech hacker skilled in Solidity, Ethereum, Hardhat, smart contracts, TypeScript, web3, and backend. Looking for frontend, React, and UI design.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "tabitha_audit",
+      "name": "Tabitha Crane",
+      "bio": "Learning how to audit secure web3 code.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "rose",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Solidity",
+              "Foundry",
+              "testing",
+              "web3",
+              "security"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "smart contracts",
+              "fintech",
+              "security"
+            ],
+            "idea": "We are building a transparent student micro-donation platform tracked entirely on-chain.",
+            "motivations": [
+              "learn",
+              "build"
+            ],
+            "summary": "Intermediate Fintech hacker skilled in Solidity, Foundry, testing, web3, and security. Looking for frontend and React.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "brendan_chain",
+      "name": "Brendan Wu",
+      "bio": "Exploring what is possible with blockchain technology.",
+      "links": {
+        "website": "https://example.com/brendan_chain"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "original",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "JavaScript",
+              "Solidity",
+              "web3"
+            ],
+            "skillsWanted": [
+              "backend",
+              "design"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Fintech",
+            "interests": [
+              "crypto",
+              "fintech"
+            ],
+            "idea": "I am looking for a team to build an on-chain savings tracker.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Beginner Fintech hacker skilled in JavaScript, Solidity, and web3. Looking for backend and design.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "aaliyah_carbon",
+      "name": "Aaliyah Grant",
+      "bio": "Tracking carbon credits on the blockchain.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Solidity",
+              "Python",
+              "blockchain",
+              "web3",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "data"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Sustainability",
+            "interests": [
+              "climate tech",
+              "carbon credits",
+              "sustainability"
+            ],
+            "idea": "I want to build a decentralized verification protocol for corporate carbon offsets.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Intermediate Sustainability hacker skilled in Solidity, Python, blockchain, web3, and backend. Looking for frontend and data.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "dario_pay",
+      "name": "Dario Esposito",
+      "bio": "Wiring up secure payment APIs for everyone.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "payments APIs",
+              "Node.js",
+              "TypeScript",
+              "Postgres",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "mobile"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Fintech",
+            "interests": [
+              "digital payments",
+              "fintech",
+              "banking"
+            ],
+            "idea": "I want to build a split-bill app that automates merchant payouts via open banking.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Intermediate Fintech hacker skilled in payments APIs, Node.js, TypeScript, Postgres, and backend. Looking for frontend and mobile.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "phoebe_budget",
+      "name": "Phoebe Lanning",
+      "bio": "Making budgeting easier with nice charts.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "berry",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "JavaScript",
+              "React",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "backend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "personal finance",
+              "budgeting",
+              "fintech"
+            ],
+            "idea": "I want to build a visual budgeting assistant that predicts monthly savings goals.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Beginner Fintech hacker skilled in JavaScript, React, and frontend. Looking for backend.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "joaquin_fin",
+      "name": "Joaquin Herrera",
+      "bio": "I study finance and code sometimes, and I speak Spanish and English too.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "stars",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "Excel",
+              "financial modeling",
+              "Spanish",
+              "data"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Fintech",
+            "interests": [
+              "financial modeling",
+              "fintech",
+              "investing"
+            ],
+            "idea": "I want to build a financial literacy platform for university students.",
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Intermediate Fintech hacker skilled in Python, Excel, financial modeling, Spanish, and data. Looking for frontend and backend.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "serena_pm",
+      "name": "Serena Okwu",
+      "bio": "Managing products and driving the pitch.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "product management",
+              "pitching",
+              "user interviews",
+              "product"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "backend",
+              "mobile"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Fintech",
+            "interests": [
+              "fintech",
+              "product strategy",
+              "user experience"
+            ],
+            "idea": "I want to build an invoice factoring platform for freelancers.",
+            "motivations": [
+              "build",
+              "compete",
+              "career"
+            ],
+            "summary": "Advanced Fintech hacker skilled in product management, pitching, user interviews, and product. Looking for frontend, backend, and mobile.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "rhys_pitch",
+      "name": "Rhys Pemberton",
+      "bio": "Leading storytelling and product vision for AI projects.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "pitching",
+              "product",
+              "market research",
+              "storytelling"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "artificial intelligence",
+              "product design",
+              "market trends"
+            ],
+            "idea": "I want to build an AI-powered market research assistant for early founders.",
+            "motivations": [
+              "compete",
+              "meet"
+            ],
+            "summary": "Intermediate AI hacker skilled in pitching, product, market research, and storytelling. Looking for ML and backend.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "leah_health",
+      "name": "Leah Abramowitz",
+      "bio": "Pre-med student focusing on product and user research.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "berry",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "product",
+              "pitching",
+              "user interviews",
+              "healthcare operations"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "mobile"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "digital health",
+              "patient care",
+              "healthcare operations"
+            ],
+            "idea": "I want to build a triage assistant for campus health clinics.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Intermediate Health hacker skilled in product, pitching, user interviews, and healthcare operations. Looking for frontend and mobile.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "tyler_market",
+      "name": "Tyler Brandt",
+      "bio": "Business major learning the ropes of game marketing.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "original",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "pitching",
+              "Canva",
+              "marketing",
+              "product"
+            ],
+            "skillsWanted": [
+              "game dev",
+              "Unity"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Games",
+            "interests": [
+              "indie games",
+              "game marketing",
+              "business"
+            ],
+            "idea": "I want to build a casual arcade game with integrated social sharing.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Beginner Games hacker skilled in pitching, Canva, marketing, and product. Looking for game dev and Unity.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ravi_edtech",
+      "name": "Ravi Bhatt",
+      "bio": "Building tools to make studying more interactive.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "Firebase",
+              "TypeScript",
+              "frontend",
+              "edtech"
+            ],
+            "skillsWanted": [
+              "ML",
+              "backend"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "AI",
+            "interests": [
+              "edtech",
+              "learning tools",
+              "artificial intelligence"
+            ],
+            "idea": "I want to build an adaptive flashcard app that generates questions on the fly.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Intermediate AI hacker skilled in React, Firebase, TypeScript, frontend, and edtech. Looking for ML and backend.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "nadege_teach",
+      "name": "Nadege Pierre-Louis",
+      "bio": "I teach kids code and speak Haitian Creole and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "mint",
+        "flair": "none",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Scratch",
+              "Python",
+              "teaching",
+              "Haitian Creole",
+              "product"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "ML"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "AI",
+            "interests": [
+              "coding education",
+              "edtech",
+              "youth programs"
+            ],
+            "idea": "I want to build a gamified coding tutor for elementary school students.",
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Beginner AI hacker skilled in Scratch, Python, teaching, Haitian Creole, and product. Looking for frontend and ML.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "evan_ai",
+      "name": "Evan Mwangi",
+      "bio": "Building intelligent tutors for personalized education.",
+      "links": {
+        "website": "https://example.com/evan_ai"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "LLMs",
+              "LangChain",
+              "prompt engineering",
+              "edtech",
+              "ML"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "AI",
+            "interests": [
+              "edtech",
+              "large language models",
+              "artificial intelligence"
+            ],
+            "idea": "I want to build an AI teaching assistant that adapts to student learning speeds.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Advanced AI hacker skilled in Python, LLMs, LangChain, prompt engineering, edtech, and ML. Looking for frontend and product.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "lukas_mentor",
+      "name": "Lukas Brandvold",
+      "bio": "I can help with smart contracts, auditing, and Solidity architecture.",
+      "links": {
+        "website": "https://example.com/lukas_mentor"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "original",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Solidity",
+              "Ethereum",
+              "smart contracts",
+              "Hardhat",
+              "Foundry",
+              "web3",
+              "TypeScript"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "smart contracts",
+              "fintech",
+              "web3"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Mentor Lukas Brandvold specializes in Solidity, Ethereum, smart contracts, Hardhat, Foundry, web3, and TypeScript.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "lucia_mentor",
+      "name": "Lucia Navarro",
+      "bio": "I can help with payments architecture, Java, Kafka, and I speak Spanish too.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "rose",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "payments",
+              "fraud detection",
+              "Java",
+              "Kafka",
+              "Python",
+              "fintech",
+              "Spanish"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "payments",
+              "fintech",
+              "backend architecture"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet"
+            ],
+            "summary": "Mentor Lucia Navarro specializes in payments, fraud detection, Java, Kafka, Python, fintech, and Spanish.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "gordon_mentor",
+      "name": "Gordon Pryce",
+      "bio": "I can help polish your pitch and structure your product presentation.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "product management",
+              "pitching",
+              "storytelling",
+              "user research",
+              "product",
+              "Figma"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "product strategy",
+              "pitching",
+              "design"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Mentor Gordon Pryce specializes in product management, pitching, storytelling, user research, product, and Figma.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "claire_mentor",
+      "name": "Claire Whitmore",
+      "bio": "I can help with edtech integrations, learning design, and React apps.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "sunset",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "edtech",
+              "learning design",
+              "React",
+              "Python",
+              "curriculum design",
+              "LMS"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "edtech",
+              "learning design",
+              "software"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet"
+            ],
+            "summary": "Mentor Claire Whitmore specializes in edtech, learning design, React, Python, curriculum design, and LMS.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "simone_health",
+      "name": "Simone Adebayo",
+      "bio": "I love analyzing public health data to find meaningful insights. Looking for a teammate to build something impactful together.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "original",
+        "flair": "hearts",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "R",
+              "Tableau",
+              "data",
+              "epidemiology"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "mobile"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "public health",
+              "epidemiology",
+              "health tech"
+            ],
+            "idea": "We are building a dashboard to track and predict community health trends.",
+            "motivations": [
+              "compete",
+              "build"
+            ],
+            "summary": "Simone Adebayo is an intermediate public health data analyst skilled in R, Tableau, epidemiology, and data, looking for teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "cat_code",
+      "name": "Catalina Restrepo",
+      "bio": "As a pre-med student learning to code, I am excited to build my first health app. I speak Spanish and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "original",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "HTML",
+              "CSS",
+              "JavaScript",
+              "Spanish"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "mobile"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "wellness"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "fun"
+            ],
+            "summary": "Catalina Restrepo is a beginner pre-med student skilled in HTML, CSS, JavaScript, and Spanish, eager to learn and build.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "brandon_bt",
+      "name": "Brandon Holt",
+      "bio": "I build wearable integrations and mobile apps. Let us connect health devices to smart software.",
+      "links": {
+        "website": "https://example.com/brandon_bt"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Bluetooth LE",
+              "Kotlin",
+              "Android",
+              "wearables",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "frontend"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Health",
+            "interests": [
+              "wearables",
+              "health tech",
+              "iot"
+            ],
+            "idea": "We are creating a real-time biometric monitoring suit for athletes.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Brandon Holt is an advanced wearables and Bluetooth engineer skilled in Bluetooth LE, Kotlin, Android, wearables, and mobile.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "megan_rn",
+      "name": "Megan Castro",
+      "bio": "I craft cross-platform mobile apps for the health sector. Looking to team up and build a winner.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "sunset",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React Native",
+              "TypeScript",
+              "Expo",
+              "mobile"
+            ],
+            "skillsWanted": [
+              "data"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Health",
+            "interests": [
+              "health tech",
+              "telehealth"
+            ],
+            "idea": "We are building a mobile app that connects patients with local wellness resources.",
+            "motivations": [
+              "compete",
+              "build"
+            ],
+            "summary": "Megan Castro is an intermediate React Native developer skilled in React Native, TypeScript, Expo, and mobile.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "rachel_clin",
+      "name": "Rachel Ostrowski",
+      "bio": "Studying nursing informatics helps me understand clinical workflows. Excited to help design better tools.",
+      "links": {
+        "website": "https://example.com/rachel_clin"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "berry",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Excel",
+              "Tableau",
+              "clinical workflows"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "mobile"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Health",
+            "interests": [
+              "nursing informatics",
+              "healthcare"
+            ],
+            "idea": "We are designing a streamlined triage tracking system for nurses.",
+            "motivations": [
+              "learn",
+              "build"
+            ],
+            "summary": "Rachel Ostrowski is a beginner nursing informatics student skilled in Excel, Tableau, and clinical workflows.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "etienne_flutter",
+      "name": "Etienne Laurent",
+      "bio": "I build cross-platform apps and speak French and English. Let us make supportive tools for mental health.",
+      "links": {
+        "website": "https://example.com/etienne_flutter"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Flutter",
+              "Dart",
+              "mobile",
+              "French"
+            ],
+            "skillsWanted": [
+              "data"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Health",
+            "interests": [
+              "peer support",
+              "mental health"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Etienne Laurent is an intermediate Flutter developer skilled in Flutter, Dart, mobile, and French, looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "patrice_mentor",
+      "name": "Patrice Ndiaye",
+      "bio": "I am a digital health engineer ready to help teams navigate FHIR, HIPAA compliance, and health data architecture.",
+      "links": {},
+      "hackyStyle": {
+        "look": "pixel",
+        "color": "sunset",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "knighthacks-ix",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "FHIR",
+              "HL7",
+              "HIPAA compliance",
+              "health data",
+              "React Native",
+              "Python"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "digital health",
+              "health tech"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Patrice Ndiaye is a digital health engineer offering guidance on FHIR, HL7, HIPAA compliance, and health data.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "gabriela_dev",
+      "name": "Gabriela Fuentes",
+      "bio": "I am a bilingual developer building tools for learners. I speak Spanish and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Next.js",
+              "TypeScript",
+              "Postgres",
+              "full-stack",
+              "Spanish"
+            ],
+            "skillsWanted": [
+              "ML",
+              "speech recognition",
+              "Python"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Education",
+            "interests": [
+              "edtech",
+              "language learning",
+              "accessibility"
+            ],
+            "idea": "An interactive pronunciation coach using real-time feedback to help ESL students improve fluency.",
+            "motivations": [
+              "build",
+              "compete",
+              "learn"
+            ],
+            "summary": "Gabriela Fuentes is an intermediate full-stack developer focusing on Education, skilled in Next.js, TypeScript, Postgres, full-stack, and Spanish. She speaks Spanish and English and is looking for teammates with skills in ML, speech recognition, and Python.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "sophie_edu",
+      "name": "Sophie Albrecht",
+      "bio": "Hey, I am an education student eager to learn and collaborate this weekend.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "berry",
+        "flair": "none",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "HTML",
+              "CSS",
+              "Canva",
+              "product"
+            ],
+            "skillsWanted": [
+              "React",
+              "JavaScript",
+              "frontend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": true,
+            "goal": "learn",
+            "track": "Education",
+            "interests": [
+              "edtech",
+              "student success",
+              "classroom tools"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Sophie Albrecht is a beginner student focusing on Education, skilled in HTML, CSS, Canva, and product. She is looking to learn and collaborate with experienced teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "eli_viz",
+      "name": "Eli Morgenstern",
+      "bio": "I turn complex climate numbers into clear, interactive visual stories.",
+      "links": {
+        "website": "https://example.com/eli_viz"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "original",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "D3.js",
+              "pandas",
+              "data"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "React",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Climate",
+            "interests": [
+              "climate tech",
+              "data science",
+              "renewable energy"
+            ],
+            "idea": "An interactive dashboard showing local carbon emission trends and reduction milestones.",
+            "motivations": [
+              "build",
+              "learn"
+            ],
+            "summary": "Eli Morgenstern is an intermediate data specialist focusing on Climate, skilled in Python, D3.js, pandas, and data. They are looking to ship a project with frontend teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "takeshi_iot",
+      "name": "Takeshi Mori",
+      "bio": "I love building connected hardware devices that measure our environment.",
+      "links": {
+        "website": "https://example.com/takeshi_iot"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "ice",
+        "flair": "stars",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "ESP32",
+              "C++",
+              "MQTT",
+              "hardware"
+            ],
+            "skillsWanted": [
+              "backend",
+              "data",
+              "mobile"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Climate",
+            "interests": [
+              "climate tech",
+              "iot",
+              "smart cities"
+            ],
+            "idea": "A low-cost air quality sensor network that alerts neighborhoods to pollution spikes.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Takeshi Mori is an advanced hardware engineer focusing on Climate, skilled in ESP32, C++, MQTT, and hardware. He is looking to win with backend and data teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "viktor_cli",
+      "name": "Viktor Hansen",
+      "bio": "I build fast tools that make developer workflows smoother.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "rose",
+        "flair": "hearts",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Go",
+              "CLI",
+              "Docker",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "product"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Developer Tools",
+            "interests": [
+              "developer tools",
+              "automation",
+              "cloud infra"
+            ],
+            "idea": "A lightning-fast terminal utility for managing local microservice environments.",
+            "motivations": [
+              "build",
+              "fun"
+            ],
+            "summary": "Viktor Hansen is an advanced backend developer focusing on Developer Tools, skilled in Go, CLI, Docker, and backend. He aims to ship a robust product.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "joy_code",
+      "name": "Joy Zhao",
+      "bio": "I craft extensions that supercharge everyday code editors.",
+      "links": {},
+      "hackyStyle": {
+        "look": "mochi",
+        "color": "original",
+        "flair": "none",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "TypeScript",
+              "Node.js",
+              "editor extensions",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "backend",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Developer Tools",
+            "interests": [
+              "developer tools",
+              "ui design",
+              "productivity"
+            ],
+            "idea": "A smart code reviewer extension that spots bad practices inline.",
+            "motivations": [
+              "compete",
+              "build"
+            ],
+            "summary": "Joy Zhao is an intermediate frontend developer focusing on Developer Tools, skilled in TypeScript, Node.js, editor extensions, and frontend. She is looking to win.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "arlo_rust",
+      "name": "Arlo Pennington",
+      "bio": "Just starting my journey with systems programming and version control.",
+      "links": {},
+      "hackyStyle": {
+        "look": "cat",
+        "color": "original",
+        "flair": "stars",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Rust",
+              "Git",
+              "backend"
+            ],
+            "skillsWanted": [
+              "full-stack",
+              "frontend"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Developer Tools",
+            "interests": [
+              "developer tools",
+              "systems programming",
+              "open source"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn"
+            ],
+            "summary": "Arlo Pennington is a beginner backend developer focusing on Developer Tools, skilled in Rust, Git, and backend. They want to learn more about systems development.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "ximena_a11y",
+      "name": "Ximena Robles",
+      "bio": "I am passionate about building inclusive digital experiences for everyone.",
+      "links": {
+        "website": "https://example.com/ximena_a11y"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "berry",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "React",
+              "ARIA",
+              "screen readers",
+              "accessibility",
+              "frontend"
+            ],
+            "skillsWanted": [
+              "mobile",
+              "Flutter",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Social Impact",
+            "interests": [
+              "accessibility",
+              "public transit",
+              "civic tech"
+            ],
+            "idea": "An accessible bus and transit app providing real-time audio and high-contrast directions for riders with disabilities.",
+            "motivations": [
+              "build",
+              "compete"
+            ],
+            "summary": "Ximena Robles is an intermediate frontend developer focusing on Social Impact, skilled in React, ARIA, screen readers, accessibility, and frontend. She leads team TransitAccess and wants mobile and design teammates.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "maricel_organizer",
+      "name": "Maricel Dizon",
+      "bio": "I organize community initiatives and handle data. I speak Tagalog and English.",
+      "links": {
+        "website": "https://example.com/maricel_organizer"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "ice",
+        "flair": "hearts",
+        "move": "bounce"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Airtable",
+              "Excel",
+              "product",
+              "Tagalog"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "design"
+            ],
+            "experience": "intermediate",
+            "wantsExperienced": false,
+            "goal": "ship",
+            "track": "Social Impact",
+            "interests": [
+              "community building",
+              "transit",
+              "public health"
+            ],
+            "idea": "An accessible bus and transit app providing real-time audio and high-contrast directions for riders with disabilities.",
+            "motivations": [
+              "meet",
+              "build"
+            ],
+            "summary": "Maricel Dizon is an intermediate product specialist focusing on Social Impact, skilled in Airtable, Excel, product, and Tagalog. She speaks Tagalog and English and is on team TransitAccess.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "hamza_codes",
+      "name": "Hamza Khalil",
+      "bio": "Excited for my first hackathon! I speak Arabic and English.",
+      "links": {},
+      "hackyStyle": {
+        "look": "star",
+        "color": "berry",
+        "flair": "hearts",
+        "move": "dance"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "Python",
+              "HTML",
+              "Arabic",
+              "backend"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "design"
+            ],
+            "experience": "beginner",
+            "wantsExperienced": false,
+            "goal": "learn",
+            "track": "Social Impact",
+            "interests": [
+              "community outreach",
+              "education",
+              "civic tech"
+            ],
+            "idea": null,
+            "motivations": [
+              "learn",
+              "meet"
+            ],
+            "summary": "Hamza Khalil is a beginner backend developer focusing on Social Impact, skilled in Python, HTML, Arabic, and backend. He speaks Arabic and English and is looking to learn.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "gideon_sec",
+      "name": "Gideon Lindahl",
+      "bio": "I build security tools that keep students safe online.",
+      "links": {
+        "website": "https://example.com/gideon_sec"
+      },
+      "hackyStyle": {
+        "look": "knit",
+        "color": "rose",
+        "flair": "stars",
+        "move": "idle"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "hacker",
+          "verified": false,
+          "availability": "available",
+          "looking": true,
+          "intake": {
+            "skills": [
+              "security",
+              "Python",
+              "browser extensions",
+              "auth"
+            ],
+            "skillsWanted": [
+              "frontend",
+              "design"
+            ],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": "win",
+            "track": "Education",
+            "interests": [
+              "online safety",
+              "privacy",
+              "edtech"
+            ],
+            "idea": "A lightweight browser extension that flags malicious sites for school networks.",
+            "motivations": [
+              "compete",
+              "build"
+            ],
+            "summary": "Gideon Lindahl is an advanced security developer focusing on Education, skilled in security, Python, browser extensions, and auth. He wants to win with frontend help.",
+            "complete": true
+          }
+        }
+      ]
+    },
+    {
+      "handle": "aiden_ai",
+      "name": "Aiden Mukherjee",
+      "bio": "I am an AI engineer ready to help you integrate machine learning and LLMs.",
+      "links": {
+        "website": "https://example.com/aiden_ai"
+      },
+      "hackyStyle": {
+        "look": "dragon",
+        "color": "berry",
+        "flair": "none",
+        "move": "hype"
+      },
+      "memberships": [
+        {
+          "event": "demo-hacks",
+          "role": "mentor",
+          "verified": true,
+          "availability": "available",
+          "looking": false,
+          "intake": {
+            "skills": [
+              "Python",
+              "PyTorch",
+              "LLMs",
+              "ML",
+              "Hugging Face",
+              "data science"
+            ],
+            "skillsWanted": [],
+            "experience": "advanced",
+            "wantsExperienced": false,
+            "goal": null,
+            "track": null,
+            "interests": [
+              "artificial intelligence",
+              "machine learning",
+              "edtech"
+            ],
+            "idea": null,
+            "motivations": [
+              "meet",
+              "fun"
+            ],
+            "summary": "Aiden Mukherjee is a mentor specializing in AI and ML, with skills in Python, PyTorch, LLMs, ML, Hugging Face, and data science. Available to help teams with artificial intelligence.",
+            "complete": true
+          }
+        }
+      ]
     }
   ],
   "teams": [
@@ -2651,6 +9129,144 @@
         "docs"
       ],
       "maxSize": 3
+    },
+    {
+      "id": "a17cba69-042a-8386-b607-e5c9528e6e80",
+      "key": "lecture_team",
+      "event": "knighthacks-ix",
+      "name": "NoteCast",
+      "owner": "yusuf_ai",
+      "members": [
+        "lena_speech"
+      ],
+      "idea": "An AI that turns lecture recordings into personal study plans, with an accessible web app.",
+      "track": "AI",
+      "wantedSkills": [
+        "frontend",
+        "React",
+        "accessibility"
+      ],
+      "maxSize": 4
+    },
+    {
+      "id": "c0c95c9f-b48a-8fc9-934e-ca086f0ba10c",
+      "key": "signs_team",
+      "event": "knighthacks-ix",
+      "name": "SignScope",
+      "owner": "astrid_cv",
+      "members": [],
+      "idea": "A phone app that translates sign language with the camera in real time.",
+      "track": "AI",
+      "wantedSkills": [
+        "mobile",
+        "iOS",
+        "Swift"
+      ],
+      "maxSize": 3
+    },
+    {
+      "id": "04ff2cff-880f-85e6-837f-c69b3afbbac3",
+      "key": "rhythm_team",
+      "event": "knighthacks-ix",
+      "name": "BeatPulse",
+      "owner": "logan_vr",
+      "members": [
+        "skyler_art"
+      ],
+      "idea": "We are building a VR rhythm game that syncs fast-paced action with custom musical beats.",
+      "track": "Games",
+      "wantedSkills": [
+        "sound design",
+        "music production",
+        "audio"
+      ],
+      "maxSize": 4
+    },
+    {
+      "id": "1d2f966c-ea8b-84cd-80db-f8db0c66e524",
+      "key": "rehab_team",
+      "event": "knighthacks-ix",
+      "name": "FlexVR",
+      "owner": "quinn_vr_rehab",
+      "members": [
+        "hayden_kinesiology"
+      ],
+      "idea": "We are building VR physical therapy exercises that need pose tracking to count reps.",
+      "track": "Health",
+      "wantedSkills": [
+        "computer vision",
+        "ML",
+        "Python"
+      ],
+      "maxSize": 4
+    },
+    {
+      "id": "4ade1db4-fa6b-8a98-a4c5-c1501748d2a7",
+      "key": "irrigation_team",
+      "event": "knighthacks-ix",
+      "name": "AquaFlow",
+      "owner": "magnus_iot",
+      "members": [],
+      "idea": "Low-power soil sensors and a live dashboard that help small farms save water.",
+      "track": "Sustainability",
+      "wantedSkills": [
+        "backend",
+        "Postgres",
+        "data visualization"
+      ],
+      "maxSize": 3
+    },
+    {
+      "id": "29c2a46b-4f56-8709-9c9d-e60334d516a8",
+      "key": "donate_team",
+      "event": "knighthacks-ix",
+      "name": "CoinAid",
+      "owner": "kwame_solidity",
+      "members": [
+        "tabitha_audit"
+      ],
+      "idea": "We are building a transparent student micro-donation platform tracked entirely on-chain.",
+      "track": "Fintech",
+      "wantedSkills": [
+        "frontend",
+        "React",
+        "UI design"
+      ],
+      "maxSize": 4
+    },
+    {
+      "id": "2a97c33a-23a8-8b87-91ff-a121c709f4d0",
+      "key": "esl_team",
+      "event": "demo-hacks",
+      "name": "LinguaFlow",
+      "owner": "gabriela_dev",
+      "members": [],
+      "idea": "An interactive pronunciation coach using real-time feedback to help ESL students improve fluency.",
+      "track": "Education",
+      "wantedSkills": [
+        "ML",
+        "speech recognition",
+        "Python"
+      ],
+      "maxSize": 3
+    },
+    {
+      "id": "b8eafde9-528f-8e51-9a7e-4c00f29e3586",
+      "key": "transit_team",
+      "event": "demo-hacks",
+      "name": "TransitAccess",
+      "owner": "ximena_a11y",
+      "members": [
+        "maricel_organizer"
+      ],
+      "idea": "An accessible bus and transit app providing real-time audio and high-contrast directions for riders with disabilities.",
+      "track": "Social Impact",
+      "wantedSkills": [
+        "mobile",
+        "Flutter",
+        "design"
+      ],
+      "maxSize": 4
     }
   ]
 }

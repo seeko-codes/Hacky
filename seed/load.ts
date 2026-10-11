@@ -3,9 +3,19 @@
 // that have none yet), so a rerun after a rate limit picks up where it stopped.
 //
 //   npm run seed:load
+//
+// A database that is already in use (the demo is live, demo_you is mid-chat)
+// takes a partial load instead. It leaves events and every person outside the
+// selection untouched:
+//
+//   npm run seed:load -- --new                 people not in the database yet
+//   npm run seed:load -- --only=maya_backend,…  just these people
+//   npm run seed:load -- --sync-availability   also set seeded mentors' availability
+//
+// A partial load includes the seed teams its people own.
 
 import { setTimeout as sleep } from "node:timers/promises";
-import { and, eq, inArray, sql, type SQL } from "drizzle-orm";
+import { and, eq, inArray, ne, sql, type SQL } from "drizzle-orm";
 import type { BatchItem } from "drizzle-orm/batch";
 import { embedTexts } from "../server/agent/model.js";
 import { db } from "../server/db/index.js";
@@ -19,7 +29,7 @@ import {
   teams,
   user,
 } from "../server/db/schema.js";
-import { emailFor, readPeople, userIdFor } from "./people-schema.js";
+import { emailFor, readPeople, userIdFor, type SeedData, type SeedPerson, type SeedTeam } from "./people-schema.js";
 import { memberProfileText, teamProfileText } from "./profile-text.js";
 import { geminiCalls, withRetry } from "./retry.js";
 
@@ -34,10 +44,83 @@ function chunks<T>(items: T[], size: number): T[][] {
   return out;
 }
 
+type Options = { only: Set<string> | null; addNew: boolean; syncAvailability: boolean };
+
+function parseArgs(argv: string[]): Options {
+  const only = argv.find((a) => a.startsWith("--only="));
+  return {
+    only: only ? new Set(only.slice("--only=".length).split(",").map((h) => h.trim()).filter(Boolean)) : null,
+    addNew: argv.includes("--new"),
+    syncAvailability: argv.includes("--sync-availability"),
+  };
+}
+
 async function main() {
   const data = readPeople();
+  const opts = parseArgs(process.argv.slice(2));
+  const partial = opts.addNew || opts.only !== null;
 
-  // Events. A non-empty theme already in the database wins over an empty seed theme.
+  // Who to load: everyone, or the selection a partial load asks for.
+  let people = data.people;
+  if (opts.only) {
+    const unknown = [...opts.only].filter((h) => !data.people.some((p) => p.handle === h));
+    if (unknown.length) throw new Error(`Not in seed/people.json: ${unknown.join(", ")}`);
+    people = people.filter((p) => opts.only!.has(p.handle));
+  }
+  if (opts.addNew) {
+    const ids = people.map((p) => userIdFor(p.handle));
+    const loaded = new Set((await db.select({ id: user.id }).from(user).where(inArray(user.id, ids))).map((u) => u.id));
+    people = people.filter((p) => !loaded.has(userIdFor(p.handle)));
+  }
+  const selected = new Set(people.map((p) => p.handle));
+  const seedTeams = partial ? data.teams.filter((t) => selected.has(t.owner)) : data.teams;
+
+  const eventId = partial ? await loadedEvents(data.events.map((e) => e.slug)) : await upsertEvents(data);
+  const eventIds = [...eventId.values()];
+
+  if (opts.syncAvailability) await syncMentorAvailability(data.people, eventId);
+  if (people.length === 0) {
+    console.log("No people to load.");
+    return;
+  }
+  if (partial) console.log(`Partial load: ${people.length} people (${[...selected].join(", ")}) and ${seedTeams.length} teams.`);
+
+  await loadPeople({ people, seedTeams, eventId, eventIds, eventCount: data.events.length });
+}
+
+/** Event ids by slug for a partial load, which never changes events. */
+async function loadedEvents(slugs: string[]): Promise<Map<string, string>> {
+  const rows = await db.select({ id: events.id, slug: events.slug }).from(events).where(inArray(events.slug, slugs));
+  const missing = slugs.filter((slug) => !rows.some((r) => r.slug === slug));
+  if (missing.length) throw new Error(`Events ${missing.join(", ")} are not loaded; run a full npm run seed:load first`);
+  return new Map(rows.map((e) => [e.slug, e.id]));
+}
+
+/** Sets each seeded mentor's availability to the seed value where it differs. */
+async function syncMentorAvailability(people: SeedPerson[], eventId: Map<string, string>): Promise<void> {
+  const updates = people.flatMap((p) =>
+    p.memberships
+      .filter((m) => m.role === "mentor" && eventId.has(m.event))
+      .map((m) =>
+        db
+          .update(eventMembers)
+          .set({ availability: m.availability })
+          .where(and(
+            eq(eventMembers.eventId, eventId.get(m.event)!),
+            eq(eventMembers.userId, userIdFor(p.handle)),
+            ne(eventMembers.availability, m.availability),
+          ))
+          .returning({ userId: eventMembers.userId, availability: eventMembers.availability }),
+      ),
+  );
+  if (updates.length === 0) return;
+  const results = await db.batch(updates as [(typeof updates)[number], ...(typeof updates)[number][]]);
+  const changed = results.flat().map((r) => `${r.userId} → ${r.availability}`);
+  console.log(changed.length ? `Mentor availability: ${changed.join(", ")}` : "Mentor availability already matches the seed.");
+}
+
+/** Upserts the events. A non-empty theme already in the database wins over an empty seed theme. */
+async function upsertEvents(data: SeedData): Promise<Map<string, string>> {
   const eventRows = await db
     .insert(events)
     .values(data.events.map((e) => ({
@@ -59,13 +142,26 @@ async function main() {
       },
     })
     .returning({ id: events.id, slug: events.slug });
-  const eventId = new Map(eventRows.map((e) => [e.slug, e.id]));
-  const eventIds = [...eventId.values()];
+  return new Map(eventRows.map((e) => [e.slug, e.id]));
+}
 
+async function loadPeople({
+  people,
+  seedTeams,
+  eventId,
+  eventIds,
+  eventCount,
+}: {
+  people: SeedPerson[];
+  seedTeams: SeedTeam[];
+  eventId: Map<string, string>;
+  eventIds: string[];
+  eventCount: number;
+}) {
   // Better Auth users and profiles.
   await db
     .insert(user)
-    .values(data.people.map((p) => ({ id: userIdFor(p.handle), name: p.name, email: emailFor(p.handle), emailVerified: true })))
+    .values(people.map((p) => ({ id: userIdFor(p.handle), name: p.name, email: emailFor(p.handle), emailVerified: true })))
     .onConflictDoUpdate({
       target: user.id,
       set: { name: excluded("name"), email: excluded("email"), emailVerified: true, updatedAt: sql`now()` },
@@ -73,11 +169,12 @@ async function main() {
 
   await db
     .insert(profiles)
-    .values(data.people.map((p) => ({
+    .values(people.map((p) => ({
       userId: userIdFor(p.handle),
       handle: p.handle,
       name: p.name,
       hackyStyle: p.hackyStyle,
+      photoUrl: p.photoUrl ?? null,
       bio: p.bio,
       links: p.links,
       isDemo: true,
@@ -88,6 +185,7 @@ async function main() {
         handle: excluded("handle"),
         name: excluded("name"),
         hackyStyle: excluded("hacky_style"),
+        photoUrl: excluded("photo_url"),
         bio: excluded("bio"),
         links: excluded("links"),
         isDemo: true,
@@ -96,7 +194,7 @@ async function main() {
     });
 
   // Memberships.
-  const memberships = data.people.flatMap((p) =>
+  const memberships = people.flatMap((p) =>
     p.memberships.map((m) => ({ ...m, userId: userIdFor(p.handle), eventId: eventId.get(m.event)! })),
   );
   await db
@@ -124,7 +222,7 @@ async function main() {
   const userIds = memberships.map((m) => m.userId);
   const [existingProfiles, existingTeams, existingEmbeddings] = await Promise.all([
     db.select().from(memberProfiles).where(and(inArray(memberProfiles.eventId, eventIds), inArray(memberProfiles.userId, userIds))),
-    db.select().from(teams).where(inArray(teams.id, data.teams.map((t) => t.id))),
+    seedTeams.length ? db.select().from(teams).where(inArray(teams.id, seedTeams.map((t) => t.id))) : Promise.resolve([]),
     db
       .select({ eventId: embeddings.eventId, ownerKind: embeddings.ownerKind, ownerId: embeddings.ownerId })
       .from(embeddings)
@@ -151,7 +249,7 @@ async function main() {
       jobs.push({ eventId: m.eventId, ownerKind: "member", ownerId: m.userId, text });
     }
   }
-  const teamRows = data.teams.map((t) => ({
+  const teamRows = seedTeams.map((t) => ({
     id: t.id,
     eventId: eventId.get(t.event)!,
     ownerId: userIdFor(t.owner),
@@ -221,7 +319,7 @@ async function main() {
       db.delete(teamMembers).where(inArray(teamMembers.teamId, teamRows.map((t) => t.id))),
       // The owner counts toward the team's size, so they get a row too.
       db.insert(teamMembers).values(
-        data.teams.flatMap((t) => [t.owner, ...t.members].map((handle) => ({ teamId: t.id, userId: userIdFor(handle) }))),
+        seedTeams.flatMap((t) => [t.owner, ...t.members].map((handle) => ({ teamId: t.id, userId: userIdFor(handle) }))),
       ),
     );
   }
@@ -246,7 +344,7 @@ async function main() {
   await db.batch(writes as [BatchItem<"pg">, ...BatchItem<"pg">[]]);
 
   console.log(
-    `Loaded ${data.events.length} events, ${data.people.length} people, ${memberships.length} memberships, ${data.teams.length} teams; embedded ${jobs.length}.`,
+    `Loaded ${eventCount} events, ${people.length} people, ${memberships.length} memberships, ${seedTeams.length} teams; embedded ${jobs.length}.`,
   );
   console.log(`Gemini embed calls: ${geminiCalls.embed}`);
 }

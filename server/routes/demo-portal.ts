@@ -4,7 +4,8 @@
 // Open it from the web app's origin (locally http://127.0.0.1:5173/api/demo/portal)
 // so the session cookie lands where the app runs.
 //
-// Self-contained: no external assets. Names are inserted with textContent.
+// Self-contained apart from people's photos (photoUrl; initials when there's
+// none or it fails to load). Names are inserted with textContent.
 // The script below avoids backticks and ${} because this file is a template literal.
 
 export const portalHtml = /* html */ `<!doctype html>
@@ -39,8 +40,9 @@ export const portalHtml = /* html */ `<!doctype html>
   .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .card { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px; border-radius: 14px;
     background: var(--panel); border: 1px solid var(--line); }
-  .avatar { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
-    font-weight: 700; font-size: 15px; color: #0d0f14; }
+  .avatar { position: relative; overflow: hidden; flex: none; width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 700; font-size: 15px; color: #0d0f14; }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .who { min-width: 0; flex: 1; }
   .name { font-weight: 600; overflow-wrap: anywhere; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
@@ -154,6 +156,13 @@ export const portalHtml = /* html */ `<!doctype html>
     var avatar = el("div", "avatar", initials(person.name));
     avatar.style.background = "hsl(" + hue(person.handle) + " 70% 72%)";
     avatar.setAttribute("aria-hidden", "true");
+    if (person.photoUrl) {
+      var photo = el("img");
+      photo.alt = "";
+      photo.addEventListener("error", function () { photo.remove(); });
+      photo.src = person.photoUrl;
+      avatar.appendChild(photo);
+    }
     var who = el("div", "who");
     who.appendChild(el("div", "name", person.name));
     var meta = el("div", "meta");

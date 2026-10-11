@@ -20,6 +20,7 @@ import type {
   TeamCard,
 } from "../../shared/contract.js";
 import * as S from "./score.js";
+export type { SkillArea } from "./score.js";
 // The seed and live re-embeds share one text builder, so vectors stay comparable.
 import { memberProfileText } from "../../seed/profile-text.js";
 
@@ -80,6 +81,23 @@ export async function matchMentors(input: MatchMentorsInput): Promise<SearchResu
 }
 
 /**
+ * What the mentors a mentor search can return (verified, not offline, not
+ * blocked) cover, grouped into short areas like "AI & ML", most-covered first.
+ * One query. The chat asks "what do you need a mentor for?" with these.
+ */
+export async function mentorAreas(eventId: string, viewerId: string): Promise<{ areas: S.SkillArea[]; other: string[] }> {
+  const { rows } = await db.execute<{ skills: string[]; available: boolean }>(sql`
+    select coalesce(mp.skills, '{}') as skills, em.availability = 'available' as available
+    from event_members em
+    left join member_profiles mp on mp.event_id = em.event_id and mp.user_id = em.user_id
+    where em.event_id = ${eventId} and em.role = 'mentor' and em.verified and em.availability <> 'offline'
+      and em.user_id <> ${viewerId}
+      and ${notBlocked(sql`em.user_id`, viewerId)}
+  `);
+  return S.groupSkillAreas(rows.map((r) => ({ skills: r.skills, availableNow: r.available })));
+}
+
+/**
  * Re-embeds one member's event profile (the update_profile tool calls this
  * when the intake completes and after later edits). Returns false if there is
  * no profile text to embed yet.
@@ -120,6 +138,12 @@ export function queryEmbeddingText(queryText: string, neededSkills: readonly str
 export type Ranked = {
   card: MatchCard;
   score: number;
+  /**
+   * What the search asked for and which of it this candidate lacks, plus the
+   * reason shown if they're only a closest fit (what they do bring, and what's
+   * not listed). Built from the same evidence as the card.
+   */
+  gap: { asked: string[]; missing: string[]; closestReason: string };
   /** Hybrid-search diagnostics; never sent to the browser. */
   debug: { keywordRank: number | null; vectorRank: number | null; similarity: number | null };
 };
@@ -171,7 +195,9 @@ export async function rankHackers(input: MatchPeopleInput): Promise<Ranked[]> {
       evidence,
       reason: personReason(evidence),
     };
-    return { card, score, debug: debugOf(row) };
+    const missing = missingSkills(asked, row.skills);
+    const closestReason = personClosestReason(evidence, card.skills, asked, missing);
+    return { card, score, gap: { asked, missing, closestReason }, debug: debugOf(row) };
   }).sort(byScore);
 }
 
@@ -205,7 +231,7 @@ export async function rankTeams(input: MatchPeopleInput): Promise<Ranked[]> {
     fused as (${fusedSql(sql`kw.id::text`)})
     select t.id, t.name, t.idea, t.track, t.wanted_skills, t.max_size,
       (select count(*) from team_members tm where tm.team_id = t.id and tm.user_id <> t.owner_id)::int + 1 as size,
-      p.user_id, p.handle, p.name as owner_name, p.hacky_style, em.role,
+      p.user_id, p.handle, p.name as owner_name, p.hacky_style, p.photo_url, em.role,
       omp.goal as owner_goal, coalesce(omp.motivations, '{}') as owner_motivations,
       f.kw_rank, f.vec_rank, f.sim
     from fused f
@@ -245,6 +271,7 @@ export async function rankTeams(input: MatchPeopleInput): Promise<Ranked[]> {
           handle: row.handle,
           name: row.owner_name,
           hackyStyle: row.hacky_style ?? {},
+          photoUrl: row.photo_url,
           role: row.role,
         },
       },
@@ -253,7 +280,10 @@ export async function rankTeams(input: MatchPeopleInput): Promise<Ranked[]> {
       evidence: { matchedSkills: matched, track: row.track, sameTrack: fit.sameTrack },
       reason: teamReason(matched, row, fit.sameTrack),
     };
-    return { card, score, debug: debugOf(row) };
+    // A team "has" a searched skill when it's asking for it.
+    const missing = missingSkills(searchSkills, row.wanted_skills);
+    const closestReason = teamClosestReason(matched, row, fit.sameTrack, missing);
+    return { card, score, gap: { asked: searchSkills, missing, closestReason }, debug: debugOf(row) };
   }).sort(byScore);
 }
 
@@ -309,7 +339,9 @@ export async function rankMentors(input: MatchMentorsInput): Promise<Ranked[]> {
       evidence: { matchedSkills: matched, availability: row.availability },
       reason: mentorReason(matched, row.availability),
     };
-    return { card, score, debug: debugOf(row) };
+    const missing = missingSkills(requested, row.skills);
+    const closestReason = mentorClosestReason(matched, card.skills, missing, row.availability);
+    return { card, score, gap: { asked: requested, missing, closestReason }, debug: debugOf(row) };
   }).sort(byScore);
 }
 
@@ -322,6 +354,7 @@ type MemberRow = {
   handle: string;
   name: string;
   hacky_style: Record<string, unknown> | null;
+  photo_url: string | null;
   role: MemberRole;
   verified: boolean;
   availability: Availability;
@@ -348,6 +381,7 @@ type TeamRow = {
   handle: string;
   owner_name: string;
   hacky_style: Record<string, unknown> | null;
+  photo_url: string | null;
   role: MemberRole;
   owner_goal: HackGoal | null;
   owner_motivations: string[];
@@ -428,7 +462,7 @@ function memberSearchSql(o: {
     ),
     vec as (${vectorArm(sql`c.id`, "member", o.eventId, o.vector)}),
     fused as (${fusedSql(sql`kw.id`)})
-    select p.user_id, p.handle, p.name, p.hacky_style,
+    select p.user_id, p.handle, p.name, p.hacky_style, p.photo_url,
       em.role, em.verified, em.availability,
       coalesce(mp.skills, '{}') as skills, mp.experience, mp.goal, mp.track,
       coalesce(mp.interests, '{}') as interests, coalesce(mp.motivations, '{}') as motivations,
@@ -509,12 +543,39 @@ function vectorLiteral(vector: readonly number[]): string {
 // Cards, reasons and the result
 // ---------------------------------------------------------------------------
 
-/** Keeps cards at or above MIN_SCORE (up to limit), or returns noMatch. */
+/**
+ * Strong matches (score >= MIN_SCORE, up to limit) come back as "matches".
+ * Otherwise the best few at or above CLOSEST_FLOOR come back as "closest", each
+ * with a reason saying what they bring and what's not listed, plus one note on
+ * what nobody has. noMatch only when no candidate reaches the floor (or every
+ * candidate was filtered out before ranking).
+ */
 export function toResult(kind: SearchKind, ranked: Ranked[], limit = DEFAULT_LIMIT): SearchResult {
   const max = Math.min(MAX_CARDS, Math.max(1, Math.floor(limit)));
   const cards = ranked.filter((r) => r.score >= S.MIN_SCORE).slice(0, max).map((r) => r.card);
-  if (cards.length === 0) return noMatch(kind);
-  return { status: "matches", kind, cards };
+  if (cards.length > 0) return { status: "matches", kind, cards };
+
+  const near = ranked.filter((r) => r.score >= S.CLOSEST_FLOOR).slice(0, Math.min(S.CLOSEST_MAX, max));
+  if (near.length === 0) return noMatch(kind);
+  return {
+    status: "closest",
+    kind,
+    cards: near.map((r) => ({ ...r.card, reason: r.gap.closestReason })),
+    note: closestNote(kind, ranked),
+  };
+}
+
+/** What nobody ranked has (or that nobody has it all), in one line. */
+function closestNote(kind: SearchKind, ranked: Ranked[]): string {
+  const asked = ranked[0]?.gap.asked ?? [];
+  const lacking = asked.filter((skill) => ranked.every((r) => r.gap.missing.includes(skill)));
+  const who = { hacker: "No one still looking", team: "No open team", mentor: "No mentor online right now" }[kind];
+  if (lacking.length > 0) {
+    const verb = kind === "team" ? "is asking for" : "lists";
+    return clampLine(`${who} ${verb} ${listText(lacking, "or")}; these are the closest.`);
+  }
+  if (asked.length > 1) return clampLine(`${who} has all of ${listText(asked)}; these come closest.`);
+  return `${who} is a strong fit for this; these are the closest.`;
 }
 
 function noMatch(kind: SearchKind): NoMatch {
@@ -532,6 +593,7 @@ function personSummary(row: MemberRow): PersonCard["person"] {
     handle: row.handle,
     name: row.name,
     hackyStyle: row.hacky_style ?? {},
+    photoUrl: row.photo_url,
     role: row.role,
   };
 }
@@ -571,6 +633,54 @@ function mentorReason(matched: string[], availability: Availability): string {
   return sentence(bits, "Verified mentor close to your request.");
 }
 
+// Closest-fit reasons: what they do bring (matched skills, else their own top
+// skills), then what the search asked for that they don't list.
+function personClosestReason(e: PersonCard["evidence"], skills: string[], asked: string[], missing: string[]): string {
+  const bits: string[] = [];
+  // Matched skills split into ones this search asked for and ones only on the viewer's wish list.
+  const askedKeys = new Set(asked.map(S.normalizeSkill));
+  const missingKeys = new Set(missing.map(S.normalizeSkill));
+  const hit = e.matchedSkills.filter((s) => askedKeys.has(S.normalizeSkill(s)) && !missingKeys.has(S.normalizeSkill(s)));
+  const wished = e.matchedSkills.filter((s) => !askedKeys.has(S.normalizeSkill(s)));
+  if (hit.length > 0) bits.push(`has ${listText(hit)}`);
+  if (wished.length > 0) bits.push(`${hit.length > 0 ? "also has" : "has"} ${listText(wished)}, which you want`);
+  if (hit.length === 0 && wished.length === 0 && skills.length > 0) bits.push(`knows ${listText(skills.slice(0, 3))}`);
+  if (e.sharedInterests.length > 0) bits.push(`also into ${listText(e.sharedInterests.slice(0, 2))}`);
+  if (e.sameTrack && e.track) bits.push(`same track (${e.track})`);
+  if (missing.length > 0) bits.push(`no ${listText(missing, "or")} listed`);
+  return sentence(bits, "Closest profile to your search at this event.");
+}
+
+function teamClosestReason(matched: string[], row: TeamRow, sameTrack: boolean, missing: string[]): string {
+  const bits: string[] = [];
+  if (matched.length > 0) bits.push(`needs ${listText(matched)}, which you have`);
+  else if (row.wanted_skills.length > 0) bits.push(`wants ${listText(tags(row.wanted_skills).slice(0, 3))}`);
+  if (sameTrack && row.track) bits.push(`same track (${row.track})`);
+  const open = row.max_size - row.size;
+  bits.push(`${open} open ${open === 1 ? "spot" : "spots"}`);
+  if (missing.length > 0) bits.push(`not asking for ${listText(missing, "or")}`);
+  return sentence(bits, "Open team closest to your search.");
+}
+
+function mentorClosestReason(matched: string[], skills: string[], missing: string[], availability: Availability): string {
+  const bits: string[] = [];
+  if (matched.length > 0) bits.push(`knows ${listText(matched)}`);
+  else if (skills.length > 0) bits.push(`knows ${listText(skills.slice(0, 3))}`);
+  if (missing.length > 0) bits.push(`no ${listText(missing, "or")} listed`);
+  bits.push(availability === "available" ? "available now" : "busy right now");
+  return sentence(bits, "Verified mentor closest to your request.");
+}
+
+/** The asked skills this candidate doesn't cover (aliases and implied skills count). */
+function missingSkills(asked: readonly string[], candidateSkills: readonly string[]): string[] {
+  const has = new Set(S.matchSkills(asked, candidateSkills).map(S.normalizeSkill));
+  return tags(S.uniqueSkills(asked).filter((label) => !has.has(S.normalizeSkill(label))));
+}
+
+function clampLine(text: string): string {
+  return text.length <= 280 ? text : `${text.slice(0, 277).trimEnd()}...`;
+}
+
 function sentence(bits: string[], fallback: string): string {
   if (bits.length === 0) return fallback;
   const text = bits.join("; ");
@@ -578,9 +688,9 @@ function sentence(bits: string[], fallback: string): string {
   return full.length <= 280 ? full : `${full.slice(0, 277).trimEnd()}...`;
 }
 
-function listText(items: string[]): string {
+function listText(items: string[], joiner: "and" | "or" = "and"): string {
   if (items.length <= 1) return items[0] ?? "";
-  return `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+  return `${items.slice(0, -1).join(", ")} ${joiner} ${items.at(-1)}`;
 }
 
 /** Tags as the contract allows them: trimmed, 1–40 chars, at most 30. */

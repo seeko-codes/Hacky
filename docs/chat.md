@@ -8,14 +8,14 @@ How the agent chat works and how the web app talks to it. Built on AI SDK 7: `ai
 2. The web app loads the thread, then `useChat` posts only the newest message to `POST /api/chat`.
 3. The server checks the Better Auth session and event membership, loads the stored thread, adds the new message, and runs `streamText` with Gemini (`server/agent/model.ts`), the tools, and a 5-step limit.
 4. The reply streams back as a UI message stream: `text` parts, plus one `tool-<name>` part per tool call whose `state` changes until its `output` is ready. When it ends, the server upserts the user and assistant messages by `id`.
-5. Intake questions: the model calls `ask_with_options` (input `{ question, options }`). It has no server `execute`, so the stream stops there. The UI shows chips, the tapped chip becomes the tool output via `addToolOutput`, and `useChat` posts again by itself. The server continues the same assistant message (same `id`).
+5. Intake questions: the model calls `ask_with_options` (input `{ say, question, options }`; `say` is the short line answering what they just said, shown above the question). It has no server `execute`, so the stream stops there. The UI shows chips, the tapped chip (or typed text) becomes the tool output `{ answer }` via `addToolOutput`, and `useChat` posts again by itself. The server continues the same assistant message (same `id`). If a new message arrives while a question is still open (another tab), the server closes it as `{ answer, skipped: true }`; show no answer bubble for those.
 6. Tool outputs render as cards chosen by tool name (shapes in `shared/contract.ts`). The agent never sends, accepts or claims anything. Card buttons call the normal `/api` routes.
 
 ## API
 
 `POST /api/chat` takes JSON `{ eventSlug, message }`. `message` is the last `UIMessage` in the chat: a new user message, or the assistant message that now carries an `ask_with_options` answer. The server never takes history or identity from the client. It reads only the new user text, or the answer to the pending question. The response is a `text/event-stream` (header `x-vercel-ai-ui-message-stream: v1`). Let `useChat` parse it; don't parse it yourself. Returns 401 with no session and 403 if the user isn't in the event.
 
-History (planned): `GET /api/events/<slug>/chat` returns `{ messages: UIMessage[] }`, oldest first. Both routes are defined in `shared/contract.ts`.
+History: `GET /api/events/<slug>/chat` returns `{ messages: UIMessage[] }`, oldest first. Both routes are defined in `shared/contract.ts`.
 
 ## Client (Vite + React, JS)
 
@@ -56,7 +56,7 @@ export function HackyChat({ eventSlug, initialMessages }) {
   const answer = (text) => {
     if (!ready || !text.trim()) return;
     clearError();
-    if (pending) addToolOutput({ tool: 'ask_with_options', toolCallId: pending.toolCallId, output: text });
+    if (pending) addToolOutput({ tool: 'ask_with_options', toolCallId: pending.toolCallId, output: { answer: text } });
     else sendMessage({ text });
   };
 
@@ -95,7 +95,7 @@ function Chips({ part, onAnswer }) {
     <div>
       <p className="assistant">{question}</p>
       {part.state === 'output-available'
-        ? <p className="user">{part.output}</p>
+        ? <p className="user">{typeof part.output === 'string' ? part.output : part.output.answer}</p>
         : options.map((o) => <button key={o} disabled={!onAnswer} onClick={() => onAnswer(o)}>{o}</button>)}
     </div>
   );

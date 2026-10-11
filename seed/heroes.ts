@@ -51,6 +51,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "Backend engineer who loves clean APIs and boring, reliable databases. Last summer I built appointment services for a small clinic.",
     links: site("maya_backend"),
     hackyStyle: { look: "cat", color: "mint", flair: "stars", move: "bounce" },
+    photoUrl: "/assets/people/iris.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -109,6 +110,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "Product designer on a mission to make health apps less scary. Figma is my happy place.",
     links: site("ivy_health"),
     hackyStyle: { look: "mochi", color: "rose", flair: "hearts", move: "dance" },
+    photoUrl: "/assets/people/ren.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -138,6 +140,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "First hackathon! I know some Python and HTML and I'm here to learn from people who have done this before.",
     links: {},
     hackyStyle: { look: "star", color: "sunset", flair: "stars", move: "bounce" },
+    photoUrl: "/assets/people/mika.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -168,6 +171,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "ML engineer who trains models on medical images for fun. Looking for builders who want to ship something real in 36 hours.",
     links: site("kai_ml"),
     hackyStyle: { look: "pixel", color: "ice", flair: "none", move: "hype" },
+    photoUrl: "/assets/people/noah.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -197,6 +201,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "Pre-med turned product person. I keep teams focused, run the user interviews and give the pitch.",
     links: site("rina_owner"),
     hackyStyle: { look: "cat", color: "sunset", flair: "hearts", move: "bounce" },
+    photoUrl: "/assets/people/aya.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -226,6 +231,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "Hardware tinkerer. If it has a sensor, I want to wire it up.",
     links: {},
     hackyStyle: { look: "star", color: "mint", flair: "none", move: "dance" },
+    photoUrl: "/assets/people/jules.webp",
     memberships: [
       {
         event: KNIGHTHACKS,
@@ -255,6 +261,7 @@ export const heroPeople: SeedPerson[] = [
     bio: "Security engineer who has debugged more OAuth redirects than I can count. Bring me your auth bugs.",
     links: site("leo_auth"),
     hackyStyle: { look: "knit", color: "berry", flair: "stars", move: "idle" },
+    photoUrl: "/assets/people/kai.webp",
     memberships: [
       {
         event: KNIGHTHACKS,

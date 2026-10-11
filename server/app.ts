@@ -10,6 +10,11 @@ import { demoRoutes } from "./routes/demo.js";
 import { eventRoutes } from "./routes/events.js";
 import { ApiFail, type AppEnv } from "./routes/http.js";
 import { meRoutes } from "./routes/me.js";
+import { chatRoutes } from "./routes/chat.js";
+import { requestsRoutes } from "./routes/requests.js";
+import { conversationsRoutes } from "./routes/conversations.js";
+import { helpRoutes } from "./routes/help.js";
+import { realtimeRoutes } from "./routes/realtime.js";
 
 // The whole API. Vercel serves it under /api (see api/index.ts and vercel.json).
 // Routes and their Zod schemas are listed in shared/contract.ts.
@@ -65,5 +70,10 @@ app.get("/health", async (c) => {
 app.route("/", meRoutes);
 app.route("/", eventRoutes);
 app.route("/", demoRoutes);
+app.route("/", chatRoutes);
+app.route("/", requestsRoutes);
+app.route("/", conversationsRoutes);
+app.route("/", helpRoutes);
+app.route("/", realtimeRoutes);
 
 export type AppType = typeof app;

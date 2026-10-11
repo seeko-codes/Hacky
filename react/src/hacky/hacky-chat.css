@@ -1,0 +1,105 @@
+/* Hacky agent chat: one turn per reply, chips for questions, cards by tool name. */
+.hc-turn{display:flex;flex-direction:column;gap:12px;min-width:0;container:hc-turn/inline-size}
+.hc-text{white-space:pre-line}
+.hc-line{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+.hc-turn .recommendation-group{margin:0}
+
+.hc-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hc-chip{min-height:var(--control-height);padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:var(--blue);font-size:14px;font-weight:700;line-height:1.3;text-align:left}
+.hc-chip:hover:not(:disabled){background:var(--hover);border-color:var(--focus)}
+.hc-chip:active:not(:disabled){transform:scale(.97)}
+.hc-chip:disabled{color:var(--muted);opacity:.6}
+
+/* Result cards read in about two seconds: head (avatar, name, one quiet line), one "why" line,
+   up to three skills, one main action. They sit 2 across and stack when the chat is narrow. */
+@container hc-turn (max-width:499px){.hc-turn .matches{grid-template-columns:minmax(0,1fr)}}
+.hc-card{display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px;border:1px solid var(--line);border-radius:var(--object-radius);background:var(--white)}
+.hc-head{display:flex;align-items:center;gap:10px;min-width:0}
+.hc-head>.avatar{width:40px;height:40px}
+.hc-title{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}
+.hc-turn .hc-card .name{font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+/* Meta facts joined by dots. Each dot sits in its fact's left padding; the inner row is shifted
+   left by that padding and clipped, so a dot at the start of a wrapped line is hidden. */
+.hc-sub{display:block;overflow:hidden;margin-top:2px;font-size:13px;line-height:1.4;color:var(--muted)}
+.hc-sub>span{display:flex;flex-wrap:wrap;margin-left:-14px}
+.hc-sub>span>span{position:relative;max-width:100%;padding-left:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-sub>span>span::before{content:'·';position:absolute;left:0;width:14px;text-align:center}
+.hc-why{margin:0;font-size:14px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hc-bio{margin:0;font-size:13px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.hc-tags li{max-width:100%;padding:2px 8px;border-radius:999px;background:var(--wash);color:var(--muted);font-size:12px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-tags li.matched{background:var(--selection);color:var(--ink);font-weight:700}
+/* One main button; a secondary action is a small text link beside it. Pinned to the bottom so
+   buttons line up across a row of cards. */
+.hc-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:auto}
+.hc-actions .hk-button{min-height:40px;padding:8px 16px}
+.hc-link{min-height:40px;padding:0 2px;border:0;border-radius:6px;background:none;color:var(--link);font-size:14px;font-weight:700;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.hc-link:hover{color:var(--link-hover);text-decoration-thickness:2px}
+/* "Closest fit": a search with no strong match. Quieter than the name. */
+.hc-closest{display:inline-flex;align-items:center;padding:1px 7px;border:1px dashed var(--line);border-radius:5px;color:var(--muted);font-size:12px;line-height:18px;font-weight:700;white-space:nowrap}
+
+/* Draft, help request and status cards stack their fields. */
+.hc-form{gap:12px}
+.hc-form .hc-actions{margin-top:0}
+.hc-hint{font-size:12px;line-height:1.4;color:var(--muted)}
+.hc-card textarea{height:auto;min-height:96px;max-height:none;padding:10px 12px;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--paper);color:var(--ink);line-height:1.5;resize:vertical}
+.hc-card textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hc-card :is(input,textarea):disabled{color:var(--muted)}
+.hc-alert{margin:0;font-size:14px;line-height:1.5;font-weight:700;color:var(--sponsor-ink)}
+.hc-done{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;line-height:1.5}
+.hc-done .toggle{padding-left:0;color:var(--blue)}
+.hc-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0}
+.hc-stats div{padding:8px 10px;border-radius:var(--control-radius);background:var(--wash)}
+.hc-stats dt{font-size:12px;line-height:1.3;color:var(--muted)}
+.hc-stats dd{margin:2px 0 0;font-size:18px;font-weight:700}
+.hc-status{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:480px){.hc-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.hc-skeleton{flex-direction:row;align-items:center}
+.hc-skeleton-avatar{width:40px;height:40px;flex-shrink:0;border-radius:50%}
+.hc-skeleton-lines{flex:1;display:grid;gap:8px}
+.hc-skeleton-lines i{display:block;height:12px;border-radius:6px}
+.hc-skeleton-lines i+i{width:60%}
+.hc-skeleton-avatar,.hc-skeleton-lines i{background:linear-gradient(90deg,var(--wash) 25%,var(--hover) 50%,var(--wash) 75%);background-size:200% 100%;animation:hc-shimmer 1.2s linear infinite}
+@keyframes hc-shimmer{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.hc-skeleton-avatar,.hc-skeleton-lines i{animation:none}}
+
+/* The brief's Hacky: its own clip, or the still pet floating gently until there is one. */
+.hacky-brief > .working-hacky.listening:not(.hacky-brief-film) { animation: hc-brief-float 4.8s ease-in-out infinite }
+@keyframes hc-brief-float { 0%,100% { transform: translateY(0) rotate(-1.5deg) } 50% { transform: translateY(-6px) rotate(1.5deg) } }
+@media (prefers-reduced-motion: reduce) { .hacky-brief > .working-hacky.listening { animation: none } }
+/* The animated Hacky fills its frame edge to edge, so it gets more room than the still pet. */
+.hacky-brief > .working-hacky.hacky-brief-film { width: clamp(160px, 30dvh, 280px); height: clamp(160px, 30dvh, 280px) }
+@media (max-height: 700px) { .hacky-brief > .working-hacky.hacky-brief-film { width: clamp(120px, 24dvh, 160px); height: clamp(120px, 24dvh, 160px) } }
+@media (max-height: 500px) and (min-width: 600px) { .hacky-brief > .working-hacky.hacky-brief-film { width: 88px; height: 88px } }
+/* The thinking clip while a reply is on its way. */
+.msg.waiting > .working-hacky.hacky-thinking-film { width: 112px; height: 112px; margin-bottom: 4px }
+
+/* Draft intro: the form folds away smoothly once sent, leaving a short "Sent" line. */
+.hc-collapse { display:grid; grid-template-rows:1fr; opacity:1; transition:grid-template-rows .38s var(--ease, ease), opacity .24s ease }
+.hc-collapse > .hc-collapse-inner { min-height:0; overflow:hidden }
+.hc-collapse.closed { grid-template-rows:0fr; opacity:0 }
+.hc-collapse.instant { transition:none }
+.hc-sent { display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; margin:2px 0 0; font-size:15px; font-weight:600; color:var(--ink); animation:hc-sent-in .32s .18s var(--ease, ease) both }
+.hc-sent.instant { animation:none }
+.hc-sent svg { width:18px; height:18px; fill:none; stroke:var(--blue); stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round }
+.hc-sent .toggle { padding-left:0; color:var(--blue); font-weight:500 }
+@keyframes hc-sent-in { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:none } }
+@media (prefers-reduced-motion: reduce) { .hc-collapse { transition:none } .hc-sent { animation:none } }
+
+/* Team preview card: name, spots left, what they're looking for, View details. */
+.hc-team { gap:8px }
+.hc-team .hc-title .name { font-size:17px }
+.hc-team-spots { margin:0; color:var(--muted); font-size:14px }
+.hc-team-wants { display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px }
+.hc-team-label { margin:0; color:var(--muted); font-size:13px }
+/* Team details dialog (reuses the profile dialog's sheet). */
+.team-identity { text-align:left }
+.team-facts { margin:4px 0 0; color:var(--muted); font-size:14px }
+.team-members { list-style:none; margin:0; padding:0; display:grid; gap:4px }
+.team-member { display:flex; align-items:center; gap:12px; width:100%; padding:8px; border:0; border-radius:12px; background:transparent; color:var(--ink); font:inherit; text-align:left; cursor:pointer }
+.team-member:hover, .team-member:focus-visible { background:var(--wash) }
+.team-member .avatar { width:40px; height:40px; flex:0 0 40px }
+.team-member .name { flex:1; font-weight:600 }
+.team-cta { padding:8px 0 4px }
+.team-cta .hk-button { width:100% }

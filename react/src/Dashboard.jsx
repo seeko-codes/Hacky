@@ -8,7 +8,7 @@ function DashboardIcon({path}) {
 export default function Dashboard() {
   const [dialog, setDialog] = useState(null);
   const menu = useRef(null);
-  const entry = '/index.html?onboarding=1';
+  const entry = '/index.html';
 
   function openDialog(event, next) {
     // WebKit does not focus buttons on pointer clicks; retain the trigger for dialog restoration.

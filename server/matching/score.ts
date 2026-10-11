@@ -23,8 +23,16 @@ export const WEIGHTS = {
  */
 export const EXPERIENCE_WEIGHT = 2;
 
-/** Best score below this returns noMatch; weaker cards are dropped too. */
+/** A strong match: cards at or above this come back as status "matches". */
 export const MIN_SCORE = 0.45;
+
+/**
+ * When nothing reaches MIN_SCORE, up to CLOSEST_MAX candidates at or above this
+ * floor come back as status "closest" (labelled as such). Below it for everyone,
+ * or no candidates at all, is noMatch.
+ */
+export const CLOSEST_FLOOR = 0.15;
+export const CLOSEST_MAX = 3;
 
 /**
  * The vector list only keeps candidates at least this similar (cosine) to the
@@ -111,6 +119,9 @@ const IMPLIES: Record<string, string[]> = {
   graphql: ["apis", "backend"],
   mongodb: ["backend"],
   fullstack: ["frontend", "backend"],
+  // Machine learning and LLMs are AI; "AI" alone doesn't imply either.
+  "machine learning": ["ai"],
+  llms: ["ai"],
   pytorch: ["machine learning"],
   tensorflow: ["machine learning"],
   "scikit-learn": ["machine learning"],
@@ -152,7 +163,9 @@ export function expandSkills(skills: readonly string[]): Set<string> {
 
 // Skill words found in free text count as skills the search asks for.
 // Left out: words that are also everyday English ("go", "express", "next").
-const AMBIGUOUS = new Set(["go", "next", "ts", "js", "py", "tf", "express", "swift"]);
+// "ai" too: in free text it usually names the project's domain ("my first AI
+// project"), not a skill; an explicit neededSkills "AI" still matches ML people.
+const AMBIGUOUS = new Set(["go", "next", "ts", "js", "py", "tf", "express", "swift", "ai"]);
 const VOCABULARY = [
   ...new Set([
     ...Object.keys(ALIASES),
@@ -255,6 +268,77 @@ export function blendedCoverage(
   if (a === null) return b;
   if (b === null) return a;
   return round(ASKED_SKILL_SHARE * a + (1 - ASKED_SKILL_SHARE) * b);
+}
+
+// ---------------------------------------------------------------------------
+// Skill areas (short chips for "what do you need a mentor for?")
+// ---------------------------------------------------------------------------
+
+// Normalized skills (after aliases and IMPLIES) that put someone in an area.
+// Order breaks ties. Skills in no area are returned as "other".
+const AREAS: { area: string; keys: string[] }[] = [
+  { area: "AI & ML", keys: ["machine learning", "llms", "ai", "artificial intelligence", "nlp", "computer vision", "deep learning", "pytorch", "tensorflow", "scikit-learn", "hugging face", "generative ai", "genai", "rag", "langchain", "prompt engineering", "data science", "ai agents", "agents"] },
+  { area: "Frontend & UI", keys: ["frontend", "react", "vue", "svelte", "angular", "next.js", "css", "html", "tailwind", "wcag", "accessibility", "a11y", "ui", "three.js"] },
+  { area: "Design & UX", keys: ["design", "ux", "figma", "ui design", "ux design", "product design", "prototyping", "user research"] },
+  { area: "Backend & APIs", keys: ["backend", "node.js", "apis", "graphql", "express", "django", "flask", "fastapi", "go", "java", "spring boot", "rails", "ruby", "rust", "microservices", "websockets"] },
+  { area: "Data & databases", keys: ["sql", "postgres", "mysql", "mongodb", "data", "databases", "database", "apache spark", "spark", "airflow", "data engineering", "redis", "supabase", "firebase", "etl", "analytics", "pandas", "data visualization"] },
+  { area: "Auth & security", keys: ["auth", "security", "oauth", "jwt", "cybersecurity", "encryption", "cryptography", "identity"] },
+  { area: "Mobile apps", keys: ["mobile", "ios", "android", "flutter", "swift", "swiftui", "kotlin", "react native", "expo"] },
+  { area: "Cloud & DevOps", keys: ["devops", "cloud", "aws", "gcp", "google cloud", "azure", "docker", "kubernetes", "github actions", "ci/cd", "terraform", "vercel", "deployment", "serverless", "linux"] },
+  { area: "Hardware & IoT", keys: ["hardware", "iot", "arduino", "raspberry pi", "embedded", "embedded systems", "esp32", "robotics", "electronics", "c", "c++"] },
+  { area: "Web3 & blockchain", keys: ["blockchain", "web3", "solidity", "ethereum", "smart contracts", "solana"] },
+  { area: "Game dev", keys: ["game dev", "game development", "unity", "unreal", "unreal engine", "godot", "c#"] },
+  { area: "AR & VR", keys: ["ar", "vr", "xr", "ar/vr", "webxr"] },
+  { area: "Pitching & product", keys: ["pitching", "pitch", "product", "product management", "business", "startups", "public speaking", "storytelling"] },
+];
+const AREA_KEYS = AREAS.map((a) => new Set(a.keys));
+
+export type SkillArea = {
+  area: string;
+  /** People (e.g. online mentors) with at least one skill in this area. */
+  people: number;
+  /** How many of them are available now (the rest are busy). */
+  availableNow: number;
+  /** Their skills in this area, as they spelled them (at most 5). */
+  skills: string[];
+};
+
+/**
+ * Groups people's skills into short areas ("AI & ML", "Auth & security"),
+ * areas with people available now first, then most-covered. `other` holds
+ * skills that fit no area.
+ */
+export function groupSkillAreas(
+  people: readonly { skills: readonly string[]; availableNow: boolean }[],
+): { areas: SkillArea[]; other: string[] } {
+  const found = AREAS.map(() => ({ people: 0, availableNow: 0, skills: [] as string[] }));
+  const other: string[] = [];
+  for (const { skills, availableNow } of people) {
+    const hit = new Set<number>();
+    for (const label of skills) {
+      const expanded = expandSkills([label]);
+      let placed = false;
+      AREA_KEYS.forEach((keys, i) => {
+        if ([...expanded].some((k) => keys.has(k))) {
+          found[i]!.skills.push(label.trim());
+          hit.add(i);
+          placed = true;
+        }
+      });
+      if (!placed && label.trim()) other.push(label.trim());
+    }
+    for (const i of hit) {
+      found[i]!.people += 1;
+      if (availableNow) found[i]!.availableNow += 1;
+    }
+  }
+  const areas = found
+    .map((f, i) => ({ i, area: AREAS[i]!.area, people: f.people, availableNow: f.availableNow, skills: uniqueSkills(f.skills) }))
+    .filter((a) => a.people > 0)
+    .sort((a, b) =>
+      b.availableNow - a.availableNow || b.people - a.people || b.skills.length - a.skills.length || a.i - b.i)
+    .map(({ area, people, availableNow, skills }) => ({ area, people, availableNow, skills: skills.slice(0, 5) }));
+  return { areas, other: uniqueSkills(other) };
 }
 
 // ---------------------------------------------------------------------------

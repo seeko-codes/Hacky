@@ -7,14 +7,14 @@ import {
 } from "@ai-sdk/google";
 import { defaultSettingsMiddleware, embedMany, wrapLanguageModel } from "ai";
 
-export const CHAT_MODEL_ID = "gemini-3.8-flash";
+export const CHAT_MODEL_ID = "gemini-3.5-flash-lite";
 export const EMBEDDING_MODEL_ID = "gemini-embedding-001";
 /** Matches the vector(768) columns. Changing it means a migration and re-embedding. */
 export const EMBEDDING_DIMENSIONS = 768;
 
 /**
- * Chat model for streamText. Thinking is set to "low" (the floor for
- * gemini-3.8-flash) so chat replies and tool calls come back fast.
+ * Chat model for streamText. Thinking is set to "low" so chat replies and
+ * tool calls come back fast.
  */
 export const chatModel = wrapLanguageModel({
   model: google(CHAT_MODEL_ID),

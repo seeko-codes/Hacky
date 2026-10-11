@@ -66,8 +66,9 @@ const Ok = z.object({ ok: z.literal(true) });
 // People
 // ---------------------------------------------------------------------------
 
-// The avatar. Option ids live in react/src/mascot-data.js and are still being
-// designed, so known keys are plain strings and unknown keys pass through.
+// The Hacky character, the avatar for people without a photo. Option ids live
+// in react/src/mascot-data.js and are still being designed, so known keys are
+// plain strings and unknown keys pass through.
 export const HackyStyle = z
   .looseObject({
     look: z.string().max(40).optional(),
@@ -77,6 +78,10 @@ export const HackyStyle = z
   })
   .refine((style) => JSON.stringify(style).length <= 2000, "hackyStyle is too large");
 export type HackyStyle = z.infer<typeof HackyStyle>;
+
+// The profile photo, the avatar when set: a site path (/assets/...) or an https
+// URL. Same rule as the profiles_photo_url_format check in the database.
+export const PhotoUrl = z.string().regex(/^(\/assets\/|https:\/\/)/, "Must be an /assets/ path or an https URL");
 
 export const ProfileLinks = z.object({
   github: HttpsUrl.optional(),
@@ -91,6 +96,7 @@ export const PublicProfile = z.object({
   handle: Handle,
   name: z.string().trim().min(1).max(80),
   hackyStyle: HackyStyle,
+  photoUrl: PhotoUrl.nullable(),
   bio: z.string().max(500).nullable(),
   links: ProfileLinks,
   isDemo: z.boolean(),
@@ -103,6 +109,7 @@ export const PersonSummary = PublicProfile.pick({
   handle: true,
   name: true,
   hackyStyle: true,
+  photoUrl: true,
 }).extend({ role: MemberRole });
 export type PersonSummary = z.infer<typeof PersonSummary>;
 
@@ -114,7 +121,7 @@ const intakeFields = {
   goal: HackGoal.nullable(),
   track: z.string().trim().max(80).nullable(),
   interests: Tags,
-  idea: z.string().trim().max(1000).nullable(),
+  idea: z.string().trim().max(2000).nullable(),
   motivations: z.array(Motivation).max(6),
 };
 
@@ -411,6 +418,10 @@ export const TeamSummary = z.object({
 });
 export type TeamSummary = z.infer<typeof TeamSummary>;
 
+// The team details view: everyone on the team, lead first (blocked people left out).
+export const TeamDetail = TeamSummary.extend({ members: z.array(PersonSummary) });
+export type TeamDetail = z.infer<typeof TeamDetail>;
+
 export const TeamCard = z.object({
   card: z.literal("team"),
   team: TeamSummary,
@@ -449,12 +460,24 @@ export const NoMatch = z.object({
 });
 export type NoMatch = z.infer<typeof NoMatch>;
 
+// Nothing reached the strong-match threshold, but a few candidates came close.
+// note says what's missing ("No mentor lists Solidity; these are the closest.");
+// each card's reason says what that person does bring. Both come from the search.
+export const ClosestMatches = z.object({
+  status: z.literal("closest"),
+  kind: SearchKind,
+  cards: z.array(MatchCard).min(1).max(3),
+  note: Reason,
+});
+export type ClosestMatches = z.infer<typeof ClosestMatches>;
+
 export const SearchResult = z.discriminatedUnion("status", [
   z.object({
     status: z.literal("matches"),
     kind: SearchKind,
     cards: z.array(MatchCard).min(1).max(10),
   }),
+  ClosestMatches,
   NoMatch,
 ]);
 export type SearchResult = z.infer<typeof SearchResult>;
@@ -476,20 +499,55 @@ export type HelpRequestCard = z.infer<typeof HelpRequestCard>;
 
 // Output schema per tool name (tool names from the plan's Agent section).
 // Tools not listed here answer in text.
+// my_status: the user's pending requests, team and help requests at a glance.
+const StatusRequest = z.object({
+  id: Uuid,
+  person: PersonSummary,
+  intro: z.string(),
+  team: TeamRef.nullable(),
+  createdAt: Timestamp,
+});
+export const StatusCard = z.object({
+  card: z.literal("status"),
+  incoming: z.array(StatusRequest),
+  outgoing: z.array(StatusRequest),
+  connectedCount: z.number().int().min(0),
+  team: z
+    .object({
+      id: Uuid,
+      name: z.string(),
+      isOwner: z.boolean(),
+      size: z.number().int().min(1),
+      maxSize: z.number().int().min(1),
+      wantedSkills: z.array(z.string()),
+    })
+    .nullable(),
+  helpRequests: z.array(
+    z.object({ id: Uuid, title: z.string(), status: HelpStatus, mentor: PersonSummary.nullable(), createdAt: Timestamp }),
+  ),
+});
+export type StatusCard = z.infer<typeof StatusCard>;
+
 export const toolOutputs = {
   search_people: SearchResult,
   get_profile: PersonDetail,
   draft_intro: DraftCard,
   draft_help_request: HelpRequestCard,
+  my_status: StatusCard,
 } as const;
 
 // Client-side tool: the UI shows chips and returns the tapped (or typed) answer.
 export const askWithOptions = {
   input: z.object({
+    // The short line before the question that answers what they just said. Required so the
+    // model always writes it; questions saved before it existed load with "" (history.ts).
+    say: z.string().max(200)
+      .describe("One short line that responds to what they just said, e.g. a greeting by first name or a quick thanks."),
     question: z.string().min(1).max(200),
     options: z.array(z.string().min(1).max(60)).min(2).max(6),
   }),
-  output: z.object({ answer: z.string().trim().min(1).max(500) }),
+  // skipped: set by the server when a new message arrived instead of an answer.
+  output: z.object({ answer: z.string().trim().min(1).max(500), skipped: z.boolean().optional() }),
 } as const;
 export type AskWithOptionsInput = z.infer<typeof askWithOptions.input>;
 export type AskWithOptionsOutput = z.infer<typeof askWithOptions.output>;
@@ -540,6 +598,7 @@ export const DemoPerson = PublicProfile.pick({
   handle: true,
   name: true,
   hackyStyle: true,
+  photoUrl: true,
 }).extend({ events: z.array(MyEvent) });
 export type DemoPerson = z.infer<typeof DemoPerson>;
 
@@ -590,6 +649,13 @@ export const endpoints = {
     path: "/api/events/:slug/people/:handle",
     params: z.object({ slug: Slug, handle: Handle }),
     response: PersonDetail,
+  },
+
+  team: {
+    method: "GET",
+    path: "/api/events/:slug/teams/:id",
+    params: z.object({ slug: Slug, id: Uuid }),
+    response: TeamDetail,
   },
 
   // Response is an AI SDK UI message stream.

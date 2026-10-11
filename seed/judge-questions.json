@@ -1,0 +1,199 @@
+{
+  "event": "knighthacks-ix",
+  "viewer": "demo_kiran_audio",
+  "questions": [
+    {
+      "id": "react-dev",
+      "category": "common",
+      "text": "find me a React developer",
+      "search": { "kind": "hacker", "query": "React developer", "neededSkills": ["React"] },
+      "chat": true
+    },
+    {
+      "id": "backend-teammate",
+      "category": "common",
+      "text": "I need a backend teammate",
+      "search": { "kind": "hacker", "query": "backend teammate", "neededSkills": ["backend"] }
+    },
+    {
+      "id": "ml-person",
+      "category": "common",
+      "text": "looking for someone who does machine learning",
+      "search": { "kind": "hacker", "query": "someone who does machine learning", "neededSkills": ["ML"] }
+    },
+    {
+      "id": "uiux-designer",
+      "category": "common",
+      "text": "Can you find me a UI/UX designer to join my team?",
+      "search": { "kind": "hacker", "query": "UI/UX designer to join my team", "neededSkills": ["UI design", "UX design"] }
+    },
+    {
+      "id": "ios-dev",
+      "category": "common",
+      "text": "I need a mobile dev for an iOS app",
+      "search": { "kind": "hacker", "query": "mobile dev for an iOS app", "neededSkills": ["iOS", "mobile"] }
+    },
+    {
+      "id": "python-data",
+      "category": "common",
+      "text": "who here knows Python and data science?",
+      "search": { "kind": "hacker", "query": "knows Python and data science", "neededSkills": ["Python", "data science"] }
+    },
+    {
+      "id": "rust-japanese",
+      "category": "specific",
+      "text": "someone who knows Rust and speaks Japanese",
+      "search": { "kind": "hacker", "query": "someone who knows Rust and speaks Japanese", "neededSkills": ["Rust", "Japanese"] }
+    },
+    {
+      "id": "arduino-sensor",
+      "category": "specific",
+      "text": "help with my Arduino sensor",
+      "search": { "kind": "mentor", "query": "help with my Arduino sensor", "neededSkills": ["Arduino", "sensors"] },
+      "chat": true
+    },
+    {
+      "id": "pitch-deck-designer",
+      "category": "specific",
+      "text": "a designer for my pitch deck",
+      "search": { "kind": "hacker", "query": "designer for my pitch deck", "neededSkills": ["design", "pitching"] }
+    },
+    {
+      "id": "solidity-mentor",
+      "category": "specific",
+      "text": "a mentor for Solidity",
+      "search": { "kind": "mentor", "query": "Solidity", "neededSkills": ["Solidity"] },
+      "chat": true
+    },
+    {
+      "id": "arvr-health",
+      "category": "specific",
+      "text": "an AR/VR dev for a health app",
+      "search": { "kind": "hacker", "query": "AR/VR dev for a health app", "neededSkills": ["AR", "VR"] }
+    },
+    {
+      "id": "oauth-node-mentor",
+      "category": "specific",
+      "text": "I'm stuck on OAuth login in my Node app, can a mentor help?",
+      "search": { "kind": "mentor", "query": "stuck on OAuth login in my Node app", "neededSkills": ["OAuth", "Node.js"] }
+    },
+    {
+      "id": "fhir-mentor",
+      "category": "specific",
+      "text": "need a mentor who knows FHIR and HIPAA for our health data project",
+      "search": { "kind": "mentor", "query": "FHIR and HIPAA for a health data project", "neededSkills": ["FHIR", "HIPAA compliance"] }
+    },
+    {
+      "id": "figma-ui",
+      "category": "specific",
+      "text": "Anyone good with Figma who can make our app look nice?",
+      "search": { "kind": "hacker", "query": "good with Figma, can make our app look nice", "neededSkills": ["Figma", "UI design"] }
+    },
+    {
+      "id": "aws-docker-mentor",
+      "category": "specific",
+      "text": "I need help deploying my app to AWS with Docker",
+      "search": { "kind": "mentor", "query": "deploying my app to AWS with Docker", "neededSkills": ["AWS", "Docker"] }
+    },
+    {
+      "id": "fintech-payments",
+      "category": "specific",
+      "text": "someone into fintech who has worked with payments",
+      "search": { "kind": "hacker", "query": "into fintech, has worked with payments", "neededSkills": ["payments", "fintech"] }
+    },
+    {
+      "id": "rag-mentor",
+      "category": "specific",
+      "text": "LLM mentor please, my RAG pipeline keeps retrieving garbage",
+      "search": { "kind": "mentor", "query": "my RAG pipeline keeps retrieving garbage", "neededSkills": ["RAG", "LLMs"] }
+    },
+    {
+      "id": "cobol-mentor",
+      "category": "odd",
+      "text": "COBOL mentor",
+      "search": { "kind": "mentor", "query": "COBOL", "neededSkills": ["COBOL"] },
+      "chat": true
+    },
+    {
+      "id": "drone-builder",
+      "category": "odd",
+      "text": "someone who's built a drone",
+      "search": { "kind": "hacker", "query": "someone who's built a drone", "neededSkills": ["drones", "hardware"] },
+      "chat": true
+    },
+    {
+      "id": "haskell",
+      "category": "odd",
+      "text": "anyone here know Haskell?",
+      "search": { "kind": "hacker", "query": "knows Haskell", "neededSkills": ["Haskell"] }
+    },
+    {
+      "id": "3d-print-cad",
+      "category": "odd",
+      "text": "a teammate who can do 3D printing and CAD",
+      "search": { "kind": "hacker", "query": "teammate who can do 3D printing and CAD", "neededSkills": ["3D printing", "CAD"] }
+    },
+    {
+      "id": "quantum-mentor",
+      "category": "odd",
+      "text": "is there a mentor for quantum computing?",
+      "search": { "kind": "mentor", "query": "quantum computing", "neededSkills": ["quantum computing"] }
+    },
+    {
+      "id": "sustainability-team",
+      "category": "team",
+      "text": "find an open team in the Sustainability track",
+      "search": { "kind": "team", "query": "open team in the Sustainability track" },
+      "chat": true
+    },
+    {
+      "id": "sound-team",
+      "category": "team",
+      "text": "Is there a team that needs a sound designer?",
+      "search": { "kind": "team", "query": "team that needs a sound designer", "neededSkills": ["sound design"] }
+    },
+    {
+      "id": "ai-team-frontend",
+      "category": "team",
+      "text": "find me a team working on AI that needs a frontend person",
+      "search": { "kind": "team", "query": "team working on AI that needs a frontend person", "neededSkills": ["frontend"] }
+    },
+    {
+      "id": "get-mentor",
+      "category": "vague",
+      "text": "Get a mentor",
+      "chat": true
+    },
+    {
+      "id": "find-someone",
+      "category": "vague",
+      "text": "find me someone",
+      "chat": true
+    },
+    {
+      "id": "hi",
+      "category": "vague",
+      "text": "hi",
+      "chat": true
+    },
+    {
+      "id": "find-team",
+      "category": "vague",
+      "text": "find me a team",
+      "chat": true
+    },
+    {
+      "id": "long-message",
+      "category": "edge",
+      "text": "Hey Hacky! Long story, sorry. My friend and I are building a mental health journaling app for college students for the Health track. The idea is you write a quick entry each night and the app picks up patterns in your mood over the week and nudges you toward campus resources when things look rough. We have most of the frontend in React Native done (screens, navigation, a cute onboarding flow), but neither of us has really done backend before. We need someone who can set up a Postgres database and a simple API for entries and accounts, and ideally someone who has played with sentiment analysis or NLP so the mood detection isn't just keyword matching. Bonus if they care about mental health and don't mind staying up late. We're beginners but we really want to ship something that works by Sunday. Who should we talk to?",
+      "search": { "kind": "hacker", "query": "backend dev who can set up Postgres and an API, ideally with sentiment analysis or NLP, for a mental health journaling app in the Health track", "neededSkills": ["backend", "Postgres", "NLP"] }
+    },
+    {
+      "id": "spanish",
+      "category": "edge",
+      "text": "Hola, busco un compañero de equipo que sepa diseño UI y Figma para una app de salud",
+      "search": { "kind": "hacker", "query": "compañero de equipo que sepa diseño UI y Figma para una app de salud", "neededSkills": ["UI design", "Figma"] },
+      "chat": true
+    }
+  ]
+}

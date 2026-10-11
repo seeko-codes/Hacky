@@ -4,27 +4,35 @@ import HackyFilm from './HackyFilm';
 import {useMedia} from './storage';
 import './Onboarding.css';
 
+// [choice, label, intake motivation id]
 const goals = [
-  ['Build a project', 'Build something'],
-  ['Learn new skills', 'Learn something'],
-  ['Meet people', 'Meet my people'],
-  ['Career opportunities', 'Grow my career'],
-  ['Compete for prizes', 'Win a prize'],
-  ['Have fun', 'Have fun'],
+  ['Build a project', 'Build something', 'build'],
+  ['Learn new skills', 'Learn something', 'learn'],
+  ['Meet people', 'Meet my people', 'meet'],
+  ['Career opportunities', 'Grow my career', 'career'],
+  ['Compete for prizes', 'Win a prize', 'compete'],
+  ['Have fun', 'Have fun', 'fun'],
 ];
-export default function Onboarding({initialPlan, style, onComplete, onSkip}) {
+// onComplete(plan, answers): plan stays local for event picks; answers ({motivations, idea}) go to the intake.
+export default function Onboarding({initialPlan, intake, style, onComplete, onSkip}) {
   const [step, setStep] = useState(1);
   const [reacting, setReacting] = useState(false);
-  const [choices, setChoices] = useState(() => initialPlan?.choices || [initialPlan?.choice].filter(Boolean));
-  const [detail, setDetail] = useState(initialPlan?.detail || '');
+  const [choices, setChoices] = useState(() => initialPlan
+    ? initialPlan.choices || [initialPlan.choice].filter(Boolean)
+    : goals.filter(goal => intake?.motivations?.includes(goal[2])).map(goal => goal[0]));
+  const [detail, setDetail] = useState(() => initialPlan ? initialPlan.detail || '' : intake?.idea || '');
   const heading = useRef(null);
   const [listening, setListening] = useState(false);
 
-  function complete(context = detail) {
+  // Skipping the second question leaves the saved idea alone.
+  function complete(context = detail, keepIdea = false) {
     context = context.trim();
-    const selected = goals.map(([value]) => value).filter(value => choices.includes(value));
+    const picked = goals.filter(([value]) => choices.includes(value));
+    const selected = picked.map(goal => goal[0]);
+    const motivations = picked.map(goal => goal[2]);
     onComplete({choices: selected, detail: context,
-      goal: (selected.length ? selected.join(' + ') : 'Explore everything') + (context ? ': ' + context : ''), pace: '4'});
+      goal: (selected.length ? selected.join(' + ') : 'Explore everything') + (context ? ': ' + context : ''), pace: '4'},
+      keepIdea ? {motivations} : {motivations, idea: context || null});
   }
 
   const acknowledgement = choices.length > 1 ? "I like that mix. We'll make it happen." : {
@@ -79,7 +87,7 @@ export default function Onboarding({initialPlan, style, onComplete, onSkip}) {
       <nav className="companion-nav" aria-label="Onboarding progress">
         <button type="button" className="companion-back" aria-label="Back" disabled={step === 1 || reacting} onClick={() => setStep(1)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
         <span className="companion-progress" aria-label={`Question ${step} of 2`}><i className="active"/><i className={step === 2 ? 'active' : ''}/></span>
-        <button id="skip-plan" type="button" className="companion-skip" onClick={() => step === 1 ? onSkip() : complete('')}>Skip</button>
+        <button id="skip-plan" type="button" className="companion-skip" onClick={() => step === 1 ? onSkip() : complete('', true)}>Skip</button>
       </nav>
       <div className="companion-stage">
         <div className="companion-thought" key={`${step}-${reacting}`}>

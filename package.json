@@ -9,6 +9,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "test:match": "node --env-file=.env.local --import tsx server/matching/test-match.ts",
+    "test:judge": "node --env-file=.env.local --import tsx server/matching/test-judge.ts",
+    "test:history": "node --env-file=.env.local --import tsx --test server/agent/history.test.ts",
+    "check:threads": "node --env-file=.env.local --import tsx server/scripts/check-threads.ts",
     "seed:generate": "node --env-file=.env.local --import tsx seed/generate.ts",
     "seed:load": "node --env-file=.env.local --import tsx seed/load.ts",
     "seed:reset": "node --env-file=.env.local --import tsx seed/reset.ts"
@@ -18,11 +21,13 @@
     "@hono/node-server": "^2.1.4",
     "@neon/config": "^1.8.6",
     "@neon/env": "^1.5.3",
+    "@neon/functions": "^0.11.0",
     "@neondatabase/serverless": "^1.2.0",
     "ai": "^7.0.137",
     "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.13",
+    "jose": "^6.2.12",
     "zod": "^4.6.5"
   },
   "devDependencies": {

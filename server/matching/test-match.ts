@@ -3,6 +3,8 @@
 // seed/match-cases.json against the real database and prints pass/fail per
 // case and the pass rate. All case queries are embedded in one Gemini call.
 // Rows a case sets up (blocks, requests) are removed again afterwards.
+// A case expecting "nothing fits" (noMatch) passes with noMatch or with
+// closest cards (no strong match); top/topBelow need strong matches.
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -71,6 +73,8 @@ function unitTests(): number {
       const skills = S.expandSkills(["Next.js", "Postgres"]);
       assert.ok(skills.has("react") && skills.has("frontend") && skills.has("backend"));
       assert.ok(!S.expandSkills(["frontend"]).has("react"));
+      assert.ok(S.expandSkills(["PyTorch"]).has("ai") && S.expandSkills(["LLMs"]).has("ai"));
+      assert.ok(!S.expandSkills(["AI"]).has("machine learning"));
     }],
     ["needed = search + wanted - has", () => {
       assert.deepEqual(S.computeNeeded(["backend"], ["Backend", "ML"], ["React", "TypeScript"]), ["backend", "ML"]);
@@ -96,6 +100,7 @@ function unitTests(): number {
       assert.deepEqual(S.skillsInText("backend dev into health tech"), ["backend"]);
       assert.deepEqual(S.skillsInText("someone who knows Node.js and ML"), ["node.js", "ml"]);
       assert.deepEqual(S.skillsInText("let's go, next week"), []);
+      assert.deepEqual(S.skillsInText("my first AI project"), []);
     }],
     ["keyword query is an OR of content words", () => {
       const q = S.keywordQuery("find me a backend dev into health tech");
@@ -131,6 +136,45 @@ function unitTests(): number {
     ["shared tags ignore case", () => {
       assert.deepEqual(S.sharedTags(["Health", "AI"], ["health", "games"]), ["health"]);
     }],
+    ["groups skills into areas, most-covered first", () => {
+      const { areas, other } = S.groupSkillAreas([
+        { skills: ["PyTorch", "LLMs"], availableNow: true },
+        { skills: ["React", "CSS"], availableNow: true },
+        { skills: ["OAuth", "JWT", "Postgres"], availableNow: true },
+        { skills: ["ML", "Basket weaving"], availableNow: false },
+        { skills: ["Docker", "AWS"], availableNow: false },
+        { skills: ["Kubernetes"], availableNow: false },
+      ]);
+      assert.equal(areas[0]?.area, "AI & ML");
+      assert.deepEqual([areas[0]?.people, areas[0]?.availableNow], [2, 1]);
+      assert.deepEqual(areas[0]?.skills, ["PyTorch", "LLMs", "ML"]);
+      const names = areas.map((a) => a.area);
+      for (const area of ["Frontend & UI", "Auth & security", "Backend & APIs"]) assert.ok(names.includes(area), area);
+      // Two busy mentors still rank below one available one.
+      assert.ok(names.indexOf("Cloud & DevOps") > names.indexOf("Frontend & UI"));
+      assert.deepEqual(other, ["Basket weaving"]);
+      assert.deepEqual(S.groupSkillAreas([]), { areas: [], other: [] });
+    }],
+    ["strong matches stay matches; otherwise the closest few; noMatch only below the floor", () => {
+      const strong = toResult("mentor", [fakeMentor("mentor_a", 0.6, ["Solidity"], []), fakeMentor("mentor_b", 0.3, ["Solidity"], ["Solidity"])]);
+      assert.equal(strong.status, "matches");
+      assert.equal(strong.status === "matches" && strong.cards.length, 1);
+      assert.equal(strong.status === "matches" && strong.cards[0]?.reason, "Strong reason.");
+
+      const near = toResult("mentor", [0.3, 0.25, 0.2, 0.18, 0.1].map((score, i) => fakeMentor(`mentor_${i}`, score, ["Solidity"], ["Solidity"])));
+      assert.equal(near.status, "closest");
+      if (near.status !== "closest") return;
+      assert.equal(near.cards.length, S.CLOSEST_MAX);
+      assert.equal(near.note, "No mentor online right now lists Solidity; these are the closest.");
+      assert.equal(near.cards[0]?.reason, "Closest reason for mentor_0.");
+      assert.ok(SearchResult.safeParse(near).success);
+
+      const split = toResult("hacker", [fakeMentor("hacker_x", 0.3, ["Rust", "Japanese"], ["Japanese"]), fakeMentor("hacker_y", 0.2, ["Rust", "Japanese"], ["Rust"])]);
+      assert.equal(split.status === "closest" && split.note, "No one still looking has all of Rust and Japanese; these come closest.");
+
+      assert.equal(toResult("mentor", [fakeMentor("mentor_z", S.CLOSEST_FLOOR - 0.01, [], [])]).status, "noMatch");
+      assert.equal(toResult("team", []).status, "noMatch");
+    }],
   ];
   for (const [name, run] of tests) {
     try {
@@ -142,6 +186,25 @@ function unitTests(): number {
   }
   console.log(`unit: ${tests.length}/${tests.length} scoring tests passed\n`);
   return tests.length;
+}
+
+/** A ranked mentor for toResult tests (no database). */
+function fakeMentor(handle: string, score: number, asked: string[], missing: string[]): Ranked {
+  return {
+    card: {
+      card: "mentor",
+      person: { userId: `usr_${handle}`, handle, name: handle, hackyStyle: {}, photoUrl: null, role: "mentor" },
+      verified: true,
+      skills: ["Python"],
+      score,
+      scoreParts: { skillOverlap: 0, relevance: 0.5, availableNow: true },
+      evidence: { matchedSkills: [], availability: "available" },
+      reason: "Strong reason.",
+    },
+    score,
+    gap: { asked, missing, closestReason: `Closest reason for ${handle}.` },
+    debug: { keywordRank: null, vectorRank: 1, similarity: 0.6 },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -219,6 +282,10 @@ async function main() {
       const shown = ranked.slice(0, 4).map((r) => describe(r, c, file.event)).join("\n");
       if (shown) console.log(shown);
       if (result?.status === "noMatch") console.log("      → noMatch");
+      if (result?.status === "closest") {
+        console.log(`      → closest: ${result.note}`);
+        for (const card of result.cards) console.log(`        ~ ${cardKey(card, c, file.event).padEnd(16)} ${card.reason}`);
+      }
     }
   } finally {
     await restore();
@@ -226,7 +293,7 @@ async function main() {
 
   const total = file.cases.length;
   console.log(`\nmatch cases: ${passed}/${total} passed (${Math.round((100 * passed) / total)}%)`);
-  console.log(`threshold MIN_SCORE=${S.MIN_SCORE}, MIN_SIMILARITY=${S.MIN_SIMILARITY}`);
+  console.log(`threshold MIN_SCORE=${S.MIN_SCORE}, CLOSEST_FLOOR=${S.CLOSEST_FLOOR}, MIN_SIMILARITY=${S.MIN_SIMILARITY}`);
   process.exitCode = passed === total ? 0 : 1;
 }
 
@@ -257,23 +324,27 @@ function check(
   is: (key: string) => (card: MatchCard) => boolean,
 ): string[] {
   const failures: string[] = [];
+  // Strong matches only: closest cards never satisfy top, topBelow or topExperience.
   const cards = result.status === "matches" ? result.cards : [];
   const e = c.expect;
 
-  if (e.noMatch && result.status !== "noMatch") {
-    failures.push(`expected noMatch, got ${cards.length} card(s), best score ${ranked[0]?.score}`);
+  // "Nothing fits" means no strong match: noMatch, or closest cards labelled as such.
+  if (e.noMatch && result.status === "matches") {
+    failures.push(`expected no strong match, got ${cards.length} card(s), best score ${ranked[0]?.score}`);
   }
   // A case that only checks who must stay hidden is fine with "nothing fits".
-  if (!e.noMatch && (e.top || e.topBelow) && result.status === "noMatch") {
-    failures.push(`unexpected noMatch (best score ${ranked[0]?.score ?? "none"})`);
+  if (!e.noMatch && (e.top || e.topBelow) && result.status !== "matches") {
+    failures.push(`unexpected ${result.status} (best score ${ranked[0]?.score ?? "none"})`);
   }
   if (e.top && !(cards[0] && is(e.top)(cards[0]))) {
     const at = ranked.findIndex((r) => is(e.top!)(r.card));
     failures.push(`expected top ${e.top}, it ranked ${at < 0 ? "nowhere" : `#${at + 1}`}`);
   }
   for (const key of e.notIn ?? []) {
-    // Checked against everything the search ranked, not just the cards shown.
+    // Checked against everything the search ranked, not just the cards shown,
+    // so hidden people can't come back as closest cards either.
     if (ranked.some((r) => is(key)(r.card))) failures.push(`${key} must not appear`);
+    if (result.status === "closest" && result.cards.some(is(key))) failures.push(`${key} must not appear as a closest card`);
   }
   if (e.topBelow) {
     const [a, b] = e.topBelow;

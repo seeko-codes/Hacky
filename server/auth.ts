@@ -4,6 +4,7 @@
 // There is no public sign-up and no password sign-in. People arrive from the
 // hackathon portal (launch ticket, later) or, with DEMO_MODE=true, from the
 // demo portal, which signs in through the server-only demoSignIn endpoint below.
+import { networkInterfaces } from "node:os";
 import { randomInt } from "node:crypto";
 import { betterAuth, type BetterAuthPlugin } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -16,8 +17,15 @@ import { account, profiles, session, user, verification } from "./db/schema.js";
 
 export const isDemoMode = () => process.env.DEMO_MODE === "true";
 
-// Local dev runs the web app on Vite (port 5173), which proxies /api here.
-const devOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
+// Local dev runs the web app on Vite (port 5173), which proxies /api here. This machine's
+// network addresses count too, so a phone on the same Wi-Fi can open the dev app.
+const lanOrigins = process.env.VERCEL
+  ? []
+  : Object.values(networkInterfaces())
+      .flat()
+      .filter((a) => a && !a.internal && !a.address.startsWith("fe80"))
+      .map((a) => (a!.family === "IPv6" ? `http://[${a!.address}]:5173` : `http://${a!.address}:5173`));
+const devOrigins = ["http://127.0.0.1:5173", "http://localhost:5173", ...lanOrigins];
 const vercelOrigins = [
   process.env.VERCEL_URL,
   process.env.VERCEL_BRANCH_URL,

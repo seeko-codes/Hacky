@@ -4,9 +4,13 @@ export default defineConfig({
   // Declare your Neon services here
   auth: false,
   functions: {
-    // Smoke test that Neon Functions deploy on this project.
-    // The live-updates function replaces it later.
-    hello: { name: "hello", source: "./functions/hello.ts" },
+    // Live updates over WebSocket (see functions/realtime.ts). Deploy with
+    // `npx neon@latest deploy --env .env.local`; the secret comes from that file.
+    realtime: {
+      name: "live updates",
+      source: "./functions/realtime.ts",
+      env: { REALTIME_TOKEN_SECRET: process.env.REALTIME_TOKEN_SECRET! },
+    },
   },
   // Branch policy: per-branch tuning
   branch: (branch) => {
