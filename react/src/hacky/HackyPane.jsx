@@ -5,7 +5,7 @@
 // Each records how many chat messages existed when it was made, so it stays
 // in place as the chat grows.
 import { memo, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { Dots, SelfAvatar, WorkingPet } from '../ui.jsx';
+import { SelfAvatar, WorkingPet } from '../ui.jsx';
 import HackyFilm, { THINKING_CLIP } from '../HackyFilm.jsx';
 import { useMedia } from '../storage.js';
 import { useSession } from '../session.jsx';
@@ -66,27 +66,10 @@ const ChatRow = memo(function ChatRow({ message, onAnswer, closed, from = Infini
 const recovered = (parts, i) => parts[i].state === 'output-error'
   && parts.slice(i + 1).some((p) => p.type === parts[i].type && p.state === 'output-available');
 
-const LocalRow = memo(function LocalRow({ entry, onOpenPanel, reduced, paused, onGrow }) {
-  if (entry.kind === 'plan-done') {
-    return (
-      <div className="msg message-arrival assistant event-answer plan-reply" data-anchor="">
-        <div className="byline">Hacky</div>
-        <p>Check out your recommended events and essentials in the highlighted event button above.</p>
-        <p>
-          <a className="event-source" href="#your-events" data-your-events="" onClick={(e) => { e.preventDefault(); onOpenPanel(e); }}>
-            View your events
-          </a>
-        </p>
-      </div>
-    );
-  }
-  return <LocalAnswer entry={entry} reduced={reduced} paused={paused} onGrow={onGrow} />;
-});
-
-// A guide answer appears like a Hacky reply: typing, then the message, then its cards.
-// paused (the pane was hidden): the rest shows at once instead of later.
-function LocalAnswer({ entry, reduced, paused, onGrow }) {
-  const [stage, setStage] = useState(reduced ? 2 : 0);
+// Local replies use the same thinking performance and minimum wait as agent replies.
+// Hiding the pane or enabling reduced motion settles the answer and cancels its timer.
+const LocalRow = memo(function LocalRow({ entry, onOpenPanel, style, reduced, paused, onGrow }) {
+  const [stage, setStage] = useState(reduced || paused ? 2 : 0);
   useEffect(() => {
     if (stage >= 2) return undefined;
     if (paused || reduced) {
@@ -101,11 +84,21 @@ function LocalAnswer({ entry, reduced, paused, onGrow }) {
   }, [stage]);
   return (
     <>
-      <UserBubble text={entry.question} />
+      {entry.question && <UserBubble text={entry.question} />}
       {stage === 0 ? (
-        <div className="msg message-arrival assistant waiting" role="status">
-          <Dots />
-          <span className="sr-only">Hacky is typing</span>
+        <div className="msg message-arrival assistant waiting hacky-task" role="status">
+          <ThinkingHacky style={style} />
+          <p>Let me check…</p>
+        </div>
+      ) : entry.kind === 'plan-done' ? (
+        <div className="msg message-arrival assistant event-answer plan-reply" data-anchor="">
+          <div className="byline">Hacky</div>
+          <p>Check out your recommended events and essentials in the highlighted event button above.</p>
+          <p>
+            <a className="event-source" href="#your-events" data-your-events="" onClick={(e) => { e.preventDefault(); onOpenPanel(e); }}>
+              View your events
+            </a>
+          </p>
         </div>
       ) : (
         <div className="msg message-arrival assistant">
@@ -115,7 +108,7 @@ function LocalAnswer({ entry, reduced, paused, onGrow }) {
       )}
     </>
   );
-}
+});
 
 // While Hacky works on a reply: the thinking clip, or the still pet if the clip can't load.
 function ThinkingHacky({ style }) {
@@ -133,6 +126,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   const { slug } = useSession();
   const chat = useHackyChat(slug);
   const [input, setInput] = useState(''),
+    [customAsk, setCustomAsk] = useState(null),
     [locals, setLocals] = useState([]),
     [planReady, setPlanReady] = useState(Boolean(plan)),
     [newReply, setNewReply] = useState(false),
@@ -215,6 +209,16 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
 
   const stable = useMemo(() => ({
     hacky: (text) => latest.current.askHacky(text),
+    choose: (text) => {
+      const { chat, askHacky } = latest.current;
+      // This chip opens free text; the question stays pending until they send their words.
+      if (/^something else$/i.test(text.trim()) && chat.pending && chat.ready) {
+        setCustomAsk(chat.pending.toolCallId);
+        document.getElementById('finder-input')?.focus();
+        return true;
+      }
+      return askHacky(text);
+    },
     start: (text) => latest.current.startHacky(text),
     local: (text) => latest.current.askLocal(text),
     viewProfile: (profile) => latest.current.onProfile(profile),
@@ -294,14 +298,14 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
   const addLocalsUpTo = (index) => {
     while (nextLocal < locals.length && place(locals[nextLocal]) <= index) {
       const entry = locals[nextLocal++];
-      rows.push(<LocalRow key={`local-${entry.id}`} entry={entry} onOpenPanel={events.openPanel} reduced={reduced} paused={paused} onGrow={grow} />);
+      rows.push(<LocalRow key={`local-${entry.id}`} entry={entry} onOpenPanel={events.openPanel} style={style} reduced={reduced} paused={paused} onGrow={grow} />);
     }
   };
   displayed.forEach((message, i) => {
     addLocalsUpTo(i);
     const last = i === chat.messages.length - 1;
     const { from, shown } = reveal.view(message);
-    rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready ? stable.hacky : null} />);
+    rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready ? stable.choose : null} />);
   });
   addLocalsUpTo(Infinity);
   const working = reveal.waiting;
@@ -365,7 +369,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
         >
           New reply
         </button>
-        {renderComposer({ value: input, onChange: setInput, onSubmit: submit, busy })}
+        {renderComposer({ value: input, onChange: setInput, onSubmit: submit, busy, placeholder: chat.pending && customAsk === chat.pending.toolCallId ? 'Type your specific request…' : 'Ask Hacky…' })}
         <p className="demo-note">Hacky drafts. You decide what gets sent.</p>
       </div>
     </CardActions.Provider>

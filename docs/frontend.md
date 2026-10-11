@@ -7,7 +7,7 @@ How `react/` talks to the backend. Every route and shape is in `shared/contract.
 1. At the repo root: `npm install`, get `.env.local` from Ryan (never commit it), then `npm run dev:api`. `http://localhost:8787/api/health` should say `ok`.
 2. In `react/`: `npm install`, then `npm install ai@7.0.137`. It must match the root's `ai` version, because `@ai-sdk/react` only pulls it in indirectly. Then `npm run dev`.
 3. Open **`http://127.0.0.1:5173`**, not `localhost`: the session cookie is tied to `127.0.0.1`.
-4. Sign in at `http://127.0.0.1:5173/api/demo/portal` and pick anyone. To test two people at once, use two browser profiles. One browser holds one person.
+4. The homepage opens the demo user picker at `/api/demo/portal` (`DEMO_MODE=true` only). Choose a person; Hacky opens their onboarding in a new tab for the selected event, including returning users. To test two people at once, use two browser profiles. One browser holds one person.
 
 ## Calling the API
 
@@ -35,11 +35,11 @@ How `react/` talks to the backend. Every route and shape is in `shared/contract.
 4. `GET /api/events/:slug/me` returns your membership plus `intake` (skills, goal, motivations, idea, `complete`, ...).
 5. One person per page: after `/api/me`, every request sends `X-Hacky-User: <profile.userId>` (`react/src/api.js`). If another tab has since signed in as someone else, the API refuses with 409 and `X-Hacky-User-Changed`. The page rechecks `/api/me` then, and whenever the tab gets focus or becomes visible again; a different person, or nobody, stops the page with a reload notice (`switched` in `react/src/session.jsx`).
 
-The event dashboard (`/`, `react/src/Dashboard.jsx`) boots the same way, so it and Hacky show the same person and event. Then it loads that person's `GET /api/events/:slug/requests`, `/conversations` and `/me/team` (the team they lead or are on, or `null`).
+The KnightHacks clone (`react/src/Dashboard.jsx` and its assets) is preserved but inactive. Both `/` and the old `/event-demo` route open the demo user picker. The clone is not mounted or linked from the demo flow.
 
 ## 2. Onboarding and avatar (replace the localStorage versions)
 
-- **Entry link:** `/index.html?onboarding=1` is the one link into Hacky from outside: the event dashboard's "Use Hacky" and a "Try Hacky" post (Discord, email). Add `&event=<slug>` to pick the event (`hackyUrl` in `react/src/entry.js` builds it). It opens the welcome ("Hey, I'm Hacky. What brings you here?") for whoever is signed in, with their saved goals checked. Signed out, the session gate shows instead. Hacky removes the param once read, so a refresh doesn't reopen it.
+- **Entry link:** `/index.html?onboarding=1` is the explicit welcome link into Hacky. The demo picker uses it after sign-in; a "Try Hacky" post can use it too (Discord, email). Add `&event=<slug>` to pick the event (`hackyUrl` in `react/src/entry.js` builds it). It opens the welcome ("Hey, I'm Hacky. What brings you here?") for whoever is signed in, with their saved goals checked. Signed out, the session gate shows instead. Hacky removes the param once read, so a refresh doesn't reopen it.
 - **When to show onboarding:** always from the entry link. Otherwise only once, for someone with nothing saved for the event yet, and the browser remembers it per person and event, so Skip or a refresh never brings it back (`react/src/welcome.js`). In the app it opens on request (Edit my answers).
 - **On complete** (an explicit Continue: **That's me**, then **Let's go**): `PATCH /api/events/:slug/me` with `{ motivations, idea }`.
 
