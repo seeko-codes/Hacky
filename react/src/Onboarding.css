@@ -15,8 +15,7 @@
 .companion-thought::before{width:17px;height:17px;bottom:-23px;left:53%}
 .companion-thought::after{width:9px;height:9px;bottom:-39px;left:49%}
 #onboarding .companion-thought h1{font-size:24px;line-height:1.3;letter-spacing:-.02em;font-weight:700;text-align:center;margin:0;text-wrap:balance;outline:none}
-#onboarding .companion-portrait{width:clamp(190px,31dvh,280px);height:clamp(190px,31dvh,280px);margin:34px 0 0;flex-shrink:0}
-#onboarding .companion-portrait .hacky-pet{width:100%;height:100%;margin:0}
+#onboarding .companion-portrait{position:relative;width:clamp(190px,31dvh,280px);height:clamp(190px,31dvh,280px);margin:34px 0 0;flex-shrink:0}
 .companion-responses{display:flex;flex-direction:column;gap:14px;padding-bottom:10px;flex-shrink:0}
 .companion-hint{text-align:center;font-size:13px;line-height:1.4;color:var(--muted);margin:0}
 .companion-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0;margin:0;border:0;min-width:0}
@@ -30,10 +29,8 @@
 .companion-options:disabled .companion-option{cursor:wait}
 #onboarding .companion-responses .hk-button{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;min-height:48px;border-radius:14px;margin-top:4px}
 #onboarding .companion-responses .hk-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#onboarding[data-reacting=true] .companion-portrait{animation:companion-nod .8s ease-in-out}
 #onboarding :is(button,input):focus-visible{outline:2px solid var(--focus);outline-offset:4px}
 @keyframes thought-appears{from{transform:translateY(5px) scale(.96)}to{transform:none}}
-@keyframes companion-nod{0%,100%{transform:none}40%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(3deg)}}
 @media(min-width:760px) and (min-height:601px){
 #onboarding.companion-onboarding{padding-block:24px}
 .companion-flow{max-width:420px}
@@ -61,7 +58,7 @@
 #onboarding .companion-portrait{width:150px;height:150px;margin-top:24px}
 .companion-thought::before{bottom:-18px;width:12px;height:12px}.companion-thought::after{bottom:-30px;width:7px;height:7px}
 }
-@media(prefers-reduced-motion:reduce){.companion-thought,#onboarding[data-reacting=true] .companion-portrait{animation:none}.companion-option{transition:none}}
+@media(prefers-reduced-motion:reduce){.companion-thought{animation:none}.companion-option{transition:none}}
 /* Reserve the answer space so Hacky never shifts between questions. */
 .companion-options{grid-auto-rows:48px;align-content:start;min-height:160px}
 @media(max-height:740px){.companion-options{grid-auto-rows:44px;min-height:148px}}
@@ -90,26 +87,6 @@
 #onboarding[data-step="2"] .companion-responses[data-ready=true] #make-plan{transition-delay:640ms}
 .companion-context .companion-hint{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.companion-responses :is(.companion-hint,.companion-option,.companion-context,#make-plan){transition:none!important;transform:none}}
-
-/* Slow breathing and weight shifts continue between conversational gestures. */
-#onboarding .companion-portrait{position:relative}
-#onboarding .companion-portrait::after{content:'';position:absolute;left:29%;right:24%;bottom:2%;height:5%;border-radius:50%;background:var(--ink);opacity:.07;filter:blur(5px);transform:scaleX(.92);animation:companion-ground 4.8s ease-in-out infinite;pointer-events:none}
-#onboarding .companion-portrait .hacky-pet{z-index:1;transform-origin:50% 92%}
-#onboarding .companion-portrait [data-move=idle] .pet-sprite{transform-origin:50% 92%;animation:companion-breathe 4.8s ease-in-out infinite}
-#onboarding[data-speaking=true] .companion-portrait>.hacky-pet{animation:companion-talk 1.5s ease-in-out infinite}
-@keyframes companion-breathe{
-0%,100%{transform:translateY(0) rotate(-1.5deg) scale(1,1)}
-25%{transform:translateY(-4px) rotate(.5deg) scale(1.012,1.025)}
-50%{transform:translateY(-1px) rotate(2deg) scale(1.008,1.006)}
-75%{transform:translateY(-5px) rotate(-.5deg) scale(1.018,1.026)}
-}
-@keyframes companion-talk{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg) translateY(-3px)}65%{transform:rotate(2deg) translateY(-1px)}}
-@keyframes companion-ground{0%,50%,100%{transform:scaleX(.92);opacity:.07}25%,75%{transform:scaleX(.84);opacity:.045}}
-@media(prefers-reduced-motion:reduce){#onboarding .companion-portrait::after,#onboarding .companion-portrait .pet-sprite,#onboarding .companion-portrait>.hacky-pet{animation:none!important}}
-
-/* The vector rig owns its own joints and ground shadow. */
-#onboarding .companion-portrait[data-live=true]{animation:none}
-#onboarding .companion-portrait[data-live=true]::after{display:none}
 
 /* Supplied animation footage is the performance, without extra CSS puppetry. */
 .hacky-film{position:relative;width:100%;height:100%;overflow:visible;background:transparent}

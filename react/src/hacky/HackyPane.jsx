@@ -85,11 +85,10 @@ const LocalRow = memo(function LocalRow({ entry, onOpenPanel }) {
   );
 });
 
-// While Hacky works on a reply: the thinking clip for the knit look, the still pet otherwise
-// (or if the clip can't load).
+// While Hacky works on a reply: the thinking clip, or the still pet if the clip can't load.
 function ThinkingHacky({ style }) {
   const [noClip, setNoClip] = useState(false);
-  if (noClip || (style?.look && style.look !== 'knit')) return <WorkingPet style={style} />;
+  if (noClip) return <WorkingPet style={style} />;
   return (
     <span className="working-hacky working hacky-thinking-film">
       <HackyFilm clip={THINKING_CLIP} onUnavailable={() => setNoClip(true)} />

@@ -66,17 +66,27 @@ const Ok = z.object({ ok: z.literal(true) });
 // People
 // ---------------------------------------------------------------------------
 
-// The Hacky character, the avatar for people without a photo. Option ids live
-// in react/src/mascot-data.js and are still being designed, so known keys are
-// plain strings and unknown keys pass through.
+// The Hacky character, the avatar for people without a photo. Every Hacky is
+// the knit one. Color, flair and move ids live in react/src/mascot-data.js and
+// are still being designed, so they're plain strings and unknown keys pass through.
+const hackyStyleOptions = {
+  color: z.string().max(40).optional(),
+  flair: z.string().max(40).optional(),
+  move: z.string().max(40).optional(),
+};
+const hackyStyleFits = (style: object) => JSON.stringify(style).length <= 2000;
+
+// What a write may store (PATCH /api/me/profile): look is "knit" or left out.
+export const HackyStyleInput = z
+  .looseObject({ look: z.literal("knit").optional(), ...hackyStyleOptions })
+  .refine(hackyStyleFits, "hackyStyle is too large");
+
+// What a read accepts (responses, tool outputs, saved chat threads). Rows and
+// threads saved before knit-only may still name another look (mochi, cat,
+// dragon, star, pixel), so any look reads fine; the web app draws knit for it.
 export const HackyStyle = z
-  .looseObject({
-    look: z.string().max(40).optional(),
-    color: z.string().max(40).optional(),
-    flair: z.string().max(40).optional(),
-    move: z.string().max(40).optional(),
-  })
-  .refine((style) => JSON.stringify(style).length <= 2000, "hackyStyle is too large");
+  .looseObject({ look: z.string().max(40).optional(), ...hackyStyleOptions })
+  .refine(hackyStyleFits, "hackyStyle is too large");
 export type HackyStyle = z.infer<typeof HackyStyle>;
 
 // The profile photo, the avatar when set: a site path (/assets/...) or an https
@@ -183,7 +193,7 @@ export const UpdateProfileBody = z
   .object({
     name: PublicProfile.shape.name,
     bio: z.string().trim().max(500).nullable(),
-    hackyStyle: HackyStyle,
+    hackyStyle: HackyStyleInput,
     links: ProfileLinks,
   })
   .partial();

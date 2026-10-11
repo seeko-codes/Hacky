@@ -29,9 +29,9 @@ function ShortcutArt({ kind }) {
 // The opening card. People and mentors go to the Hacky agent; event and
 // sponsor questions are answered from the static guide.
 function Brief({ style, working, onHacky, onLocal }) {
-  // The animated knit Hacky has its own clip here; other looks (and no clip yet) use the still pet.
+  // Hacky's chat clip; the still pet while working or if the clip can't load.
   const [noClip, setNoClip] = useState(false);
-  const film = !working && !noClip && (!style?.look || style.look === 'knit');
+  const film = !working && !noClip;
   return (
     <div id="hacky-brief" className="msg assistant hacky-brief hacky-task">
       {film ? (

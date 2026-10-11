@@ -52,11 +52,6 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
 .portrait { position:relative; isolation:isolate; border-radius:50%; overflow:hidden; background:var(--portrait-paper,#e8edf3) }
 .portrait-sprite { position:absolute; inset:0; background-image:var(--portrait-url); background-size:var(--portrait-size) var(--portrait-size); background-position:var(--portrait-x) var(--portrait-y); background-repeat:no-repeat; filter:var(--portrait-filter,none) }
 .portrait[data-look=classic] { --portrait-size:350%; --portrait-x:15%; --portrait-y:6%; --figure-scale:1 }
-.portrait[data-look=mochi] { --portrait-size:310%; --portrait-x:12%; --portrait-y:4%; --figure-scale:.96 }
-.portrait[data-look=cat] { --portrait-size:290%; --portrait-x:13%; --portrait-y:3%; --figure-scale:.96 }
-.portrait[data-look=dragon] { --portrait-size:330%; --portrait-x:13%; --portrait-y:2%; --figure-scale:1.02 }
-.portrait[data-look=star] { --portrait-size:370%; --portrait-x:15%; --portrait-y:11%; --figure-scale:1.06 }
-.portrait[data-look=pixel] { --portrait-size:330%; --portrait-x:14%; --portrait-y:6%; --figure-scale:1 }
 .match .portrait,.profile-identity .portrait,.suggestion .portrait { background:transparent; border-radius:0; overflow:visible }
 .match .portrait-sprite,.profile-identity .portrait-sprite,.suggestion .portrait-sprite { background-size:200% 200%; background-position:0 0; transform:scale(var(--figure-scale,1)); transform-origin:50% 85% }
 .team-portraits { position:relative; width:44px; height:44px }
