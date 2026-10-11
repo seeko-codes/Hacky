@@ -12,6 +12,7 @@ import { useSession } from '../session.jsx';
 import { useHackyChat } from './useHackyChat.js';
 import { CardActions, MessagePart, isVisiblePart } from './cards.jsx';
 import Brief from './Brief.jsx';
+import RestartChat from './RestartChat.jsx';
 import { FIRST_MS, GAP_MS, showingOrder } from './reveal.js';
 import { useReveal } from './useReveal.js';
 import { displayMessages, isLocalCommand } from './presentation.js';
@@ -308,6 +309,7 @@ export default function HackyPane({ plan, planRevision, style, events, paused = 
 
   return (
     <CardActions.Provider value={actions}>
+      <div className="hc-toolbar"><RestartChat /></div>
       <div
         ref={feed}
         className={`feed has-conversation${planReady ? ' plan-ready' : ''}`}

@@ -1,4 +1,14 @@
 /* Hacky agent chat: one turn per reply, chips for questions, cards by tool name. */
+.hc-toolbar{display:flex;justify-content:flex-end;flex-shrink:0;padding:0 16px}
+.hc-toolbar .toggle{min-height:36px;gap:6px;font-size:13px;color:var(--muted)}
+.hc-toolbar svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.hc-reset-dialog{width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 32px);box-sizing:border-box;padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink)}
+.hc-reset-dialog::backdrop{background:var(--overlay)}
+.hc-reset-dialog h2{margin:0 0 12px;font-size:22px;line-height:1.25}
+.hc-reset-dialog p{margin:0 0 16px;font-size:14px;line-height:1.5}
+.hc-reset-dialog .hc-reset-notice{color:var(--muted);font-size:13px}
+.hc-reset-actions{display:flex;flex-wrap:wrap;gap:10px}
+.hc-reset-actions .hk-button{flex:1;min-height:44px;white-space:nowrap}
 .hc-turn{display:flex;flex-direction:column;gap:12px;min-width:0;container:hc-turn/inline-size}
 .hc-text{white-space:pre-line}
 /* Bulleted replies (event recommendations): block spans inside the one bubble paragraph. */

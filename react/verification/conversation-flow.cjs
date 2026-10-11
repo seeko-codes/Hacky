@@ -51,6 +51,9 @@ const os = require('node:os');
     const base = process.env.HACKY_TEST_URL || 'http://127.0.0.1:5173';
     const open = async () => { await page.goto(`${base}/index.html`); await page.waitForFunction(() => document.querySelector('#feed')?.getAttribute('aria-busy') === 'false'); };
     const send = async text => { await page.locator('#finder-input').fill(text); await page.locator('#finder-send').tap(); };
+    const openContacts = async () => {
+      if (await page.locator('#toggle').getAttribute('aria-expanded') !== 'true') await page.locator('#toggle').tap();
+    };
     await open();
     await page.evaluate(() => {
       window.arrivals = {};
@@ -99,7 +102,7 @@ const os = require('node:os');
     assert.match(posts.at(-1).message.parts[0].text, /prototype my React app/);
     assert.ok(posts.every(body => !body.messages), 'Only the newest message is submitted; presentation parts stay local');
 
-    await page.locator('#toggle').tap();
+    await openContacts();
     await page.getByRole('button', { name: 'Options for Sam Lee', exact: true }).tap();
     await page.getByRole('button', { name: 'Hide chat on this device', exact: true }).tap();
     assert.equal(await page.locator('[data-contact="chat-test"]').count(), 0);
@@ -109,7 +112,7 @@ const os = require('node:os');
     await page.getByRole('button', { name: 'Hide chat on this device', exact: true }).tap();
     await page.screenshot({ path: path.join(os.tmpdir(), 'hacky-hidden-chat.png') });
     await open();
-    await page.locator('#toggle').tap();
+    await openContacts();
     assert.equal(await page.locator('[data-contact="chat-test"]').count(), 0, 'Hidden preference survives reload');
     await page.getByText('Hidden chats on this device (1)', { exact: true }).tap();
     await page.getByRole('button', { name: 'Restore chat with Sam Lee', exact: true }).tap();
