@@ -145,3 +145,7 @@ return createUIMessageStreamResponse({
 ```
 
 Store `parts` exactly as you get them. Tool parts carry `callProviderMetadata`, which holds Gemini's thought signatures.
+
+## Event guides
+
+The agent answers questions about the event itself (schedule, venue, food, parking, Wi-Fi, prizes, tracks, rules, sponsors) only from that event's guide: one markdown file per event at `server/agent/event-guides/<slug>.md`, named by `events.slug`. To add one, write the facts there in plain markdown, including the links to the official hacker's guide and Discord (the agent points there for anything the guide doesn't cover); no code change is needed, and `vercel.json` (`includeFiles`) ships the folder with the function. `eventGuide` in `server/agent/prompts.ts` reads the file once, keeps it in memory and rereads it only when it changes. `buildInstructions` puts it in every mode right after the common rules and before the person's profile, so Gemini's implicit cache can reuse that prefix. An event with no file (like `demo-hacks`) still works: the agent says it doesn't have the event details. Every word is sent with every model call, so keep guides tight. `npm run test:prompts` checks the loader and the prompt.

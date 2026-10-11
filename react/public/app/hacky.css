@@ -81,6 +81,7 @@ html,body { overscroll-behavior:none } /* the page itself never bounces; only th
 .person-dialog { padding:0; border:0; border-radius:var(--sheet-radius); width:min(560px,calc(100vw - 24px)); height:min(780px,calc(100dvh - 24px)); max-height:calc(100dvh - 24px); max-width:none; color:var(--ink); background:var(--paper); overflow:hidden }
 .person-dialog::backdrop { background:var(--overlay) }
 .person-sheet { height:100%; display:flex; flex-direction:column }
+.person-dialog .person-sheet:focus-visible { outline:none } /* opening a dialog focuses the sheet, not Back, so nothing looks pressed */
 .person-toolbar { display:flex; align-items:center; justify-content:space-between; padding:8px 18px; border-bottom:1px solid var(--line); flex-shrink:0 }
 .person-content { overflow:auto; overscroll-behavior:contain; flex:1; padding:20px 24px }
 .profile-identity { display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center }

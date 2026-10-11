@@ -229,10 +229,10 @@ export default function People({ profile, onClose, onMessage, onEditAnswers, onC
       id="person-dialog"
       className="person-dialog"
       labelledBy="person-title"
-      initialFocus="#close-person"
+      initialFocus=".person-sheet"
     >
       {handle && (
-        <div className="person-sheet">
+        <div className="person-sheet" tabIndex={-1}>
           <header className="person-toolbar">
             <button id="close-person" className="toggle" onClick={onClose}>
               <Icon name="back" />

@@ -115,7 +115,7 @@ After changing tool or card schemas in `shared/contract.ts`, run `npm run check:
 - "Not now" sets `connections.hidden_at`. The API shows it only to the recipient; the sender keeps seeing "pending". Blocking uses the `blocks` table and applies everywhere, in both directions.
 - Open teams appear in search as team cards. "Contact team" sends a request (with `team_id`) to the team's owner. Joining teams and team chats are not built.
 - Onboarding: the form's answers (including the six motivations) fill the member profile, its last step customizes the Hacky avatar, and the agent only asks for what's still missing.
-- Event schedule, sponsor info and reminders stay static in the web app. There are no read receipts; unread badges come from `last_read_at`. Resolving a help request posts a system message in the mentor chat.
+- Event schedule, sponsor info and reminders stay static in the web app, and the chat agent answers event questions from `server/agent/event-guides/<slug>.md`. There are no read receipts; unread badges come from `last_read_at`. Resolving a help request posts a system message in the mentor chat.
 - Mentor queue: shared, sorted by fit for each mentor (`fit.highlighted` marks the strong fits). A claim succeeds only while the request is still open. A hacker can have at most 3 requests waiting for a mentor. There is no cancel yet.
 - A block hides the conversation from both people's lists, and sending into it returns 403.
 
