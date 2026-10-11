@@ -50,7 +50,31 @@ button.social-mine { cursor:pointer }
 .person-dialog .person-toolbar .social-block { color:var(--muted); font-size:13px }
 .social-chips { display:flex; flex-wrap:wrap; gap:6px }
 .social-chips .social-tag { color:var(--ink) }
-.social-facts { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:2px }
+/* A profile fits on one screen: the sheet sizes to its content, the picture sits beside the
+   name, and the body scrolls only when a profile is longer than the screen. */
+#person-dialog { height:fit-content }
+#person-dialog .person-sheet { height:auto; max-height:calc(100dvh - 24px) }
+#person-dialog .person-toolbar { padding-block:4px }
+#person-dialog .person-content { flex:0 1 auto; min-height:0; padding:16px 20px }
+#person-dialog .profile-identity:has(> .avatar) { display:grid; grid-template-columns:auto 1fr; column-gap:14px; row-gap:4px; align-items:center; text-align:left }
+#person-dialog .profile-identity > .avatar { grid-row:span 2; width:64px; height:64px }
+#person-dialog .profile-identity h2 { font-size:22px }
+#person-dialog .profile-categories { justify-content:flex-start }
+#person-dialog .profile-section { margin-top:12px }
+#person-dialog .profile-section h3 { font-size:13px; margin-bottom:4px }
+#person-dialog .profile-section p { line-height:1.5 }
+#person-dialog .social-chips { gap:4px }
+#person-dialog .person-footer { padding:10px 20px max(10px,env(safe-area-inset-bottom)) }
+#person-dialog .social-footer-actions .hk-button { min-height:44px }
+#person-dialog .person-footer p { margin-top:6px }
+@media (max-height:700px) {
+  #person-dialog,#person-dialog .person-sheet { max-height:calc(100dvh - 12px) }
+  #person-dialog .person-toolbar { padding-block:0 }
+  #person-dialog .person-content { padding-block:12px }
+  #person-dialog .person-footer { padding-block:8px max(8px,env(safe-area-inset-bottom)) }
+  #person-dialog .profile-section { margin-top:10px }
+  #person-dialog .profile-section p { font-size:13px }
+}
 .social-request-form { display:flex; flex-direction:column; gap:8px }
 .social-request-form label { font-size:14px; font-weight:700 }
 .social-request-form textarea { height:auto; min-height:84px; max-height:180px; padding:8px 12px; border:1px solid var(--line); border-radius:10px; background:var(--white); color:var(--ink); line-height:22px; resize:vertical }

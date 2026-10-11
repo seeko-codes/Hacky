@@ -6,32 +6,6 @@ import { friendly } from "./social/useSocial.js";
 import { introProblem } from "./social/messages.js";
 import { RoleChip, firstName } from "./social/parts.jsx";
 
-function SocialIcon({ platform }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      {platform === "github" ? (
-        <path d="M9 19c-4 1-4-2-6-2m12 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-1.5-.5-3-1.5-4 .2-1 0-2-.5-3-2 0-3 1-4 1a15 15 0 0 0-6 0c-1 0-2-1-4-1-.5 1-.7 2-.5 3C3.5 7 3 8.5 3 10c0 4 3 5.5 7 6-.7.5-1 1.5-1 2v4" />
-      ) : platform === "linkedin" ? (
-        <>
-          <rect x="3" y="3" width="18" height="18" rx="3" />
-          <path d="M7 10v7m0-10v.1m5 9.9v-7m0 3c0-4 5-4 5 0v4" />
-        </>
-      ) : (
-        <>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
-        </>
-      )}
-    </svg>
-  );
-}
-const LINKS = [
-  ["github", "GitHub"],
-  ["linkedin", "LinkedIn"],
-  ["website", "Website"],
-];
-const GOALS = { win: "Wants to win", learn: "Here to learn", ship: "Wants to ship something" };
-const LEVELS = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
 const AVAILABILITY = { available: "Available now", busy: "Busy", offline: "Offline" };
 
 function Chips({ title, items }) {
@@ -59,8 +33,10 @@ function Text({ title, children }) {
   );
 }
 
+// Starts as one button so the profile fits on screen; the intro form opens when tapped.
 function RequestForm({ person, onSent }) {
   const { slug } = useSession();
+  const [writing, setWriting] = useState(false);
   const [intro, setIntro] = useState("");
   const [state, setState] = useState({ busy: false, error: "", tried: false });
   const problem = introProblem(intro);
@@ -79,11 +55,18 @@ function RequestForm({ person, onSent }) {
     }
   };
   const shown = state.error || (state.tried || /https?:\/\/|www\./i.test(intro) ? problem : "");
+  if (!writing)
+    return (
+      <button className="profile-message" onClick={() => setWriting(true)}>
+        Connect with {firstName(person.name)}
+      </button>
+    );
   return (
     <form className="social-request-form" onSubmit={send}>
       <label htmlFor="request-intro">Say why you’d like to connect</label>
       <textarea
         id="request-intro"
+        autoFocus
         rows="3"
         maxLength={500}
         value={intro}
@@ -196,7 +179,8 @@ function Actions({ person, relation, setRelation, onMessage }) {
   );
 }
 
-export default function People({ profile, onClose, onMessage, onBlocked }) {
+// Your own profile shows what others see, with buttons to change your answers and Hacky.
+export default function People({ profile, onClose, onMessage, onEditAnswers, onCustomize, onBlocked }) {
   const { slug, me } = useSession();
   const handle = profile?.handle;
   const [load, setLoad] = useState({ person: null, error: "" });
@@ -226,7 +210,6 @@ export default function People({ profile, onClose, onMessage, onBlocked }) {
 
   const p = load.person;
   const self = p && p.userId === me?.profile?.userId;
-  const links = p ? LINKS.filter(([key]) => p.links?.[key]) : [];
   const block = async () => {
     setBlocking((b) => ({ ...b, busy: true, error: "" }));
     try {
@@ -281,13 +264,10 @@ export default function People({ profile, onClose, onMessage, onBlocked }) {
                   <h2 id="person-title">{p.name}</h2>
                   <div className="profile-categories">
                     <RoleChip role={p.role} verified={p.verified} />
-                  </div>
-                  <div className="social-facts">
                     {p.role === "mentor" && AVAILABILITY[p.availability] && (
                       <span className="social-tag">{AVAILABILITY[p.availability]}</span>
                     )}
                     {p.role === "hacker" && p.looking && <span className="social-tag">Looking for a team</span>}
-                    {LEVELS[p.experience] && <span className="social-tag">{LEVELS[p.experience]}</span>}
                   </div>
                 </div>
                 {profile.reason && (
@@ -296,37 +276,37 @@ export default function People({ profile, onClose, onMessage, onBlocked }) {
                     <p>{profile.reason}</p>
                   </section>
                 )}
-                <Text title="About">{p.bio}</Text>
-                <Text title="Summary">{p.summary}</Text>
+                {/* Just the essentials. The summary restates the skills, so it stands in only when there's no bio. */}
+                <Text title="About">{p.bio || p.summary}</Text>
                 <Chips title="Skills" items={p.skills} />
-                <Chips title="Wants to work with" items={p.skillsWanted} />
-                <Text title="Goal">
-                  {[GOALS[p.goal], p.track && `Track: ${p.track}`].filter(Boolean).join(" · ")}
-                </Text>
-                <Chips title="Interests" items={p.interests} />
-                <Text title="Idea">{p.idea}</Text>
-                {links.length > 0 && (
-                  <div className="profile-links">
-                    <div className="socials">
-                      {links.map(([key, label]) => (
-                        <a
-                          key={key}
-                          className="social-link"
-                          href={p.links[key]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${label} for ${p.name} (opens in a new tab)`}
-                        >
-                          <SocialIcon platform={key} />
-                          {label}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </>
             )}
           </div>
+          {p && self && (
+            <footer className="person-footer">
+              <div className="social-footer-actions">
+                <button
+                  className="hk-button"
+                  onClick={() => {
+                    onClose();
+                    onEditAnswers();
+                  }}
+                >
+                  Edit my answers
+                </button>
+                <button
+                  className="hk-button secondary"
+                  onClick={(event) => {
+                    onClose();
+                    onCustomize(event);
+                  }}
+                >
+                  Customize Hacky
+                </button>
+              </div>
+              <p>This is how other people see you.</p>
+            </footer>
+          )}
           {p && !self && (
             <footer className="person-footer">
               {blocking.confirm ? (

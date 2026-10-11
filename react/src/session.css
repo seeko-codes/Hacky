@@ -14,3 +14,4 @@
 .avatar.portrait.person-avatar{container-type:size;border-radius:50%;overflow:hidden;background:var(--wash)}
 .avatar.portrait.person-avatar>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 .avatar.portrait.person-avatar>.avatar-initials{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-size:max(9px,38cqmin);font-weight:700;line-height:1;letter-spacing:-.01em;color:var(--ink);user-select:none}
+.my-profile .avatar{width:30px;height:30px}
