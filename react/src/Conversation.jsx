@@ -132,8 +132,9 @@ export default function Conversation({
   // Pin the app to the visible area. On iOS the keyboard shrinks the visual
   // viewport and scrolls the page down, so the fixed app moves down with it.
   // The page scroll comes first and the viewport offset catches up about
-  // 0.4 s later, so follow whichever is further. Feeds that were at their
-  // latest message stay there.
+  // 0.4 s later, so follow whichever is further. Only while typing: a swipe
+  // that bounces the page moves both too, and the app must stay put then.
+  // Feeds that were at their latest message stay there.
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
@@ -146,7 +147,8 @@ export default function Conversation({
       const latest = [...el.querySelectorAll(".feed,.dm-feed")].filter(
         (feed) => feed.scrollHeight - feed.clientHeight - feed.scrollTop < 80,
       );
-      const top = Math.max(viewport.offsetTop, window.scrollY);
+      const typing = document.activeElement?.matches("input, textarea, [contenteditable]");
+      const top = typing ? Math.max(viewport.offsetTop, window.scrollY) : 0;
       el.style.height = viewport.height + "px";
       el.style.transform = top ? `translateY(${top}px)` : "";
       for (const feed of latest) feed.scrollTop = feed.scrollHeight;
