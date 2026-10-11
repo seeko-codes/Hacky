@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Icon, PersonAvatar } from "./ui.jsx";
+import { Icon, PersonAvatar, SelfAvatar } from "./ui.jsx";
+import { useSession } from "./session.jsx";
 import { useMedia } from "./storage.js";
 import People from "./People.jsx";
 import HackyPane, { HackyEventName } from "./hacky/HackyPane.jsx";
@@ -104,6 +105,7 @@ export default function Conversation({
   onThemeChange,
 }) {
   const mobile = useMedia("(max-width:700px)");
+  const { me } = useSession();
   const [opened, setOpened] = useState(!mobile),
     [current, setCurrent] = useState(null),
     [drafts, setDrafts] = useState({}),
@@ -128,8 +130,10 @@ export default function Conversation({
     dmAction = useRef(null);
   useEffect(() => setOpened(!mobile), [mobile]);
   // Pin the app to the visible area. On iOS the keyboard shrinks the visual
-  // viewport and scrolls it down, so the fixed app follows its offset too.
-  // Feeds that were at their latest message stay there.
+  // viewport and scrolls the page down, so the fixed app moves down with it.
+  // The page scroll comes first and the viewport offset catches up about
+  // 0.4 s later, so follow whichever is further. Feeds that were at their
+  // latest message stay there.
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
@@ -142,18 +146,19 @@ export default function Conversation({
       const latest = [...el.querySelectorAll(".feed,.dm-feed")].filter(
         (feed) => feed.scrollHeight - feed.clientHeight - feed.scrollTop < 80,
       );
+      const top = Math.max(viewport.offsetTop, window.scrollY);
       el.style.height = viewport.height + "px";
-      el.style.transform = viewport.offsetTop
-        ? `translateY(${viewport.offsetTop}px)`
-        : "";
+      el.style.transform = top ? `translateY(${top}px)` : "";
       for (const feed of latest) feed.scrollTop = feed.scrollHeight;
     };
     fit();
     viewport.addEventListener("resize", fit);
     viewport.addEventListener("scroll", fit);
+    window.addEventListener("scroll", fit);
     return () => {
       viewport.removeEventListener("resize", fit);
       viewport.removeEventListener("scroll", fit);
+      window.removeEventListener("scroll", fit);
     };
   }, []);
   useEffect(() => {
@@ -482,16 +487,17 @@ export default function Conversation({
                 </svg>
               </button>
               <button
-                id="preferences"
-                className="icon"
-                aria-label="Preferences"
-                title="Preferences"
-                onClick={onPreferences}
+                id="my-profile"
+                className="icon my-profile"
+                aria-label="Your profile"
+                aria-haspopup="dialog"
+                title="Your profile"
+                onClick={(event) => {
+                  event.currentTarget.focus({ preventScroll: true });
+                  setProfile({ handle: me.profile.handle });
+                }}
               >
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="m10 3-.6 2.2-2 .9-2-.6-2 3.4 1.5 1.6v2.3L3.4 14l2 3.4 2-.6 2 .9L10 20h4l.6-2.3 2-.9 2 .6 2-3.4-1.5-1.6v-2.3l1.5-1.6-2-3.4-2 .6-2-.9L14 3Z" />
-                  <circle cx="12" cy="11.5" r="3" />
-                </svg>
+                <SelfAvatar />
               </button>
             </div>
           </header>
@@ -519,6 +525,8 @@ export default function Conversation({
         profile={profile}
         onClose={() => setProfile(null)}
         onMessage={profileMessage}
+        onEditAnswers={onPreferences}
+        onCustomize={onCustomize}
         onBlocked={(userId) => {
           if (dmChat?.peer.userId === userId) setCurrent(null);
         }}
