@@ -128,8 +128,10 @@ export default function Conversation({
     dmAction = useRef(null);
   useEffect(() => setOpened(!mobile), [mobile]);
   // Pin the app to the visible area. On iOS the keyboard shrinks the visual
-  // viewport and scrolls it down, so the fixed app follows its offset too.
-  // Feeds that were at their latest message stay there.
+  // viewport and scrolls the page down, so the fixed app moves down with it.
+  // The page scroll comes first and the viewport offset catches up about
+  // 0.4 s later, so follow whichever is further. Feeds that were at their
+  // latest message stay there.
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
@@ -142,18 +144,19 @@ export default function Conversation({
       const latest = [...el.querySelectorAll(".feed,.dm-feed")].filter(
         (feed) => feed.scrollHeight - feed.clientHeight - feed.scrollTop < 80,
       );
+      const top = Math.max(viewport.offsetTop, window.scrollY);
       el.style.height = viewport.height + "px";
-      el.style.transform = viewport.offsetTop
-        ? `translateY(${viewport.offsetTop}px)`
-        : "";
+      el.style.transform = top ? `translateY(${top}px)` : "";
       for (const feed of latest) feed.scrollTop = feed.scrollHeight;
     };
     fit();
     viewport.addEventListener("resize", fit);
     viewport.addEventListener("scroll", fit);
+    window.addEventListener("scroll", fit);
     return () => {
       viewport.removeEventListener("resize", fit);
       viewport.removeEventListener("scroll", fit);
+      window.removeEventListener("scroll", fit);
     };
   }, []);
   useEffect(() => {
