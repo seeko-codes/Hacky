@@ -27,9 +27,9 @@ button,textarea { font:inherit; color:inherit }
 button { cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; transition:background 160ms,color 160ms,border-color 160ms,transform 160ms var(--ease) }
 button:disabled { cursor:default }
 button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex="-1"]:focus-visible { outline:2px solid var(--blue); outline-offset:3px }
-/* After touch or a mouse (data-input, set in ui.jsx), focus moved by script draws no ring on controls;
-   the next key press brings rings back for keyboard users. Text fields keep theirs. */
-:root[data-input=pointer] :is(button,a,summary,[tabindex]):focus-visible { outline:none!important }
+/* Reset both custom focus-visible and WebKit's native focus outline after a tap/click.
+   Keep focus in place for dialogs; keyboard navigation and editable fields keep their rings. */
+:root[data-input=pointer] :is(button,a,summary,[tabindex]:not(input,textarea,select,[contenteditable])):focus { outline:none!important }
 ::selection { background:var(--selection); color:var(--ink) }
 svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0 }
 [hidden] { display:none!important }

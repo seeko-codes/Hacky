@@ -534,7 +534,6 @@ export default function Conversation({
         profile={profile}
         onClose={() => setProfile(null)}
         onMessage={profileMessage}
-        onEditAnswers={onPreferences}
         onCustomize={onCustomize}
         onBlocked={(userId) => {
           if (dmChat?.peer.userId === userId) setCurrent(null);

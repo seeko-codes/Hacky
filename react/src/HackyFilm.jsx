@@ -3,7 +3,8 @@ import {useMedia} from './storage';
 
 // Supplied character performances. WebP clips retain their transparent backgrounds.
 export const ONBOARDING_CLIP = {
-  video: '/assets/mascots/video/hacky-match-dance.mp4',
+  webp: '/onboarding/hacky-match-dance.webp',
+  poster: '/onboarding/hacky-match-dance.png',
   label: 'Hacky dances to welcome you',
 };
 export const CHAT_CLIP = {

@@ -110,6 +110,12 @@
 .event-result .detail-choice>svg:last-child{display:block;width:14px;height:14px;flex-shrink:0}
 @media (hover:hover){.event-result .detail-choice:hover{background:var(--hover)}}
 .event-result .detail-choice .recommendation-icon{margin-top:0;width:20px;height:20px;flex-basis:20px}
+/* Keep row feedback inside its bounds: Safari can leave an outside focus outline painted
+   across adjacent separators after returning from a dialog. Selection has one owner in useEvents. */
+.event-result .detail-choice:focus{outline:none}
+:root:not([data-input=pointer]) .event-result .detail-choice:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+#recommended-events .detail-choice[data-selected=true]{box-shadow:inset 0 -2px 0 var(--blue)}
+.event-result .detail-choice:active{background:var(--wash)}
 .recommendation-group .recommendation-group{grid-column:1/-1}
 @media(max-width:359px){.detail-choice,.matches .match{gap:8px;padding:10px 8px}.matches .match .portrait{width:30px;height:38px;flex-basis:30px}}
 

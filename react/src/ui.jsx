@@ -66,6 +66,10 @@ if(typeof window!=='undefined'){
   const typing=e=>e.key!=='Tab'&&e.key!=='Escape'&&e.target?.matches?.('textarea,select,[contenteditable],input:not([type=checkbox],[type=radio],[type=button],[type=submit])');
   window.addEventListener('keydown',e=>{if(!e.metaKey&&!e.ctrlKey&&!e.altKey&&!typing(e))input('keyboard');},true);
   window.addEventListener('pointerdown',()=>input('pointer'),true);
+  // Older WebKit and embedded browsers can deliver touch/mouse events without pointerdown.
+  // Register before focus changes so opening or closing a dialog never inherits a keyboard ring.
+  window.addEventListener('touchstart',()=>input('pointer'),{capture:true,passive:true});
+  window.addEventListener('mousedown',()=>input('pointer'),true);
 }
 // Focus moved by script without scrolling. The ring rule above decides whether it shows; focusVisible
 // says the same to browsers that support that option.
@@ -75,7 +79,7 @@ export function Modal({open,onClose,id,className,labelledBy,label,children,initi
   closeRef.current=onClose;
   useLayoutEffect(()=>{
     const node=ref.current;
-    if(open&&!node.open){origin.current=document.activeElement;node.showModal();if(initialFocus)focusQuietly(node.querySelector(initialFocus));}
+    if(open&&!node.open){origin.current=document.activeElement;node.showModal();focusQuietly(initialFocus?node.querySelector(initialFocus):document.activeElement);}
     else if(!open&&node.open){node.close();if(origin.current?.isConnected)focusQuietly(origin.current);}
   },[open,initialFocus]);
   // A tap on the dimmed backdrop closes. The listener sits on the dialog itself, not React's root:
