@@ -84,7 +84,7 @@
 .detail-choice{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:14px 2px;border:0;background:transparent;text-align:left;font-size:14px;font-weight:700;color:var(--ink)}
 .detail-choice:hover{background:var(--hover)}.detail-choice>span{flex:1;min-width:0}.detail-choice>svg:last-child{width:16px;height:16px;transform:rotate(180deg);color:var(--muted)}
 .info-dialog{width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0;max-width:none}
-.info-dialog .person-sheet{max-width:720px;margin:auto}.info-dialog .person-content{padding:20px 24px 32px}
+.info-sources{display:flex;flex-wrap:wrap;gap:0 20px;margin-top:4px}.info-dialog .person-sheet{max-width:720px;margin:auto}.info-dialog .person-content{padding:20px 24px 32px}
 .info-dialog h2{font-size:28px;line-height:1.2;letter-spacing:-.025em;margin:0 0 24px}
 .info-identity{display:flex;align-items:center;gap:16px;margin-bottom:12px}.info-identity h2{margin:0}.info-identity .recommendation-icon{width:44px;height:44px;flex-basis:44px}.info-focus{font-size:16px;color:var(--muted);margin:0 0 24px}
 .info-dialog .event-card{border:0;background:transparent;margin:0;border-radius:0;overflow:visible}.info-dialog .event-card-overview{padding:0 0 20px}.info-dialog .event-card-detail{padding:0}.info-dialog .event-when,.info-dialog .event-place{font-size:15px}.info-dialog .event-description{white-space:normal;overflow:visible;margin-top:16px;font-size:15px;line-height:1.6}.info-dialog .event-actions{margin-top:4px}.sponsor-sessions{margin-top:24px}
