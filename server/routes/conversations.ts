@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { AddTeamChatMemberBody, MessagesQuery, SendMessageBody, Slug, Uuid } from "../../shared/contract.js";
-import { ensureDemoTeamChat, addDemoTeamMember } from "../social/demo.js";
+import { ensureDemoTeamChat, addDemoTeamMember, replyInDemoTeam } from "../social/demo.js";
 import { db } from "../db/index.js";
 import { eventMembers, events } from "../db/schema.js";
 import {
@@ -75,6 +75,7 @@ export const conversationsRoutes = new Hono<AppEnv>()
     const { id } = readParams(c, IdParams);
     const body = await readJson(c, SendMessageBody);
     const { message, created } = await sendMessage(user.id, id, body);
+    await replyInDemoTeam(message);
     return c.json({ message }, created ? 201 : 200);
   })
 

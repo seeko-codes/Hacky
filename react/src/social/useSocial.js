@@ -183,6 +183,8 @@ function useThreads(selfId) {
       const { message } = await api(`/api/conversations/${id}/messages`, { method: 'POST', body: { clientId, body } });
       merge(id, [message]);
       onSent?.(message);
+      // Include a demo teammate's reply immediately, including polling-only clients.
+      catchUp(id);
     } catch (error) {
       const text = error?.status === 403 ? error.message : friendly(error, 'Not sent.');
       update(id, (t) => ({ ...t, messages: updateLocal(t.messages, clientId, { status: 'failed', error: text }) }));

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { api } from '../api.js';
 import { useSession } from '../session.jsx';
-import { Icon, PersonAvatar } from '../ui.jsx';
+import { PersonAvatar } from '../ui.jsx';
 import { skillLabel } from '../labels.js';
 import { friendly } from './useSocial.js';
-import { HelpStatus, RoleChip, roleLabel } from './parts.jsx';
+import { HelpStatus, RoleChip, roleLabel, TeamAvatar } from './parts.jsx';
 
 // A button's pending state and one friendly error line.
 function useAction() {
@@ -127,7 +127,7 @@ function ChatRow({ c, selfId, draft, unread, onOpen, menuOpen, onMenu, onHide })
   return (
     <div className="contact-row">
     <button type="button" className="contact" data-contact={c.id} onClick={() => onOpen(c.id)}>
-      {c.kind === 'team' ? <span className="team-chat-avatar" aria-hidden="true"><Icon name="chat" /></span> : <PersonAvatar person={c.peer} />}
+      {c.kind === 'team' ? <TeamAvatar members={c.members} /> : <PersonAvatar person={c.peer} />}
       <span className="info">
         <span className="name">{name}</span>
         <span className="contact-categories">

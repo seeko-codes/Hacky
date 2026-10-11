@@ -27,8 +27,10 @@ export function TeamChatBar({ conversation, social, onOpen }) {
   const [state, setState] = useState({ busy: false, error: '' });
   if (!social.demoMode || social.role !== 'hacker' || !conversation) return null;
   if (conversation.kind === 'team') return <div className="social-teambar" aria-label="Team members">
-    <span>{conversation.members?.map(p => p.userId === social.selfId ? `${p.name} (you)` : p.name).join(' · ')}</span>
-    <span>{conversation.members?.length}/{conversation.team.maxSize} spots filled</span>
+    <div className="team-member-strip">{conversation.members?.map(p => <span className="team-member-chip" key={p.userId} title={p.name}>
+      <PersonAvatar person={p} /><span>{firstName(p.name)}{p.userId === social.selfId ? ' (you)' : ''}</span>
+    </span>)}</div>
+    <span className="team-capacity">{conversation.members?.length}/{conversation.team.maxSize} spots filled</span>
   </div>;
   if (conversation.kind !== 'dm' || conversation.peer?.role !== 'hacker') return null;
   const team = social.teamChat;

@@ -5,6 +5,7 @@ import { useMedia } from "./storage.js";
 import People from "./People.jsx";
 import HackyPane, { HackyEventName } from "./hacky/HackyPane.jsx";
 import { useSocial } from "./social/useSocial.js";
+import { TeamAvatar } from "./social/parts.jsx";
 import { ChatLists, EventBadge } from "./social/Lists.jsx";
 import {
   HelpBar,
@@ -346,7 +347,7 @@ export default function Conversation({
                   <Icon name="back" />
                 </button>
                 <div id="dm-avatar">
-                  {dmChat && (dmChat.kind === 'team' ? <span className="team-chat-avatar" aria-hidden="true"><Icon name="chat" /></span> : <PersonAvatar person={dmChat.peer} />)}
+                  {dmChat && (dmChat.kind === 'team' ? <TeamAvatar members={dmChat.members} /> : <PersonAvatar person={dmChat.peer} />)}
                 </div>
                 <button
                   id="dm-identity"

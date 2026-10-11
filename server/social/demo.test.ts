@@ -17,7 +17,7 @@ mock.module(new URL("../db/tx.ts", import.meta.url).href, {
   namedExports: { withTransaction: (work: (tx: unknown) => Promise<unknown>) => database.transaction(work) },
 });
 mock.module(new URL("../auth.ts", import.meta.url).href, { namedExports: { isDemoMode: () => process.env.DEMO_MODE === 'true' } });
-const { ensureDemoTeamChat, addDemoTeamMember, sendDemoAwareRequest, autoClaimDemoHelp } = await import('./demo.js');
+const { ensureDemoTeamChat, addDemoTeamMember, sendDemoAwareRequest, autoClaimDemoHelp, replyInDemoTeam } = await import('./demo.js');
 const { acceptRequest, blockUser } = await import('./requests.js');
 const { listConversations, sendMessage, getMessagePage } = await import('./conversations.js');
 const { createHelpRequest } = await import('./help.js');
@@ -150,4 +150,24 @@ test('mentor help automatically opens a one-to-one mentor chat', async () => {
   const chats = await listConversations(eventId, 'alex');
   assert.equal(chats[0]?.kind, 'mentor');
   assert.equal(chats[0]?.team, undefined);
+});
+
+test('demo teammate replies after a delay, once per message, and respects mode and blocks', async () => {
+  const id = await ensureDemoTeamChat(eventId, 'alex');
+  const { message } = await sendMessage('alex', id, { clientId: randomUUID(), body: 'Hola equipo' });
+  const start = performance.now();
+  await replyInDemoTeam(message);
+  assert.ok(performance.now() - start >= 1800);
+  const page = await getMessagePage('alex', id, { limit: 30 });
+  assert.equal(page.messages.at(-1)?.senderId, 'bee');
+  assert.ok(page.messages.at(-1)?.clientId);
+  await replyInDemoTeam(message);
+  assert.equal((await getMessagePage('alex', id, { limit: 30 })).messages.length, page.messages.length);
+  const next = await sendMessage('alex', id, { clientId: randomUUID(), body: 'Next step?' });
+  process.env.DEMO_MODE = 'false';
+  await replyInDemoTeam(next.message);
+  process.env.DEMO_MODE = 'true';
+  await blockUser('bee', 'alex');
+  await replyInDemoTeam(next.message);
+  assert.equal((await getMessagePage('alex', id, { limit: 30 })).messages.length, page.messages.length + 1);
 });

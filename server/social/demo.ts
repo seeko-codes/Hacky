@@ -1,8 +1,9 @@
 // Demo behavior stays on the server. Delays are awaited by the request, never
 // detached timers that a serverless runtime could drop after returning.
 import { setTimeout as sleep } from "node:timers/promises";
+import { createHash } from "node:crypto";
 import { and, eq, sql } from "drizzle-orm";
-import type { ConnectionRequest, SendRequestBody } from "../../shared/contract.js";
+import type { ConnectionRequest, SendRequestBody, Message } from "../../shared/contract.js";
 import { isDemoMode } from "../auth.js";
 import { db } from "../db/index.js";
 import { connections, conversationMembers, conversations, messages, profiles, teamMembers, teams } from "../db/schema.js";
@@ -181,6 +182,43 @@ export async function addDemoTeamMember(conversationId: string, userId: string, 
     await tx.insert(conversationMembers).values({ conversationId, userId: targetId });
     const [person] = await tx.select({ name: profiles.name }).from(profiles).where(eq(profiles.userId, targetId));
     await tx.insert(messages).values({ conversationId, kind: "system", body: `${person?.name ?? "A teammate"} accepted the invitation and joined the team.` });
+    await tx.insert(messages).values({ conversationId, senderId: targetId, kind: "text", body: "Hey team! Thanks for the invite. What are we building?", createdAt: new Date() });
     return conversationId;
+  });
+}
+
+// Awaited by the message endpoint so serverless shutdown cannot lose the reply.
+// One reply per original message, even when a client retries after losing its response.
+export async function replyInDemoTeam(message: Message): Promise<void> {
+  if (!isDemoMode() || !message.senderId || message.kind !== 'text') return;
+  const [chat] = await db.select({ kind: conversations.kind }).from(conversations).where(eq(conversations.id, message.conversationId));
+  if (chat?.kind !== 'team') return;
+  await sleep(acceptanceDelay(message.createdAt));
+  if (!isDemoMode()) return;
+  const hex = createHash('sha256').update(`demo-reply:${message.id}`).digest('hex');
+  const clientId = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+  await withTransaction(async tx => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`demo-reply:${message.id}`}, 0))`);
+    const [existing] = await tx.select({ id: messages.id }).from(messages).where(eq(messages.clientId, clientId));
+    if (existing) return;
+    const { rows } = await tx.execute<{ user_id: string }>(sql`
+      select p.user_id from conversation_members m
+      join conversations c on c.id = m.conversation_id
+      join profiles p on p.user_id = m.user_id and p.is_demo
+      join event_members e on e.event_id = c.event_id and e.user_id = p.user_id
+      where c.id = ${message.conversationId} and c.kind = 'team' and p.user_id <> ${message.senderId}
+        and exists (select 1 from messages original where original.id = ${message.id} and original.conversation_id = c.id)
+        and not exists (select 1 from blocks b
+          join conversation_members a on a.conversation_id = c.id and a.user_id = b.blocker_id
+          join conversation_members z on z.conversation_id = c.id and z.user_id = b.blocked_id)
+      order by md5(p.user_id || ${message.id}) limit 1
+    `);
+    const responder = rows[0]?.user_id;
+    if (!responder) return;
+    const spanish = /\b(hola|equipo|gracias|podemos|proyecto|hagamos)\b/i.test(message.body);
+    const replies = spanish
+      ? ['¡Me apunto! ¿Cuál es el primer paso?', '¡Suena bien! Dividamos las tareas y armemos una primera versión.', 'Estoy listo. Enfoquémonos en una demo pequeña que podamos terminar.']
+      : ['I’m in! What should we tackle first?', 'Sounds good! Let’s split up the tasks and build a first version.', 'I’m ready. Let’s focus on a small demo we can finish together.'];
+    await tx.insert(messages).values({ conversationId: message.conversationId, senderId: responder, clientId, kind: 'text', body: replies[parseInt(hex.slice(2, 4), 16) % replies.length]! }).onConflictDoNothing();
   });
 }

@@ -1,4 +1,9 @@
 import './social.css';
+import { PersonAvatar } from '../ui.jsx';
+
+export function TeamAvatar({ members = [] }) {
+  return <span className="team-photo-stack" aria-hidden="true">{members.slice(0, 3).map(p => <PersonAvatar key={p.userId} person={p} />)}</span>;
+}
 
 const ROLES = { hacker: 'Hacker', mentor: 'Mentor', sponsor: 'Sponsor', organizer: 'Organizer' };
 export const roleLabel = (role) => ROLES[role] || '';
