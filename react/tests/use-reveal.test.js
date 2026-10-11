@@ -74,7 +74,7 @@ test('stored history shows at once and never replays, on load or after a refresh
   }
 });
 
-test('a new reply: typing, the message about 300 ms after the request, then its cards', async (t) => {
+test('a new reply: typing, the message at two seconds after the request, then its cards', async (t) => {
   const probe = setup(t, { messages: [] });
   await probe.set({});
   await probe.set({ messages: [ask], status: 'submitted' });
@@ -95,9 +95,9 @@ test('a new reply: typing, the message about 300 ms after the request, then its 
   const done = reply('a1', picks());
   await probe.set({ messages: [ask, done], status: 'ready' });
   await probe.wait(FIRST_MS - 200 - 1);
-  assert.deepEqual(onScreen(probe.out, done), [], 'still typing just before 300 ms');
+  assert.deepEqual(onScreen(probe.out, done), [], 'still typing just before two seconds');
   await probe.wait(1);
-  assert.deepEqual(onScreen(probe.out, done), ['text'], 'the message at 300 ms');
+  assert.deepEqual(onScreen(probe.out, done), ['text'], 'the message at two seconds');
   assert.equal(probe.out.waiting, false);
   await probe.wait(GAP_MS);
   assert.deepEqual(onScreen(probe.out, done), ['text', 'cards'], 'its cards follow after the brief gap');
@@ -108,7 +108,7 @@ test('a streamed explanation shows before the suggestion, and continuing the str
   const probe = setup(t, { messages: [] });
   await probe.set({});
   await probe.set({ messages: [ask], status: 'submitted' });
-  await probe.wait(1000); // model latency already exceeds the initial visual delay
+  await probe.wait(FIRST_MS + 100); // model latency already exceeds the initial visual delay
   const shown = (value, state) => displayMessages([ask, reply('a1', [text(value, state)])]);
   const early = shown('Figma is a design tool.\n\nFor your project,', 'streaming');
   await probe.set({ messages: early, status: 'streaming' });
@@ -134,7 +134,7 @@ test('reduced motion: the whole reply shows as soon as it is ready', async (t) =
   await probe.unmount();
 });
 
-// Pending: the reply is in, but its first part is due only at 300 ms.
+// Pending: the reply is in, but its first part is due only at two seconds.
 async function pending(t, props) {
   const probe = setup(t, { messages: [], ...props });
   await probe.set({});
@@ -223,4 +223,39 @@ test('a finished reply never stays hidden: a cut-off or failed stream still show
     await probe.unmount();
     t.mock.timers.reset();
   }
+});
+
+// Seeded search results and clarifying chips can arrive almost immediately.
+for (const request of ['Find a mentor', 'Find a teammate', 'Find an open team']) {
+  test(`fast ${request} reply keeps Hacky thinking for two seconds`, async (t) => {
+    const probe = setup(t, { messages: [] });
+    await probe.set({});
+    const question = user('fast-user', request);
+    await probe.set({ messages: [question], status: 'submitted' });
+    const done = reply('fast-reply', [step, {
+      type: 'tool-ask_with_options', state: 'input-available',
+      input: { question: 'What are you building?', options: ['Web', 'Mobile'] },
+    }]);
+    await probe.wait(10);
+    await probe.set({ messages: [question, done], status: 'ready' });
+    await probe.wait(1989);
+    assert.equal(probe.out.waiting, true);
+    assert.deepEqual(onScreen(probe.out, done), []);
+    await probe.wait(1);
+    assert.equal(probe.out.waiting, false);
+    assert.deepEqual(onScreen(probe.out, done), ['cards']);
+    await probe.unmount();
+  });
+}
+
+test('network time already over two seconds needs no additional thinking delay', async (t) => {
+  const probe = setup(t, { messages: [] });
+  await probe.set({});
+  await probe.set({ messages: [ask], status: 'submitted' });
+  await probe.wait(2500);
+  const done = reply('slow-reply', [step, text('Here are your mentors.')]);
+  await probe.set({ messages: [ask, done], status: 'ready' });
+  assert.deepEqual(onScreen(probe.out, done), ['text']);
+  assert.equal(probe.out.waiting, false);
+  await probe.unmount();
 });
