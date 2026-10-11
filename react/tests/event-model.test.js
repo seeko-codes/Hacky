@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { data } from '../src/event-data.js';
-import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn } from '../src/event-model.js';
+import { readFileSync } from 'node:fs';
+import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn, isRecommendationQuestion, findEvents } from '../src/event-model.js';
 
 const beforeWeekend = Date.parse('2026-10-09T00:00:00-04:00');
 const broadProfile = { track: 'AI / Machine Learning', motivations: ['build', 'learn', 'meet', 'career', 'compete', 'fun'], skills: ['Python', 'React'], skillsWanted: ['design'], interests: ['cloud', 'data'], experience: 'intermediate', idea: 'An AI study helper' };
@@ -129,4 +130,54 @@ test('the full agenda keeps Sunday afternoon on the schedule until the closing c
   const atTwo = stillOn(Date.parse('2026-10-11T14:00:00-04:00')).map(event => event.id);
   assert.deepEqual(atTwo, ['khix-judging', 'khix-lunch-sun', 'khix-merch-2', 'khix-closing']);
   assert.deepEqual(stillOn(Date.parse('2026-10-11T19:30:00-04:00')), []);
+});
+
+test('recommendation questions go to Hacky; time, place and schedule questions stay local', () => {
+  const personal = [
+    'What event do you recommend?',
+    'What event do you recommend for me?',
+    'Which workshops would you recommend for a beginner?',
+    'What should I go to?',
+    'What should I attend tonight?',
+    'Should I go to the Figma workshop?',
+    'Any events for me?',
+    'Are there any workshops for me today?',
+    'Suggest something',
+    'Can you suggest an event?',
+    'Is the AWS session worth going to?',
+    'Which events would I like?',
+  ];
+  for (const question of personal) assert.ok(isRecommendationQuestion(question), question);
+  const local = [
+    'When is the Devpost submission deadline?',
+    'What time is the Devpost submission deadline today?',
+    'When is the DevPost workshop?',
+    'Where is the Figma workshop?',
+    'Show upcoming events',
+    'Show me the event schedule',
+    'What can you tell me about the events?',
+    'Which sponsors are here?',
+    'Where can I get help at the event?',
+    'Show my reminders',
+  ];
+  for (const question of local) assert.ok(!isRecommendationQuestion(question), question);
+  // The local answers those rely on are unchanged.
+  assert.equal(matchQuestion('When is the Devpost submission deadline?', beforeWeekend).best?.id, 'khix-submission');
+  assert.equal(matchQuestion('When is the DevPost workshop?', beforeWeekend).best?.id, 'khix-devpost-workshop');
+});
+
+test('show_events names from the event guide find their schedule entries', () => {
+  // Every session in the guide's schedule (check-in and the deadline line aside) has a card.
+  const guide = readFileSync(new URL('../../server/agent/event-guides/knighthacks-ix.md', import.meta.url), 'utf8');
+  const lines = guide.slice(guide.indexOf('## Schedule'), guide.indexOf('## Official links')).split('\n').filter(line => line.startsWith('- '));
+  const missing = lines.map(line => line.split(' · ')[1]).filter(name => !findEvents([name], beforeWeekend).length);
+  assert.deepEqual(missing, ['Check-in and swag pickup (photo ID + Blade QR)', 'Hard Devpost submission deadline (edits until 11:00 AM)']);
+  const ids = (names, now = beforeWeekend) => findEvents(names, now).map(event => event.id);
+  assert.deepEqual(ids(['KH: Hackathons 101 (Sprout Track)', 'KH: Intro to Vibe Coding x OpenAI Codex', 'Career Fair: Meet Our Sponsors']), ['khix-hackathons-101', 'khix-codex', 'khix-career-fair']);
+  assert.deepEqual(ids(['KH x IEEE: Embedded Systems', 'KH x IEEE: Embedded Systems II']), ['khix-embedded-1', 'khix-embedded-2']);
+  assert.deepEqual(ids(['Merch Market, session 2']), ['khix-merch-2']);
+  // Late Sunday the first Merch Market is over, so the name means the second one.
+  assert.deepEqual(ids(['Merch Market'], Date.parse('2026-10-11T13:00:00-04:00')), ['khix-merch-2']);
+  assert.deepEqual(ids(['Figma', 'A made-up workshop', '']), []);
+  assert.deepEqual(ids(['Adobe Workshop', 'adobe workshop']), ['khix-adobe']);
 });

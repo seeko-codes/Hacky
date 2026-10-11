@@ -6,7 +6,7 @@
   --line:#d8dde5; --wash:#e9edf3; --sidebar:#eef1f5; --stage:#edf2f8;
   --action:#0866d9; --action-hover:#0754b3; --on-action:#fff;
   --hover:#eaf1fb; --selection:#d4e5ff; --request:#eaf1fb;
-  --disabled:#e2e6ec; --disabled-ink:#657080; --focus:#0866d9; --scroll:#929eaf;
+  --disabled:#e2e6ec; --disabled-ink:#5b6575; --focus:#0866d9; --scroll:#929eaf;
   --gold:#0866d9; --overlay:#14203380; --radius:12px; --ease:cubic-bezier(.16,1,.3,1);
   --hacker-ink:#24558c; --hacker-bg:#e6effa; --mentor-ink:#39604f; --mentor-bg:#e8f0eb; --sponsor-ink:#805915; --sponsor-bg:#f6e9c9;
 }
@@ -22,9 +22,14 @@
 * { box-sizing:border-box }
 body { margin:0; -webkit-font-smoothing:antialiased }
 button,textarea { font:inherit; color:inherit }
-button { cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; transition:background 160ms,color 160ms,border-color 160ms,transform 160ms var(--ease) }
+/* No text selection on buttons: on iOS, repeated taps on a disabled button ("Request sent") select its
+   label, and the next tap anywhere (Back) only clears that selection, so the dialog seems frozen. */
+button { cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; transition:background 160ms,color 160ms,border-color 160ms,transform 160ms var(--ease) }
 button:disabled { cursor:default }
 button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex="-1"]:focus-visible { outline:2px solid var(--blue); outline-offset:3px }
+/* After touch or a mouse (data-input, set in ui.jsx), focus moved by script draws no ring on controls;
+   the next key press brings rings back for keyboard users. Text fields keep theirs. */
+:root[data-input=pointer] :is(button,a,summary,[tabindex]):focus-visible { outline:none!important }
 ::selection { background:var(--selection); color:var(--ink) }
 svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0 }
 [hidden] { display:none!important }
@@ -33,7 +38,9 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
 /* Editable dimensions, shared by the app and the component playground. */
 :root { --object-radius:14px; --object-padding:18px; --object-gap:16px; --control-height:44px; }
 :is(.hk-button,.event-remind,.custom-save,.profile-message,.send) { min-height:var(--control-height); padding:10px 16px; border:0; border-radius:10px; font:inherit; font-size:14px; font-weight:700; background:var(--action); color:var(--on-action) }
-:is(.hk-button,.event-remind,.custom-save,.profile-message,.send):hover:not(:disabled) { background:var(--action-hover) }
+/* Hover only where a pointer can hover: on touch screens :hover sticks after a tap, so a tapped
+   button would keep looking pressed or selected. Pressed (:active), focus and selected states stay. */
+@media (hover:hover) { :is(.hk-button,.event-remind,.custom-save,.profile-message,.send):hover:not(:disabled) { background:var(--action-hover) } }
 :is(.hk-button,.event-remind,.custom-save,.profile-message,.send):disabled { background:var(--disabled); color:var(--disabled-ink) }
 .hk-button.secondary { background:var(--white); color:var(--blue); border:1px solid var(--line) }
 .hk-notice { padding:var(--object-padding); border:1px solid var(--line); border-radius:var(--object-radius); background:var(--wash); font-size:14px; line-height:1.5 }
@@ -45,8 +52,8 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
 /* Shared identity, conversation, object and input primitives. */
 .icon { width:44px; height:44px; border:0; border-radius:10px; background:transparent; color:var(--muted); display:grid; place-items:center; flex-shrink:0 }
 .toggle { justify-self:start; min-height:44px; display:inline-flex; align-items:center; gap:8px; border:0; border-radius:8px; padding:0 6px; background:transparent; color:var(--muted); font-size:14px }
-.icon:hover,.toggle:hover { color:var(--blue); background:var(--wash) }
-.icon:active,.toggle:active,.social-link:active:not(:disabled),.profile-message:active,.custom-save:active:not(:disabled) { transform:scale(.96) }
+@media (hover:hover) { .icon:hover,.toggle:hover { color:var(--blue); background:var(--wash) } }
+.icon:active:not(:disabled),.toggle:active:not(:disabled),.social-link:active:not(:disabled),.profile-message:active:not(:disabled),.custom-save:active:not(:disabled) { transform:scale(.96) }
 /* Character portraits, with separate full-body and face treatments. */
 .avatar { width:40px; height:40px; display:block; flex-shrink:0 }
 .portrait { position:relative; isolation:isolate; border-radius:50%; overflow:hidden; background:var(--portrait-paper,#e8edf3) }
@@ -75,11 +82,12 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
 .byline .portrait { width:24px; height:24px }
 .matches { margin-top:16px; display:grid; gap:10px }
 .match { width:100%; display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--line); border-radius:14px; text-align:left; background:var(--white) }
-.match:hover { border-color:var(--focus); background:var(--hover) }
+@media (hover:hover) { .match:hover { border-color:var(--focus); background:var(--hover) } }
 .match .portrait { width:62px; height:68px }
 .match-specialty { display:block; font-size:13px; color:var(--muted); margin-top:5px; line-height:1.45 }
 .card-chevron { width:18px; height:18px; transform:rotate(180deg); color:var(--muted) }
-.match:focus-visible .card-chevron,.match:hover .card-chevron { color:var(--blue) }
+:root:not([data-input=pointer]) .match:focus-visible .card-chevron { color:var(--blue) }
+@media (hover:hover) { .match:hover .card-chevron { color:var(--blue) } }
 .waiting { display:flex; align-items:center; gap:10px; color:var(--muted) }
 .thinking-dots { display:inline-flex; gap:4px; align-items:center; flex-shrink:0; height:20px; color:var(--blue) }
 .thinking-dots i { width:4px; height:4px; border-radius:50%; background:currentColor; animation:thinking 900ms ease-in-out infinite }
@@ -92,7 +100,8 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
 textarea { caret-color:var(--blue); border:0; outline:none; background:transparent; width:100%; min-width:0; height:40px; max-height:116px; resize:none; padding:8px 0; line-height:24px; font-size:16px }
 textarea::placeholder { color:var(--muted); opacity:1 }
 .send { width:44px; height:44px; padding:0; flex-shrink:0; display:grid; place-items:center }
-.send:hover:not(:disabled),.custom-save:hover:not(:disabled),.profile-message:hover { background:var(--action-hover) }
+/* :not(:disabled) on every one: a disabled "Request sent" must keep its disabled colors. */
+@media (hover:hover) { .send:hover:not(:disabled),.custom-save:hover:not(:disabled),.profile-message:hover:not(:disabled) { background:var(--action-hover) } }
 .send:active:not(:disabled) { transform:scale(.94) }
 .send:disabled,.custom-save:disabled { background:var(--disabled); color:var(--disabled-ink) }
 .demo-note { text-align:center; font-size:12px; line-height:1.5; color:var(--muted); margin:8px 0 0 }
@@ -101,7 +110,7 @@ textarea::placeholder { color:var(--muted); opacity:1 }
 :root { --control-radius:10px; --sheet-radius:16px; --space-tight:8px; --space-group:16px; --space-section:24px; }
 :is(.hk-button,.event-remind,.custom-save,.profile-message,.send) { border-radius:var(--control-radius); line-height:20px; transition:background 160ms,color 160ms,transform 160ms var(--ease); }
 :is(.hk-button,.event-remind,.custom-save,.profile-message,.send):active:not(:disabled) { transform:translateY(1px); }
-.hk-button.secondary:hover:not(:disabled),.event-remind[aria-pressed=true]:hover { background:var(--hover); color:var(--blue); }
+@media (hover:hover) { .hk-button.secondary:hover:not(:disabled),.event-remind[aria-pressed=true]:hover { background:var(--hover); color:var(--blue); } }
 :is(input,textarea,select) { caret-color:var(--blue); accent-color:var(--blue); }
 :is(input,textarea)::placeholder { color:var(--muted); opacity:1; }
 :is(.hk-field input,.hk-field select,.schedule-day-label select):focus-visible { outline:2px solid var(--blue); outline-offset:3px; }

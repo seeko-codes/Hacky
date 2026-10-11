@@ -77,7 +77,7 @@ Change these only with the owner's agreement.
 - **Database schema:** `server/db/schema.ts` and the migrations in `drizzle/`.
 - **API:** every route, with its Zod request and response schemas, is listed in `shared/contract.ts`. `server/app.ts` implements them; the web app calls only these.
 - **Chat:** `POST /api/chat` takes `{ eventSlug, message }` (only the newest message; the server loads history itself) and streams an AI SDK UI message stream. `docs/chat.md` explains the server side and `useChat` in the web app.
-- **Tool results and cards:** Zod schemas in `shared/contract.ts` (`toolOutputs`), including the evidence fields. The chat picks a component by tool name: `search_people` (person, team or mentor cards, or no match), `get_profile`, `draft_intro` (`DraftCard`), `draft_help_request` (`HelpRequestCard`), `my_status` (`StatusCard`). `ask_with_options` is answered in the UI with `{ answer }`.
+- **Tool results and cards:** Zod schemas in `shared/contract.ts` (`toolOutputs`), including the evidence fields. The chat picks a component by tool name: `search_people` (person, team or mentor cards, or no match), `get_profile`, `draft_intro` (`DraftCard`), `draft_help_request` (`HelpRequestCard`), `my_status` (`StatusCard`), `show_events` (`EventsCard`, event cards drawn from the web app's own schedule). `ask_with_options` is answered in the UI with `{ answer }`.
 - **Live-update messages:** the payload schemas in `shared/contract.ts`.
 - **Launch ticket:** the fields a hackathon signs, defined with the launch route.
 - **Matching:** the definitions in the plan's Matching section, checked by `seed/match-cases.json`.
@@ -128,7 +128,7 @@ After changing tool or card schemas in `shared/contract.ts`, run `npm run check:
 - Tokens last 10 minutes. Reconnect with a fresh token about 60 s before `expiresAt`, and after 40 s with no frame at all (the socket is dead even if `close` never fired). Treat `error` as closed.
 - Add rows from the event payload instead of refetching. Skip rows already on screen.
 - Sent messages show instantly with a `client_id`. Replace the instant copy when the real row arrives with the same `client_id`.
-- Connections drop (idle timeouts, restarts). On every `open` and when the tab regains focus, fetch messages `after` the last one shown, and refetch requests and the help queue.
+- Connections drop (idle timeouts, restarts). On every `open` and when the tab regains focus, fetch the open chat's newest page and reconcile it with the screen (it adds new messages and drops deleted ones), and refetch requests and the help queue.
 - Load the last 30 messages and fetch older ones on scroll. Memoize message rows.
 
 ## Other rules

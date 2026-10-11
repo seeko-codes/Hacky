@@ -12,6 +12,10 @@ import {
   newClientId,
   newestId,
   oldestId,
+  pageConnects,
+  reconcileMessages,
+  removeMessage,
+  savedIds,
   splitRequests,
   updateLocal,
 } from './messages.js';
@@ -85,19 +89,37 @@ function useThreads(selfId) {
   }, []);
   const merge = (id, messages) => update(id, (t) => ({ ...t, messages: mergeMessages(t.messages, messages) }));
 
+  // The newest page brings what's new and drops what its sender deleted (there's
+  // no live event for deletes). When more arrived than one page holds, page
+  // forward from the newest message on screen first. A cursor the server
+  // rejects (400) was deleted: drop it and go on from the one before.
   const catchUp = useCallback(async (id) => {
     const t = store.current[id];
     if (!t?.loaded || busy.current.has(id)) return;
-    let after = newestId(t.messages);
-    if (!after) return load(id, true);
     busy.current.add(id);
     try {
-      for (let page = 0; page < 10 && after; page++) {
-        const next = await api(`/api/conversations/${id}/messages?after=${after}&limit=100`);
-        merge(id, next.messages);
-        if (!next.hasMore) break;
-        after = next.messages.at(-1)?.id;
+      const asked = savedIds(get(id).messages);
+      const newest = await api(`/api/conversations/${id}/messages?limit=30`);
+      if (!pageConnects(get(id).messages, newest)) {
+        let after = newestId(get(id).messages);
+        for (let page = 0; page < 10 && after; page++) {
+          try {
+            const next = await api(`/api/conversations/${id}/messages?after=${after}&limit=100`);
+            merge(id, next.messages);
+            if (!next.hasMore) break;
+            after = next.messages.at(-1)?.id;
+          } catch (error) {
+            if (error?.status !== 400) throw error;
+            update(id, (t) => ({ ...t, messages: removeMessage(t.messages, after) }));
+            after = newestId(get(id).messages);
+          }
+        }
       }
+      update(id, (t) => ({
+        ...t,
+        messages: reconcileMessages(t.messages, newest, asked),
+        hasMore: oldestId(t.messages) ? t.hasMore : newest.hasMore,
+      }));
     } catch {
       // The next open, focus or poll catches up again.
     } finally {
@@ -132,9 +154,22 @@ function useThreads(selfId) {
     try {
       const page = await api(`/api/conversations/${id}/messages?before=${before}&limit=30`);
       update(id, (t) => ({ ...t, messages: mergeMessages(t.messages, page.messages), hasMore: page.hasMore, older: false }));
-    } catch {
-      update(id, (t) => ({ ...t, older: false }));
+    } catch (error) {
+      // 400: the oldest message on screen was deleted, so it can't be a cursor.
+      const gone = error?.status === 400;
+      update(id, (t) => ({ ...t, messages: gone ? removeMessage(t.messages, before) : t.messages, older: false }));
     }
+  }, []);
+
+  // Unsend for everyone. 404 means it's already gone (or the chat is), so it
+  // leaves the screen either way; other errors are for the caller to show.
+  const remove = useCallback(async (id, messageId) => {
+    try {
+      await api(`/api/conversations/${id}/messages/${messageId}`, { method: 'DELETE' });
+    } catch (error) {
+      if (error?.status !== 404) throw error;
+    }
+    update(id, (t) => ({ ...t, messages: removeMessage(t.messages, messageId) }));
   }, []);
 
   // Live message-new: only threads we've opened keep messages in memory.
@@ -170,7 +205,7 @@ function useThreads(selfId) {
     post(id, clientId, m.body, onSent);
   }, []);
 
-  return { threads: store.current, load, loadOlder, catchUp, receive, send, retry };
+  return { threads: store.current, load, loadOlder, catchUp, receive, send, retry, remove };
 }
 
 // Exactly one socket for the app (useSocial is mounted once, in Conversation).
@@ -312,6 +347,14 @@ export function useSocial({ activeId }) {
       throw error;
     }
   };
+  // The chat list shows the newest message left on screen until the refetch lands.
+  const deleteMessage = async (conversationId, messageId) => {
+    await threads.remove(conversationId, messageId);
+    const left = threads.threads[conversationId]?.messages.findLast((m) => !m.local && m.id !== messageId) ?? null;
+    conversations.patch((list) => list.map((c) =>
+      c.id === conversationId && c.lastMessage?.id === messageId ? { ...c, lastMessage: left } : c));
+    conversations.refetch();
+  };
   const resolve = async (helpId, conversationId) => {
     await api(`/api/help-requests/${helpId}/resolve`, { method: 'POST' });
     conversations.refetch();
@@ -338,6 +381,7 @@ export function useSocial({ activeId }) {
     reload: threads.load,
     send: (id, body) => threads.send(id, body, sent),
     retry,
+    deleteMessage,
     accept,
     hide,
     claim,

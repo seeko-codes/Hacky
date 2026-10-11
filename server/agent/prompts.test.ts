@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { after, describe, test } from "node:test";
 import type { Intake } from "../../shared/contract.js";
 import type { ChatContext } from "./data.js";
-import { buildInstructions, eventGuide } from "./prompts.js";
+import { buildInstructions, eventGuide, eventNow, guideSchedule, stillOnText } from "./prompts.js";
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -132,6 +132,45 @@ describe("buildInstructions", () => {
     assert.ok(prompt.includes("If they ask about the event itself (schedule, food, Wi-Fi, rules and so on)"));
   });
 
+  test("hackers: open teams search right away, and a newer request replaces an earlier one", () => {
+    for (const complete of [false, true]) {
+      const prompt = buildInstructions(fakeContext("hacker", complete), [], guide);
+      // The web app sends this exact text for the dashboard's Join a team link (HackyPane STARTS.team).
+      assert.ok(prompt.includes('"Show me open teams I can join"'));
+      assert.ok(prompt.includes('searches kind "team" right away'));
+      assert.ok(prompt.includes("Their newest request decides what to look for."));
+    }
+  });
+
+  test("hackers: Find hackers is hacker discovery, kept apart from the mentor and team flows", () => {
+    for (const complete of [false, true]) {
+      const prompt = buildInstructions(fakeContext("hacker", complete), [], guide);
+      // The web app sends this exact text for Hacky's Find hackers chip (react/src/hacky/Brief.jsx FIND_HACKERS).
+      const rule = prompt.split("\n").find((line) => line.includes('"Help me find hackers"'));
+      assert.ok(rule, "the Find hackers rule is missing");
+      // A typed request for people gets the same rule.
+      assert.ok(rule.includes('"help me find people"'));
+      // Exactly two chips, and neither is a mentor.
+      const chips = rule.match(/exactly two chips, ((?:"[^"]+"(?:,? and |, )?)+)/)?.[1]?.match(/"[^"]+"/g);
+      assert.deepEqual(chips, ['"Find a teammate"', '"Find an open team"']);
+      assert.ok(rule.includes("never a mentor") && rule.includes("no mentor chip"));
+      assert.ok(!/"(Get|Find) a mentor"/.test(rule), "the Find hackers rule offers a mentor chip");
+      // "Find an open team" goes straight to the open-team search, like the dashboard's Join a team link.
+      const teams = prompt.split("\n").find((line) => line.includes('"Show me open teams I can join"'));
+      assert.ok(teams?.includes('"Find an open team" chip) searches kind "team" right away'));
+      // The general ask-first rule no longer turns finding hackers into a mentor question.
+      assert.ok(prompt.includes("except when they're finding hackers, below: that never offers a mentor"));
+      // The other starting points keep their own wording and flows.
+      assert.ok(prompt.includes('"Find a mentor"'));
+      assert.ok(prompt.includes('"Show me open teams I can join"'));
+      assert.ok(prompt.includes("find a teammate, find an open team, or get a mentor") || !complete);
+    }
+    // Mentors see the same chip; for them too it searches hackers.
+    const mentor = buildInstructions(fakeContext("mentor", true), [], guide);
+    const rule = mentor.split("\n").find((line) => line.includes('"Help me find hackers"'));
+    assert.ok(rule?.includes('search kind "hacker", never mentors or teams'), "the mentor prompt lacks the Find hackers rule");
+  });
+
   test("static parts come first: common rules, event and guide, then profile and skipped notes", () => {
     const prompt = buildInstructions(fakeContext("hacker", false), ["What can you build?"], guide);
     const order = [
@@ -152,4 +191,150 @@ describe("buildInstructions", () => {
     const prompts = MODES.map(({ ctx }) => prefix(buildInstructions(ctx, [], guide)));
     assert.ok(prompts.every((p) => p === prompts[0]));
   });
+});
+
+// ---------------------------------------------------------------------------
+// Event recommendations
+// ---------------------------------------------------------------------------
+
+describe("event recommendations", () => {
+  const guide = eventGuide("test-hacks", [dir]);
+  const saturdayMorning = new Date("2026-10-10T13:00:00Z"); // 9:00 AM EDT
+
+  test("the time line uses the pinned now, in Eastern time", () => {
+    assert.equal(eventNow(saturdayMorning), "Saturday, October 10 at 9:00 AM");
+    const prompt = buildInstructions(fakeContext("hacker", true), [], guide, saturdayMorning);
+    assert.ok(prompt.includes("Right now it's Saturday, October 10 at 9:00 AM (US Eastern"));
+    const sunday = buildInstructions(fakeContext("hacker", true), [], guide, new Date("2026-10-11T21:30:00Z"));
+    assert.ok(sunday.includes("Right now it's Sunday, October 11 at 5:30 PM"));
+  });
+
+  test("every mode gets the recommendation rules with the guide, none without it", () => {
+    for (const { ctx } of MODES) {
+      const prompt = buildInstructions(ctx, [], guide);
+      for (const rule of [
+        "Recommending events (",
+        "It's a personal pick, not a schedule search.",
+        "the message wins",
+        'pick from the "Still ahead or happening now" list below',
+        "Never offer anything else; it has ended",
+        "Pick 1 to 3 that fit this person best",
+        "For you, I'd start with:",
+        "- **Event name as the guide writes it** — why it fits them",
+        "Then one short line with each pick's day, time and room, copied exactly from the list below.",
+        "First call show_events once with your picks, named exactly as the guide writes them",
+        "Every recommendation does this, even if earlier replies in this chat didn't.",
+        "Then write your message in exactly this shape:",
+        "The message covers exactly the events you passed to show_events, in the same order.",
+        "Each reason names the one thing it matches",
+        "Don't say their name in it and don't list their profile back to them.",
+        "Never invent what it covers, perks, availability, career or résumé benefits",
+        "ask one simple question with ask_with_options instead",
+        "Other event questions (times, places, food, rules): answer simply first.",
+      ]) {
+        assert.ok(prompt.includes(rule), rule);
+      }
+      assert.ok(!buildInstructions(ctx, [], null).includes("Recommending events ("));
+    }
+  });
+
+  test("the style rules allow the bullet format for recommendations only", () => {
+    const prompt = buildInstructions(fakeContext("hacker", true), [], guide);
+    assert.ok(prompt.includes("One to three short sentences per reply; event recommendations use their own short bullet format (below)."));
+    assert.ok(prompt.includes("Bold only event names in recommendations."));
+  });
+
+  test("the rules come before the profile, so they're in the shared prefix", () => {
+    const prompt = buildInstructions(fakeContext("hacker", true), [], guide);
+    assert.ok(prompt.indexOf("Recommending events (") < prompt.indexOf("The person's saved profile"));
+  });
+
+  test("each prompt carries only its own person's profile", () => {
+    const base = fakeContext("hacker", true);
+    const ai: ChatContext = {
+      ...base,
+      userId: "usr_ai",
+      me: { name: "Priya Nair", handle: "priya_ml", role: "hacker" },
+      intake: { ...base.intake, track: "AI / Machine Learning", skills: ["Python", "PyTorch"], interests: ["LLMs"] },
+    };
+    const hw: ChatContext = {
+      ...base,
+      userId: "usr_hw",
+      me: { name: "Diego Ruiz", handle: "diego_hw", role: "hacker" },
+      intake: { ...base.intake, track: "Embedded Software", skills: ["Arduino", "C"], skillsWanted: ["UI design"] },
+    };
+    const first = buildInstructions(ai, [], guide, saturdayMorning);
+    const second = buildInstructions(hw, [], guide, saturdayMorning);
+    assert.equal(buildInstructions(ai, [], guide, saturdayMorning), first, "building another person's prompt changes nothing");
+    assert.ok(first.includes('"handle":"priya_ml"') && first.includes("PyTorch"));
+    assert.ok(second.includes('"handle":"diego_hw"') && second.includes("Arduino"));
+    for (const other of ["priya_ml", "Priya", "PyTorch", "LLMs"]) assert.ok(!second.includes(other), other);
+    for (const other of ["diego_hw", "Diego", "Arduino", "UI design"]) assert.ok(!first.includes(other), other);
+  });
+});
+
+describe("what's still on", () => {
+  const SCHEDULE = `# Test guide
+
+## Schedule
+### Saturday, October 10
+- 9:15–10:15 AM · Databricks: Intro to Databricks · ENG2 102
+- 9:00–10:30 AM · Breakfast: Bagels · ENG2 105
+- 11:30–12:15 PM · Morning talk · Room A
+- 10:00 PM–12:00 AM · Rave · Atrium
+
+### Sunday, October 11
+- 10:00 AM · Submission deadline
+- 6:00–7:30 PM · Closing Ceremony · Ballroom
+
+## Official links
+- 1:00 PM · not a schedule line`;
+  const at = (iso: string) => new Date(iso);
+  const hour = 60 * 60_000;
+
+  test("reads the schedule lines and their Eastern times", () => {
+    const events = guideSchedule(SCHEDULE, 2026);
+    assert.deepEqual(events.map((e) => e.name), ["Databricks: Intro to Databricks", "Breakfast: Bagels", "Morning talk", "Rave", "Submission deadline", "Closing Ceremony"]);
+    const saturday = Date.UTC(2026, 9, 10);
+    assert.equal(events[0]?.start, saturday + 9.25 * hour);
+    assert.equal(events[2]?.start, saturday + 11.5 * hour, "a start without AM/PM before a PM end can be in the morning");
+    assert.equal(events[3]?.end, saturday + 24 * hour, "midnight is the next day");
+    assert.equal(events[4]?.end, events[4]?.start, "no end time");
+    assert.equal(events[5]?.line, "Sunday 6:00–7:30 PM · Closing Ceremony · Ballroom");
+  });
+
+  test("lists what's on or ahead within a day, never what ended, and no meals", () => {
+    const morning = stillOnText(SCHEDULE, at("2026-10-10T13:30:00Z")); // Sat 9:30 AM EDT
+    assert.ok(morning.includes("- Saturday 9:15–10:15 AM · Databricks: Intro to Databricks · ENG2 102 (happening now)"));
+    assert.ok(morning.includes("- Saturday 11:30–12:15 PM · Morning talk · Room A\n"));
+    assert.ok(morning.includes("Rave"));
+    assert.ok(!morning.includes("Breakfast"));
+    assert.ok(!morning.includes("Closing Ceremony"), "more than a day away");
+    const later = stillOnText(SCHEDULE, at("2026-10-10T14:30:00Z")); // Sat 10:30 AM
+    assert.ok(!later.includes("Databricks"));
+    const sunday = stillOnText(SCHEDULE, at("2026-10-11T22:00:00Z")); // Sun 6:00 PM
+    assert.ok(sunday.includes("Closing Ceremony · Ballroom (happening now)"));
+    assert.ok(!sunday.includes("Rave") && !sunday.includes("Submission deadline"));
+    assert.equal(stillOnText(SCHEDULE, at("2026-10-12T00:00:00Z")), "\nEverything on the guide's schedule has ended: the event is over.");
+  });
+
+  test("no guide or no schedule adds nothing", () => {
+    assert.equal(stillOnText(null, at("2026-10-10T13:30:00Z")), "");
+    assert.equal(stillOnText("# A guide without a schedule", at("2026-10-10T13:30:00Z")), "");
+  });
+
+  test("the list follows the time line in the prompt", () => {
+    const ctx = fakeContext("hacker", true);
+    const prompt = buildInstructions(ctx, [], SCHEDULE, at("2026-10-10T13:30:00Z"));
+    const time = prompt.indexOf("Right now it's Saturday, October 10 at 9:30 AM");
+    const list = prompt.indexOf("Still ahead or happening now, from the guide's schedule");
+    assert.ok(time >= 0 && list > time && list < prompt.indexOf("The person's saved profile"));
+  });
+
+  test("intake mode answers a recommendation question instead of asking the next intake question", () => {
+    const prompt = buildInstructions(fakeContext("hacker", false), [], guide());
+    assert.ok(prompt.includes("That includes asking what events to go to"));
+    assert.ok(prompt.includes("not the next intake question"));
+  });
+  const guide = () => eventGuide("test-hacks", [dir]);
 });

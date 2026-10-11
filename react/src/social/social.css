@@ -2,7 +2,8 @@
 .social-lists section + section .label { margin-top:24px }
 .social-lists .contact { position:relative }
 .contact.social-card { align-items:flex-start; cursor:default }
-.contact.social-card:hover { background:transparent }
+/* A request or help card isn't a button: tapping Accept or Claim presses only that button, not the card. */
+.contact.social-card:is(:hover,:active) { background:transparent }
 .social-who { flex-shrink:0; padding:0; border:0; border-radius:50%; background:transparent }
 .social-intro { display:block; margin-top:6px; font-size:13px; line-height:1.5; color:var(--ink); overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden }
 .social-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px }
@@ -22,7 +23,7 @@
 .social-error { display:block; margin-top:6px; font-size:13px; line-height:1.45; color:var(--sponsor-ink) }
 .social-hidden { margin:4px 0 8px }
 .social-hidden > summary { min-height:40px; display:flex; align-items:center; padding:0 12px; border-radius:10px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer }
-.social-hidden > summary:hover { background:var(--hover); color:var(--blue) }
+@media (hover:hover) { .social-hidden > summary:hover { background:var(--hover); color:var(--blue) } }
 .social-mine { cursor:default }
 button.social-mine { cursor:pointer }
 
@@ -37,14 +38,27 @@ button.social-mine { cursor:pointer }
 .bubble.social-failed .message-body p { opacity:.65; outline:1px dashed var(--line); outline-offset:2px }
 .social-failed-note { display:block; margin-top:4px; font-size:12px; line-height:1.5; color:var(--sponsor-ink); text-align:right }
 .social-failed-note button { min-height:32px; padding:0 8px; border:0; border-radius:8px; background:transparent; color:var(--link); font-size:12px; font-weight:700; text-decoration:underline; text-underline-offset:3px }
-.social-failed-note button:hover { background:var(--wash) }
+@media (hover:hover) { .social-failed-note button:hover { background:var(--wash) } }
 .social-system { align-self:center; max-width:85%; text-align:center; font-size:12px; line-height:1.5; color:var(--muted); flex-shrink:0 }
 .social-system p { margin:0; padding:4px 10px; border-radius:10px; background:var(--wash) }
 .social-older { align-self:center; flex-shrink:0; min-height:36px; padding:0 12px; border:0; border-radius:10px; background:transparent; color:var(--blue); font-size:13px; font-weight:700 }
-.social-older:hover:not(:disabled) { background:var(--wash) }
+@media (hover:hover) { .social-older:hover:not(:disabled) { background:var(--wash) } }
 .social-older:disabled { color:var(--muted) }
 .social-retry { margin-top:12px }
 .dm-notice { margin:0 20px 4px; font-size:13px; line-height:1.45; color:var(--sponsor-ink); flex-shrink:0 }
+/* Your own messages: tap one for its time and Delete; Tab reaches Delete too. */
+.bubble.social-own .message-body { display:flex; flex-direction:column; align-items:flex-end; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent }
+.bubble.social-picked .message-body p { filter:brightness(.88) }
+.social-message-actions { display:flex; align-items:center; gap:8px; margin-top:2px; font-size:12px; line-height:1.4; color:var(--muted) }
+.social-message-actions.sr-only:focus-within { position:static; width:auto; height:auto; margin:2px 0 0; overflow:visible; clip-path:none }
+.social-message-actions button { min-height:44px; padding:0 12px; border:0; border-radius:10px; background:transparent; color:var(--sponsor-ink); font-size:13px; font-weight:700 }
+@media (hover:hover) { .social-message-actions button:hover { background:var(--wash) } }
+.social-confirm-dialog { width:min(400px,calc(100vw - 32px)); max-width:none; padding:20px; border:0; border-radius:var(--sheet-radius); color:var(--ink); background:var(--paper) }
+.social-confirm-dialog::backdrop { background:var(--overlay) }
+.social-confirm-dialog h2 { margin:0 0 12px; font-size:18px; line-height:1.3 }
+.social-confirm-dialog p { margin:0 0 16px; font-size:14px; line-height:1.5; color:var(--muted) }
+.social-confirm-dialog .social-confirm-quote { padding:8px 12px; border-radius:10px; background:var(--wash); color:var(--ink); white-space:pre-wrap; overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden }
+.social-confirm-dialog .social-error { margin:10px 0 0; color:var(--sponsor-ink) }
 
 /* Profile dialog. */
 .person-dialog .person-toolbar .social-block { color:var(--muted); font-size:13px }

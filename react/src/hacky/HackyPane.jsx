@@ -4,46 +4,59 @@
 // Local exchanges (event/sponsor questions, the plan) never reach the agent.
 // Each records how many chat messages existed when it was made, so it stays
 // in place as the chat grows.
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Dots, SelfAvatar, WorkingPet } from '../ui.jsx';
 import HackyFilm, { THINKING_CLIP } from '../HackyFilm.jsx';
-import { replyDelay } from '../storage.js';
+import { replyDelay, useMedia } from '../storage.js';
 import { useSession } from '../session.jsx';
 import { useHackyChat } from './useHackyChat.js';
 import { CardActions, MessagePart, isVisiblePart } from './cards.jsx';
 import Brief from './Brief.jsx';
+import { FIRST_MS, GAP_MS, showingOrder } from './reveal.js';
+import { useReveal } from './useReveal.js';
 import './hacky-chat.css';
 
 const PLAN_COMMAND = /^(change my plan|plan my hackathon|show my plan)$/i;
+// Requests another page hands over in the address. The event dashboard's "Join a team" opens
+// /index.html?start=team, and Hacky starts that search as a new message.
+const STARTS = { team: 'Show me open teams I can join' };
+const startFromUrl = () => STARTS[new URLSearchParams(location.search).get('start')] ?? null;
 const atBottom = (el, slack) => el.scrollHeight - el.clientHeight - el.scrollTop < slack;
 const textOf = (message) => message.parts.filter((p) => p.type === 'text').map((p) => p.text).join('\n').trim();
-// Whether the newest step of a reply shows anything yet.
-const stepVisible = (message) => message?.role === 'assistant'
-  && message.parts.slice(message.parts.findLastIndex((p) => p.type === 'step-start') + 1).some(isVisiblePart);
 
 export function HackyEventName() {
   return useSession().event?.name ?? null;
 }
 
 // data-anchor marks where the newest exchange starts; following stops there.
-function UserBubble({ text }) {
+// arrive: animate it in (not for stored history, which shows at once).
+function UserBubble({ text, arrive = true }) {
   return (
-    <div className="msg message-arrival user" data-anchor="">
+    <div className={`msg${arrive ? ' message-arrival' : ''} user`} data-anchor="">
       <div className="byline"><SelfAvatar /><span>You</span></div>
       <p className="hc-text">{text}</p>
     </div>
   );
 }
 
-const ChatRow = memo(function ChatRow({ message, onAnswer }) {
+// closed: a newer message follows, so a question here can't be answered anymore.
+// Parts show in showingOrder (the explanation before its cards). from and shown come from
+// useReveal: parts before from were on screen already, shown are the new ones revealed so far
+// (each fades in, see .hc-reveal). history: loaded with the page, so nothing animates.
+const ChatRow = memo(function ChatRow({ message, onAnswer, closed, from = Infinity, shown, history }) {
   if (message.role === 'user') {
     const text = textOf(message);
-    return text ? <UserBubble text={text} /> : null;
+    return text ? <UserBubble text={text} arrive={!history} /> : null;
   }
-  if (message.role !== 'assistant' || !message.parts.some(isVisiblePart)) return null;
+  const on = showingOrder(message.parts).filter((i) => (i < from || shown?.has(i)) && !recovered(message.parts, i));
+  if (message.role !== 'assistant' || !on.some((i) => isVisiblePart(message.parts[i]))) return null;
   return (
-    <div className="hc-turn message-arrival">
-      {message.parts.map((part, i) => (recovered(message.parts, i) ? null : <MessagePart key={i} part={part} onAnswer={onAnswer} />))}
+    <div className="hc-turn">
+      {on.map((i) => (
+        <div key={i} className={i < from ? 'hc-part' : 'hc-part hc-reveal'}>
+          <MessagePart part={message.parts[i]} onAnswer={onAnswer} closed={closed} explanation={textOf(message)} />
+        </div>
+      ))}
     </div>
   );
 });
@@ -52,7 +65,7 @@ const ChatRow = memo(function ChatRow({ message, onAnswer }) {
 const recovered = (parts, i) => parts[i].state === 'output-error'
   && parts.slice(i + 1).some((p) => p.type === parts[i].type && p.state === 'output-available');
 
-const LocalRow = memo(function LocalRow({ entry, onOpenPanel }) {
+const LocalRow = memo(function LocalRow({ entry, onOpenPanel, reduced, paused, onGrow }) {
   if (entry.kind === 'plan-pending') {
     return (
       <div className="msg message-arrival assistant plan-reply plan-pending">
@@ -74,16 +87,42 @@ const LocalRow = memo(function LocalRow({ entry, onOpenPanel }) {
       </div>
     );
   }
+  return <LocalAnswer entry={entry} reduced={reduced} paused={paused} onGrow={onGrow} />;
+});
+
+// A guide answer appears like a Hacky reply: typing, then the message, then its cards.
+// paused (the pane was hidden): the rest shows at once instead of later.
+function LocalAnswer({ entry, reduced, paused, onGrow }) {
+  const [stage, setStage] = useState(reduced ? 2 : 0);
+  useEffect(() => {
+    if (stage >= 2) return undefined;
+    if (paused || reduced) {
+      setStage(2);
+      return undefined;
+    }
+    const timer = setTimeout(() => setStage((n) => n + 1), stage === 0 ? FIRST_MS : GAP_MS);
+    return () => clearTimeout(timer);
+  }, [stage, paused, reduced]);
+  useEffect(() => {
+    if (stage > 0) onGrow?.();
+  }, [stage]);
   return (
     <>
       <UserBubble text={entry.question} />
-      <div className="msg message-arrival assistant">
-        <p>{entry.text}</p>
-        {entry.content}
-      </div>
+      {stage === 0 ? (
+        <div className="msg message-arrival assistant waiting" role="status">
+          <Dots />
+          <span className="sr-only">Hacky is typing</span>
+        </div>
+      ) : (
+        <div className="msg message-arrival assistant">
+          <p>{entry.text}</p>
+          {stage === 2 && entry.content && <div className="hc-part hc-reveal">{entry.content}</div>}
+        </div>
+      )}
     </>
   );
-});
+}
 
 // While Hacky works on a reply: the thinking clip, or the still pet if the clip can't load.
 function ThinkingHacky({ style }) {
@@ -96,14 +135,16 @@ function ThinkingHacky({ style }) {
   );
 }
 
-export default function HackyPane({ plan, planRevision, style, events, onPreferences, onProfile, onOpenConversation, renderComposer }) {
+// paused: the pane is hidden (onboarding is open), so a handed-over request waits.
+export default function HackyPane({ plan, planRevision, style, events, paused = false, onPreferences, onProfile, onOpenConversation, renderComposer }) {
   const { slug } = useSession();
   const chat = useHackyChat(slug);
   const [input, setInput] = useState(''),
     [locals, setLocals] = useState([]),
     [planBusy, setPlanBusy] = useState(false),
     [planReady, setPlanReady] = useState(Boolean(plan)),
-    [newReply, setNewReply] = useState(false);
+    [newReply, setNewReply] = useState(false),
+    [start, setStart] = useState(startFromUrl);
   const feed = useRef(null),
     scroll = useRef(null),
     pinned = useRef(true),
@@ -115,6 +156,11 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
     latest = useRef({});
   const chatBusy = chat.status === 'submitted' || chat.status === 'streaming';
   const busy = planBusy || !chat.ready;
+  // New replies appear in a short sequence (typing, message, cards); history shows at once.
+  const reduced = useMedia('(prefers-reduced-motion: reduce)');
+  const loadedAll = chat.loaded && chat.messages.length >= (chat.historyCount ?? 0);
+  const reveal = useReveal({ key: slug, loaded: loadedAll, messages: chat.messages, status: chat.status, paused, reduced, visible: isVisiblePart });
+  const [grown, grow] = useReducer((n) => n + 1, 0);
 
   const addLocal = (entry) => {
     const { chat } = latest.current;
@@ -135,6 +181,15 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
   const askHacky = (text) => {
     const { chat, planBusy } = latest.current;
     if (planBusy || !chat.answer(text)) return false;
+    lastSent.current = text;
+    pinned.current = true;
+    setPlanReady(false);
+    return true;
+  };
+  // A new request, never an answer to the open question (see useHackyChat start()).
+  const startHacky = (text) => {
+    const { chat, planBusy } = latest.current;
+    if (planBusy || !chat.start(text)) return false;
     lastSent.current = text;
     pinned.current = true;
     setPlanReady(false);
@@ -161,7 +216,7 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
     addLocal({ kind: 'plan-pending' });
     setTimeout(completePlan, replyDelay(plan.goal));
   };
-  latest.current = { chat, plan, planBusy, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky };
+  latest.current = { chat, plan, planBusy, events, onPreferences, onProfile, onOpenConversation, askLocal, askHacky, startHacky };
 
   const submit = () => {
     const text = input.trim();
@@ -178,10 +233,12 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
 
   const stable = useMemo(() => ({
     hacky: (text) => latest.current.askHacky(text),
+    start: (text) => latest.current.startHacky(text),
     local: (text) => latest.current.askLocal(text),
     viewProfile: (profile) => latest.current.onProfile(profile),
-    contactTeam: (team) => latest.current.askHacky(`Help me contact the team ${team.name} (led by @${team.owner.handle}).`),
+    contactTeam: (team) => latest.current.startHacky(`Help me contact the team ${team.name} (led by @${team.owner.handle}).`),
     openConversation: (id) => latest.current.onOpenConversation(id),
+    openDetail: (type, id, origin) => latest.current.events.openDetail(type, id, origin),
   }), []);
   const actions = useMemo(() => ({ ...stable, slug, busy }), [stable, slug, busy]);
 
@@ -200,6 +257,19 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
     window.addEventListener('hashchange', show);
     return () => window.removeEventListener('hashchange', show);
   }, []);
+  // A handed-over request (?start=) is sent once: it leaves the address right away, so a
+  // reload or Back never sends it again, and it goes out once the stored chat has loaded.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (!params.has('start')) return;
+    params.delete('start');
+    history.replaceState(history.state, '', location.pathname + (params.size ? `?${params}` : '') + location.hash);
+  }, []);
+  useEffect(() => {
+    if (!start || paused || planBusy || !chat.ready) return;
+    setStart(null);
+    latest.current.startHacky(start);
+  }, [start, paused, planBusy, chat.ready]);
   // Keep the failed text so the person can retry it.
   useEffect(() => {
     if (chat.error && lastSent.current) setInput((text) => text || lastSent.current);
@@ -233,7 +303,7 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
         el.scrollTop = Math.max(el.scrollTop, Math.min(end, top));
       }
     } else if (arrived) setNewReply(true);
-  }, [chat.messages, chat.status, chat.error, locals]);
+  }, [chat.messages, chat.status, chat.error, locals, reveal.tick, grown]);
 
   // Local exchanges sit after the chat messages that existed when they were made.
   const place = (entry) => entry.at ?? chat.historyCount ?? Infinity;
@@ -242,16 +312,17 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
   const addLocalsUpTo = (index) => {
     while (nextLocal < locals.length && place(locals[nextLocal]) <= index) {
       const entry = locals[nextLocal++];
-      rows.push(<LocalRow key={`local-${entry.id}`} entry={entry} onOpenPanel={events.openPanel} />);
+      rows.push(<LocalRow key={`local-${entry.id}`} entry={entry} onOpenPanel={events.openPanel} reduced={reduced} paused={paused} onGrow={grow} />);
     }
   };
   chat.messages.forEach((message, i) => {
     addLocalsUpTo(i);
     const last = i === chat.messages.length - 1;
-    rows.push(<ChatRow key={message.id} message={message} onAnswer={last && chat.ready && !planBusy ? stable.hacky : null} />);
+    const { from, shown } = reveal.view(message);
+    rows.push(<ChatRow key={message.id} message={message} closed={!last} from={from} shown={shown} history={reveal.history(message.id)} onAnswer={last && chat.ready && !planBusy ? stable.hacky : null} />);
   });
   addLocalsUpTo(Infinity);
-  const working = chat.status === 'submitted' || (chat.status === 'streaming' && !stepVisible(chat.messages.at(-1)));
+  const working = reveal.waiting;
 
   return (
     <CardActions.Provider value={actions}>
@@ -277,7 +348,7 @@ export default function HackyPane({ plan, planRevision, style, events, onPrefere
           aria-live="polite"
           aria-label="Conversation with Hacky"
         >
-          <Brief style={style} working={planBusy} onHacky={stable.hacky} onLocal={stable.local} />
+          <Brief style={style} working={planBusy} onStart={stable.start} onLocal={stable.local} />
           {rows}
           {chat.failed && (
             <div className="msg message-arrival assistant" role="alert">

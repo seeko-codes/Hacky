@@ -1,5 +1,5 @@
 // GET /api/events/:slug (public), GET and PATCH /api/events/:slug/me,
-// GET /api/events/:slug/people/:handle.
+// GET /api/events/:slug/me/team, GET /api/events/:slug/people/:handle.
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -11,8 +11,9 @@ import {
   type EventMe,
   type Intake,
   type Motivation,
+  type MyTeam,
 } from "../../shared/contract.js";
-import { personDetail, teamDetail } from "../agent/data.js";
+import { myTeam, personDetail, teamDetail } from "../agent/data.js";
 import { db } from "../db/index.js";
 import { eventMembers, events, memberProfiles } from "../db/schema.js";
 import { fail, iso, readJson, readParams, requireUser, type AppContext, type AppEnv } from "./http.js";
@@ -132,6 +133,16 @@ export const eventRoutes = new Hono<AppEnv>()
   .get("/events/:slug/me", async (c) => {
     const { user, eventId, member } = await requireMembership(c);
     return c.json(toEventMe(member, await findMemberProfile(eventId, user.id)));
+  })
+
+  // The team they lead or are on here (the event dashboard's team line), or null.
+  .get("/events/:slug/me/team", async (c) => {
+    const { user, eventId } = await requireMembership(c);
+    const team = await myTeam(eventId, user.id);
+    const body: { team: MyTeam | null } = {
+      team: team && { id: team.id, name: team.name, isOwner: team.isOwner, size: team.size, maxSize: team.maxSize },
+    };
+    return c.json(body);
   })
 
   // A team and its members. A blocked lead looks like "not found".

@@ -6,7 +6,7 @@
 
 .style-actions{display:flex;justify-content:center;gap:8px;margin-top:8px}
 .style-button,.dance-button,.surprise{gap:6px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;border-radius:8px;color:var(--blue);font-size:13px;font-weight:700;min-height:44px;padding:0 10px}
-.style-button:hover,.dance-button:hover,.surprise:hover{background:var(--wash)}
+@media (hover:hover){.style-button:hover,.dance-button:not(:disabled):hover,.surprise:hover{background:var(--wash)}}
 .mascot-stage>.hacky-pet{width:100%;height:100%}
 
 .pet-flair i svg{width:100%;height:100%}.pet-flair i{width:24px;height:24px;text-shadow:none}.pet-flair i:nth-child(2){width:18px;height:18px}
@@ -24,10 +24,10 @@
 .custom-controls{min-width:0}
 .custom-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:18px}
 .custom-tab{flex:1;min-width:0;border:0;border-bottom:2px solid transparent;background:transparent;padding:10px 3px;font-size:13px;color:var(--muted);min-height:44px}
-.custom-tab:hover{color:var(--blue)}.custom-tab[aria-selected=true]{border-bottom-color:var(--blue);color:var(--blue);font-weight:700}
+@media (hover:hover){.custom-tab:hover{color:var(--blue)}}.custom-tab[aria-selected=true]{border-bottom-color:var(--blue);color:var(--blue);font-weight:700}
 .tab-panel[hidden]{display:none}
 .color-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.color-choice:hover,.tile-choice:hover{border-color:var(--focus)}
+@media (hover:hover){.color-choice:hover,.tile-choice:hover{border-color:var(--focus)}}
 .color-choice[aria-pressed=true],.tile-choice[aria-pressed=true]{border-color:var(--blue);background:var(--wash)}
 .choice-note{font-size:13px;color:var(--muted);line-height:1.5;margin:14px 0 0}
 .option-label{font-size:13px;font-weight:700;margin:0 0 14px}

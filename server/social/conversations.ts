@@ -14,6 +14,7 @@ import type {
 } from "../../shared/contract.js";
 import { db } from "../db/index.js";
 import { conversationMembers, messages } from "../db/schema.js";
+import { withTransaction } from "../db/tx.js";
 import { ApiFail, fail } from "../routes/http.js";
 
 type MessageRow = typeof messages.$inferSelect;
@@ -311,6 +312,52 @@ export async function sendMessage(
   const raced = await findByClientId(userId, input.clientId);
   if (raced) return replay(raced);
   throw blockedError();
+}
+
+// ---------------------------------------------------------------------------
+// DELETE /api/conversations/:id/messages/:messageId
+// ---------------------------------------------------------------------------
+
+// Unsend: the sender deletes their own message for everyone in the chat. Only
+// the row goes: no table references messages (no foreign keys or triggers), so
+// requests, connections, teams and help requests are untouched. System
+// messages can't be deleted. Not a member: 404, like the other routes. A
+// message that's already gone is 404 too, which the web app treats as deleted.
+export function deleteRefusal(
+  row: { senderId: string | null; kind: MessageKind } | undefined,
+  userId: string,
+): ApiFail | null {
+  if (!row) return fail.notFound("That message isn't here anymore.");
+  if (row.kind === "system" || row.senderId === null) {
+    return fail.forbidden("System messages can't be deleted.");
+  }
+  if (row.senderId !== userId) return fail.forbidden("You can only delete your own messages.");
+  return null;
+}
+
+// Checked and deleted in one transaction, with the row locked in between. The
+// delete repeats the sender check, so a system message (no sender) can never match.
+export async function deleteMessage(
+  userId: string,
+  conversationId: string,
+  messageId: string,
+): Promise<void> {
+  await withTransaction(async (tx) => {
+    const { rows } = await tx.execute<{ member: boolean }>(sql`
+      select ${isMember(conversationId, userId)} as member
+    `);
+    if (!rows[0]?.member) throw notFound();
+    const [row] = await tx
+      .select({ senderId: messages.senderId, kind: messages.kind })
+      .from(messages)
+      .where(and(eq(messages.id, messageId), eq(messages.conversationId, conversationId)))
+      .for("update");
+    const refusal = deleteRefusal(row, userId);
+    if (refusal) throw refusal;
+    await tx
+      .delete(messages)
+      .where(and(eq(messages.id, messageId), eq(messages.senderId, userId)));
+  });
 }
 
 // ---------------------------------------------------------------------------

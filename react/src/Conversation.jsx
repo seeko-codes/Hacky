@@ -97,6 +97,7 @@ function Composer({
 export default function Conversation({
   plan,
   planRevision,
+  paused,
   style,
   onPreferences,
   onCustomize,
@@ -243,7 +244,8 @@ export default function Conversation({
       dmFeed.current.scrollTop <
       48;
   // Restore on open, follow my sends and new replies at the bottom, offer
-  // "New reply" otherwise, and keep the view still when older messages load.
+  // "New reply" otherwise (not when the last one was deleted), and keep the
+  // view still when older messages load.
   useLayoutEffect(() => {
     const el = dmFeed.current,
       prev = feedState.current,
@@ -254,6 +256,7 @@ export default function Conversation({
     }
     const first = list[0]?.id,
       last = list.at(-1)?.id,
+      lastAt = Date.parse(list.at(-1)?.createdAt) || 0,
       action = dmAction.current?.id === current ? dmAction.current : null;
     if (action?.type === "restore") {
       if (dmThread?.loaded || dmThread?.error) {
@@ -264,13 +267,15 @@ export default function Conversation({
       if (action?.type === "follow" || prev.atLatest) {
         el.scrollTop = el.scrollHeight;
         if (action) dmAction.current = null;
-      } else if (list.at(-1)?.senderId !== social.selfId) setNewDm(true);
+      } else if (list.at(-1)?.senderId !== social.selfId && lastAt > prev.lastAt)
+        setNewDm(true);
     } else if (prev.id === current && first !== prev.first)
       el.scrollTop += el.scrollHeight - prev.height;
     feedState.current = {
       id: current,
       first,
       last,
+      lastAt,
       height: el.scrollHeight,
       atLatest: dmAtLatest(),
     };
@@ -387,6 +392,7 @@ export default function Conversation({
                     onRetry={social.retry}
                     onReload={social.reload}
                     onOlder={social.loadOlder}
+                    onDelete={social.deleteMessage}
                   />
                 )}
               </div>
@@ -506,6 +512,7 @@ export default function Conversation({
           <HackyPane
             plan={plan}
             planRevision={planRevision}
+            paused={paused}
             style={style}
             events={events}
             onPreferences={onPreferences}

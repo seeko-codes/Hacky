@@ -372,6 +372,26 @@ export type StatusData = {
 };
 type StatusRequest = { id: string; person: PersonSummary; intro: string; team: TeamRef | null; createdAt: string };
 
+/**
+ * The team they lead or are on in this event (the one they lead first), or null. size counts the
+ * owner. my_status and GET /api/events/:slug/me/team (the event dashboard) both read it.
+ */
+export async function myTeam(eventId: string, userId: string): Promise<StatusData["team"]> {
+  const { rows } = await db.execute<{ id: string; name: string; owner_id: string; max_size: number; wanted_skills: string[]; size: number }>(sql`
+    select t.id, t.name, t.owner_id, t.max_size, t.wanted_skills,
+      (select count(*) from team_members tm where tm.team_id = t.id and tm.user_id <> t.owner_id)::int + 1 as size
+    from teams t
+    where t.event_id = ${eventId}
+      and (t.owner_id = ${userId} or exists (select 1 from team_members tm where tm.team_id = t.id and tm.user_id = ${userId}))
+    order by (t.owner_id = ${userId}) desc, t.created_at
+    limit 1
+  `);
+  const t = rows[0];
+  return t
+    ? { id: t.id, name: t.name, isOwner: t.owner_id === userId, size: t.size, maxSize: t.max_size, wantedSkills: t.wanted_skills }
+    : null;
+}
+
 /** Read-only: pending requests both ways, my team, my open help requests. */
 export async function myStatus(eventId: string, userId: string): Promise<StatusData> {
   const [requests, connected, team, help] = await Promise.all([
@@ -393,15 +413,7 @@ export async function myStatus(eventId: string, userId: string): Promise<StatusD
       where c.event_id = ${eventId} and c.status = 'accepted'
         and (c.from_user = ${userId} or c.to_user = ${userId})
     `),
-    db.execute<{ id: string; name: string; owner_id: string; max_size: number; wanted_skills: string[]; size: number }>(sql`
-      select t.id, t.name, t.owner_id, t.max_size, t.wanted_skills,
-        (select count(*) from team_members tm where tm.team_id = t.id and tm.user_id <> t.owner_id)::int + 1 as size
-      from teams t
-      where t.event_id = ${eventId}
-        and (t.owner_id = ${userId} or exists (select 1 from team_members tm where tm.team_id = t.id and tm.user_id = ${userId}))
-      order by (t.owner_id = ${userId}) desc, t.created_at
-      limit 1
-    `),
+    myTeam(eventId, userId),
     db.execute<{
       id: string;
       title: string;
@@ -431,14 +443,11 @@ export async function myStatus(eventId: string, userId: string): Promise<StatusD
     team: r.team_id && r.team_name ? { id: r.team_id, name: r.team_name } : null,
     createdAt: isoOf(r.created_at),
   });
-  const t = team.rows[0];
   return {
     incoming: requests.rows.filter((r) => r.from_user !== userId).map(toRequest),
     outgoing: requests.rows.filter((r) => r.from_user === userId).map(toRequest),
     connectedCount: connected.rows[0]?.n ?? 0,
-    team: t
-      ? { id: t.id, name: t.name, isOwner: t.owner_id === userId, size: t.size, maxSize: t.max_size, wantedSkills: t.wanted_skills }
-      : null,
+    team,
     helpRequests: help.rows.map((h) => ({
       id: h.id,
       title: h.title,

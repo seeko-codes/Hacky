@@ -12,15 +12,36 @@ export class ApiError extends Error {
   }
 }
 
-export async function api(path, { method = 'GET', body, signal } = {}) {
+// The person this page loaded as (session.jsx sets it). Every request says so in X-Hacky-User,
+// and the API refuses one whose cookie is now someone else's (another tab signed in as another
+// person), so a stale tab never shows one person while acting as another. A refusal, or a 401
+// for a page that had someone, fires 'hacky:user-changed' and the session checks who's signed in.
+let pageUser = null;
+export function setPageUser(userId) { pageUser = userId || null; }
+export const USER_CHANGED = 'hacky:user-changed';
+
+// fetch with that header and check. The chat transport uses it too. anyUser: leave the header
+// off (the "who's signed in now?" check itself).
+export async function apiFetch(input, init = {}, { anyUser = false } = {}) {
+  const headers = new Headers(init.headers);
+  const sentAs = anyUser ? null : pageUser;
+  if (sentAs) headers.set('X-Hacky-User', sentAs);
+  const response = await fetch(input, { ...init, headers });
+  if (sentAs && (response.headers.get('X-Hacky-User-Changed') || response.status === 401)) {
+    window.dispatchEvent(new CustomEvent(USER_CHANGED));
+  }
+  return response;
+}
+
+export async function api(path, { method = 'GET', body, signal, anyUser = false } = {}) {
   let response;
   try {
-    response = await fetch(path, {
+    response = await apiFetch(path, {
       method,
       signal,
       headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
-    });
+    }, { anyUser });
   } catch (error) {
     if (error.name === 'AbortError') throw error;
     throw new ApiError(0, 'network', 'Can’t reach Hacky. Check your connection and try again.');

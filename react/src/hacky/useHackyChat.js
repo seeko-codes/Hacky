@@ -4,10 +4,11 @@
 //   chat.answer('Find me a backend teammate');
 //
 // answer() sends a new message, or answers the pending ask_with_options question.
+// start() always sends a new message, even over a pending question (the server closes it as skipped).
 import { useEffect, useMemo, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from 'ai';
-import { api } from '../api.js';
+import { api, apiFetch } from '../api.js';
 
 export const isPendingAsk = (part) => part.type === 'tool-ask_with_options' && part.state === 'input-available';
 
@@ -34,6 +35,7 @@ export function dropUnansweredTurn(messages, text) {
 export const chatTransport = (slug) => new DefaultChatTransport({
   api: '/api/chat',
   body: { eventSlug: slug },
+  fetch: (input, init) => apiFetch(input, init), // says who the page is for (api.js)
   prepareSendMessagesRequest: ({ messages, body }) => ({ body: { ...body, message: messages.at(-1) } }),
 });
 
@@ -79,6 +81,22 @@ export function useHackyChat(slug) {
     return true;
   };
 
+  // A new request from outside the thread (the event dashboard's "Join a team"). It never
+  // answers the open question: an earlier mentor question must not swallow a team request.
+  // The server closes that question as skipped; here it stays as loaded, and the chat stops
+  // offering its chips once a newer message follows it (cards.jsx). Stored messages aren't
+  // rewritten in place.
+  const start = (text) => {
+    if (!ready || !text.trim()) return false;
+    if (!pending) {
+      const kept = dropUnansweredTurn(messages, text);
+      if (kept !== messages) setMessages(kept);
+    }
+    clearError();
+    sendMessage({ text });
+    return true;
+  };
+
   return {
     loaded: Boolean(loaded),
     failed: Boolean(history?.slug === slug && history.failed),
@@ -90,5 +108,6 @@ export function useHackyChat(slug) {
     ready,
     pending,
     answer,
+    start,
   };
 }

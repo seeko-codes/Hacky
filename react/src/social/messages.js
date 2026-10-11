@@ -22,6 +22,45 @@ export function mergeMessages(list, incoming) {
   return server.concat(list.filter((m) => m.local && !sent.has(m.clientId)));
 }
 
+// Ids of the saved (not local) messages in a thread.
+export function savedIds(list) {
+  return new Set(list.filter((m) => !m.local).map((m) => m.id));
+}
+
+// The newest page from the server (oldest first) against what's on screen:
+// adds what's new and drops saved messages the server no longer has (their
+// sender deleted them). asked: savedIds of the screen when the page was
+// requested. Only those can be judged, and only from the page's first message
+// on (without hasMore the page is the whole conversation). Local copies, and
+// messages that arrived while the page loaded, stay.
+export function reconcileMessages(list, page, asked) {
+  const got = page.messages;
+  const ids = new Set(got.map((m) => m.id));
+  const first = page.hasMore ? got[0] : null;
+  const gone = (m) =>
+    !m.local && asked.has(m.id) && !ids.has(m.id) && (!first || compareMessages(m, first) >= 0);
+  const kept = list.some(gone) ? list.filter((m) => !gone(m)) : list;
+  return mergeMessages(kept, got);
+}
+
+// The page joins what's on screen without a gap: it's the whole conversation,
+// or it shares a saved message with the screen (or the screen has none).
+export function pageConnects(list, page) {
+  if (!page.hasMore) return true;
+  const saved = savedIds(list);
+  return !saved.size || page.messages.some((m) => saved.has(m.id));
+}
+
+// After a delete (or a 404 saying it's already gone).
+export function removeMessage(list, id) {
+  const next = list.filter((m) => m.local || m.id !== id);
+  return next.length === list.length ? list : next;
+}
+
+// Only the sender can delete a saved message, and never a system one.
+export const canDelete = (m, selfId) =>
+  Boolean(selfId) && !m.local && m.kind !== 'system' && m.senderId === selfId;
+
 export function localMessage({ conversationId, senderId, clientId, body }) {
   return {
     id: `local-${clientId}`,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { data } from './event-data.js';
-import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn } from './event-model.js';
+import { schedule, recommendEvents, matchQuestion, describeEvent, stillOn, isRecommendationQuestion } from './event-model.js';
 import { Icon, Modal, Group, ExternalLink } from './ui.jsx';
 import { readStore, writeStore, useMedia } from './storage.js';
 
@@ -32,10 +32,10 @@ function EventIcon({ event }) {
   return event.sponsorIds?.length ? <SponsorIcon id={event.sponsorIds[0]} /> : <svg className="recommendation-icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4m8-4v4M4 10h16m-9 5h3" /></svg>;
 }
 // reason: why it was recommended, shown under the name.
-function EventChoice({ event, openDetail, reason }) {
+export function EventChoice({ event, openDetail, reason }) {
   return <div className="event-result"><button type="button" className="detail-choice" data-event-detail={event.id} aria-haspopup="dialog" onClick={e => openDetail('event', event.id, e.currentTarget)}><EventIcon event={event} /><span>{event.name}{reason && <small className="choice-reason">{reason}</small>}</span><Icon name="back" /></button></div>;
 }
-function EventChoices({ events, openDetail, label, reasons }) {
+export function EventChoices({ events, openDetail, label, reasons }) {
   return events.length ? <Group label={label || `${events.length} events`}>{events.map(event => <EventChoice key={event.id} event={event} openDetail={openDetail} reason={reasons?.[event.id]} />)}</Group> : null;
 }
 function Sponsors({ sponsors = data.sponsors, openDetail }) {
@@ -137,8 +137,11 @@ export function useEvents(plan, onEditGoals) {
   </>;
   const nudgeEvent = guidance.muted ? null : schedule.find(event => { const state = guidance.events[event.id], start = Date.parse(event.startDateTime); return state?.saved && !state.dismissed && start > now && start - now <= 15 * 60000; });
   const nudge = nudgeEvent ? <ReminderNudge token={nudgeEvent.id}><aside id="event-nudge" data-token={nudgeEvent.id}><div className="nudge-copy"><p>{nudgeEvent.name} starts {data.days[nudgeEvent.day].label}, {data.days[nudgeEvent.day].short} at {nudgeEvent.time} EDT · {nudgeEvent.place}</p><button type="button" className="toggle" id="nudge-open" onClick={e => openDetail('event', nudgeEvent.id, e.currentTarget)}>View event</button><GuidanceError error={error} /></div><button type="button" className="icon" id="nudge-dismiss" aria-label="Dismiss event reminder" onClick={() => store.update(nudgeEvent.id, { dismissed: true })}><Icon name="close" /></button></aside></ReminderNudge> : null;
+  // null: not a guide question, so Hacky's AI answers it. Personal picks ("what do you recommend
+  // for me?") always go there: the AI explains them from the saved profile and the chat.
   const answer = useCallback(question => {
     const q = question.toLowerCase();
+    if (isRecommendationQuestion(q)) return null;
     if (/my reminders|pause reminders|reminder settings|saved sessions/.test(q)) return { text: 'Reminders · 15 minutes before, while Hacky is open.', content: <ReminderAnswer store={store} openDetail={openDetail} /> };
     if (/tell me about the events|recommended events/.test(q)) {
       const events = recommendEvents(plan?.intake);
@@ -159,5 +162,5 @@ export function useEvents(plan, onEditGoals) {
     }
     return null;
   }, [plan, openDetail, store]);
-  return { answer, openPanel, attention, setAttention, dialogs, nudge, recommendedCount: picks.length };
+  return { answer, openPanel, openDetail, attention, setAttention, dialogs, nudge, recommendedCount: picks.length };
 }

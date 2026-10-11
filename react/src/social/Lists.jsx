@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { api } from '../api.js';
 import { useSession } from '../session.jsx';
 import { PersonAvatar } from '../ui.jsx';
+import { skillLabel } from '../labels.js';
 import { friendly } from './useSocial.js';
 import { HelpStatus, RoleChip, roleLabel } from './parts.jsx';
 
@@ -92,7 +93,7 @@ function QueueRow({ item, social, onOpen, onProfile }) {
           <span className="contact-categories">
             {item.fit.highlighted && <span className="social-tag social-fit">Top fit</span>}
             {item.fit.matchedSkills.map((skill) => (
-              <span key={skill} className="social-tag">{skill}</span>
+              <span key={skill} className="social-tag">{skillLabel(skill)}</span>
             ))}
           </span>
         )}

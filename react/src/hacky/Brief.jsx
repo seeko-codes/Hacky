@@ -26,9 +26,13 @@ function ShortcutArt({ kind }) {
   );
 }
 
-// The opening card. People and mentors go to the Hacky agent; event and
+// What the Find hackers chip sends. The agent offers teammate or open-team discovery,
+// never the mentor flow: findingRules in server/agent/prompts.ts quotes this exact text.
+export const FIND_HACKERS = 'Help me find hackers';
+
+// The opening card. Hackers and mentors go to the Hacky agent; event and
 // sponsor questions are answered from the static guide.
-function Brief({ style, working, onHacky, onLocal }) {
+function Brief({ style, working, onStart, onLocal }) {
   // Hacky's chat clip; the still pet while working or if the clip can't load.
   const [noClip, setNoClip] = useState(false);
   const film = !working && !noClip;
@@ -44,15 +48,15 @@ function Brief({ style, working, onHacky, onLocal }) {
       <p>What can I help you with?</p>
       <p className="brief-guidance">Pick a starting point, or tell me what you’re trying to do.</p>
       <div className="suggestions" aria-label="Try a request">
-        <button className="suggestion" data-prompt="Help me find people" onClick={() => onHacky('Help me find people')}>
+        <button className="suggestion" data-prompt={FIND_HACKERS} onClick={() => onStart(FIND_HACKERS)}>
           <Avatar id="mika" />
-          Find people
+          Find hackers
         </button>
         <button className="suggestion" data-prompt="What can you tell me about the events?" onClick={() => onLocal('What can you tell me about the events?')}>
           <ShortcutArt kind="event" />
           Event questions
         </button>
-        <button className="suggestion" data-prompt="Find a mentor" onClick={() => onHacky('Find a mentor')}>
+        <button className="suggestion" data-prompt="Find a mentor" onClick={() => onStart('Find a mentor')}>
           <Avatar id="aya" />
           <span>
             Find mento

@@ -5,7 +5,7 @@
 .companion-back,.companion-skip{display:grid;place-items:center;min-width:44px;min-height:44px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;border-radius:8px;cursor:pointer}
 .companion-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .companion-back:disabled{visibility:hidden}
-.companion-skip:hover,.companion-back:hover{background:var(--wash);color:var(--ink)}
+@media (hover:hover){.companion-skip:hover,.companion-back:not(:disabled):hover{background:var(--wash);color:var(--ink)}}
 .companion-progress{display:flex;gap:6px}
 .companion-progress i{width:6px;height:6px;border-radius:50%;background:var(--line)}
 .companion-progress i.active{background:var(--blue)}
@@ -24,7 +24,7 @@
 .companion-option svg{display:none;width:14px;height:14px;flex-shrink:0;color:var(--blue)}
 .companion-option:has(:checked){background:var(--selection);border-color:var(--blue)}
 .companion-option:has(:checked) svg{display:block}
-.companion-option:hover{background:var(--wash)}
+@media (hover:hover){.companion-option:hover{background:var(--wash)}}
 .companion-option:has(:focus-visible){outline:2px solid var(--focus);outline-offset:3px}
 .companion-options:disabled .companion-option{cursor:wait}
 #onboarding .companion-responses .hk-button{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;min-height:48px;border-radius:14px;margin-top:4px}

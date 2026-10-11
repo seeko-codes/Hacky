@@ -1,5 +1,6 @@
 // Conversations and messages: GET /api/events/:slug/conversations,
-// GET and POST /api/conversations/:id/messages, POST /api/conversations/:id/read.
+// GET and POST /api/conversations/:id/messages,
+// DELETE /api/conversations/:id/messages/:messageId, POST /api/conversations/:id/read.
 // The rules live in server/social/conversations.ts.
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -8,6 +9,7 @@ import { MessagesQuery, SendMessageBody, Slug, Uuid } from "../../shared/contrac
 import { db } from "../db/index.js";
 import { eventMembers, events } from "../db/schema.js";
 import {
+  deleteMessage,
   getMessagePage,
   listConversations,
   markRead,
@@ -17,6 +19,7 @@ import { fail, readJson, readParams, requireUser, type AppContext, type AppEnv }
 
 const SlugParams = z.object({ slug: Slug });
 const IdParams = z.object({ id: Uuid });
+const MessageParams = z.object({ id: Uuid, messageId: Uuid });
 
 // 404 for an unknown event, 403 when the user isn't a member.
 async function requireEventMember(c: AppContext) {
@@ -62,6 +65,14 @@ export const conversationsRoutes = new Hono<AppEnv>()
     const body = await readJson(c, SendMessageBody);
     const { message, created } = await sendMessage(user.id, id, body);
     return c.json({ message }, created ? 201 : 200);
+  })
+
+  // Unsend: only the sender, never a system message. Removed for everyone.
+  .delete("/conversations/:id/messages/:messageId", async (c) => {
+    const user = requireUser(c);
+    const { id, messageId } = readParams(c, MessageParams);
+    await deleteMessage(user.id, id, messageId);
+    return c.json({ ok: true as const });
   })
 
   .post("/conversations/:id/read", async (c) => {

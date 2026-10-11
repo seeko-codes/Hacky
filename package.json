@@ -12,6 +12,8 @@
     "test:judge": "node --env-file=.env.local --import tsx server/matching/test-judge.ts",
     "test:history": "node --env-file=.env.local --import tsx --test server/agent/history.test.ts",
     "test:prompts": "node --import tsx --test server/agent/prompts.test.ts",
+    "test:chat": "node --env-file=.env.local --import tsx --test server/routes/chat.test.ts",
+    "test:social": "node --env-file=.env.local --import tsx --test server/social/conversations.test.ts",
     "check:threads": "node --env-file=.env.local --import tsx server/scripts/check-threads.ts",
     "seed:generate": "node --env-file=.env.local --import tsx seed/generate.ts",
     "seed:load": "node --env-file=.env.local --import tsx seed/load.ts",
