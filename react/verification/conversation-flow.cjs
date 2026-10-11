@@ -75,7 +75,7 @@ const os = require('node:os');
     await send('what is figma');
     await page.getByText(/^Figma is a collaborative design tool/).waitFor();
     await page.getByText(/^Since you build interfaces with React/).waitFor();
-    assert.equal(await page.locator('#thread .msg.assistant').count(), 2, 'Explanation and project suggestion have separate bubbles');
+    assert.equal(await page.locator('#thread .hc-turn .msg.assistant').count(), 2, 'Explanation and project suggestion have separate bubbles');
     assert.equal(posts.at(-1).message.parts[0].text, 'what is figma', 'General questions reach the real chat transport');
     assert.equal(posts.at(-1).eventSlug, 'knighthacks-ix');
     assert.equal(await page.getByText(/^From the guide:/).count(), 0, 'No local canned answer');
