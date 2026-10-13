@@ -1,55 +1,70 @@
-# Hacky React
+# Hacky web app
 
-A native React port of the existing Hacky demo. The original HTML, CSS and JavaScript outside this directory remain preserved as reference files. This app renders React components directly; it does not embed or execute the original app.
+The Vite + React front end for [Hacky](../README.md). It is a client of the Hono API in `server/`: sign-in, profiles, matching, the agent chat, requests, DMs and the mentor queue all come from `/api`. The browser never talks to the database.
+
+Two guides cover the wiring, so this file doesn't repeat them:
+
+- [docs/frontend.md](../docs/frontend.md): every route the app calls, in order, with the live-update rules
+- [docs/chat.md](../docs/chat.md): how the agent chat streams and how `useChat` is set up
 
 ## Run
 
-From this directory:
+The app needs the API running. From the repo root, `npm install` and `npm run dev:api` (see the [root README](../README.md#run-it-locally) for `.env.local`). Then, from this directory:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173/` for the hacker dashboard. Its **Use Hacky** link opens `/index.html?onboarding=1`, which starts the two-step onboarding and then enters the conversation. `/index.html` opens Hacky directly, showing onboarding when no preferences or session skip have been saved. `/event-demo/knight-hacks-demo.html` also renders the dashboard.
+Open `http://127.0.0.1:5173/`, not `localhost`: the session cookie is tied to `127.0.0.1`. Vite proxies `/api` to `http://localhost:8787`.
+
+`/` redirects to the demo user picker at `/api/demo/portal` (`DEMO_MODE=true` only). Picking a person signs in and opens Hacky at `/index.html?onboarding=1&event=<slug>`. `/index.html` opens Hacky directly for whoever is signed in. One browser holds one signed-in person; use two browser profiles to test two people.
 
 ```sh
 npm run build
 npm run preview
 ```
 
-The production preview runs at `http://127.0.0.1:5174/`. The build output is `dist/`. Serve it with an HTML fallback for the dashboard alias; asset URLs assume hosting at the site root.
+The build output is `dist/`, which Vercel serves as static files. The preview runs at `http://127.0.0.1:5174/` and proxies `/api` the same way.
 
 ## Code map
 
-- `src/main.jsx`: route selection, route-specific styles and React entry point.
-- `src/App.jsx`: shared preferences, mascot customization, theme, onboarding and event state.
-- `src/Dashboard.jsx`: hacker dashboard, badge and résumé preview dialogs.
-- `src/Onboarding.jsx` and `src/Onboarding.css`, `src/Customizer.jsx`: local form and customization drafts, committed through App callbacks.
-- `src/Conversation.jsx`, `src/People.jsx`: Hacky conversation, profiles, team/direct chats and contact selection. `src/conversation-model.js` contains demo matching and reply rules.
-- `src/Events.jsx`, `src/event-model.js`: event answers, panels, details, recommendations and reminders.
-- `src/HackyFilm.jsx`: Hacky's supplied clips (onboarding, chat intro, thinking) as animated WebP with alpha, the one format that stays transparent in iOS Safari as well as Chrome and Firefox. Reduced motion shows the PNG poster. The WebP clips, their VP9 WebM sources and the posters live in `public/assets/mascots/video/`. Background segmentation uses the original full-width source to preserve the cape; check actual alpha in Chrome with `verification/hacky-transparency-check.js`.
-- `src/ui.jsx`: shared icons, mascot, avatars and native dialogs. `src/storage.js`: browser storage, media queries and reply timing.
-- `src/event-data.js`, `src/people.js`, `src/mascot-data.js`: event snapshot and demo fixtures. `public/` contains all artwork, fonts and styles needed by this standalone React app. In the full local workspace, those files mirror root `assets/`, `app/*.css`, `event-demo/assets/`, and `event-demo/dashboard.css`; `tests/public-assets.parity.js` checks that copy boundary.
+- `src/main.jsx`: entry point. Redirects `/` to the demo picker, otherwise mounts the app inside `SessionProvider`.
+- `src/session.jsx`: who is signed in and which event they're in, loaded once from `/api`. `src/api.js`: the one way the app calls the backend.
+- `src/App.jsx`: onboarding, customizer, theme and event state around the conversation.
+- `src/Onboarding.jsx`, `src/welcome.js`, `src/entry.js`: the welcome flow, when it shows, and the links into it.
+- `src/Customizer.jsx`, `src/mascot-data.js`: the knit Hacky avatar's colors, flair and moves, saved to the profile.
+- `src/Conversation.jsx`, `src/People.jsx`, `src/ProfileEditor.jsx`: the main layout, profile dialogs and profile editing.
+- `src/hacky/`: the agent chat.
+  - `useHackyChat.js`: stored history plus `useChat`.
+  - `HackyPane.jsx`, `Brief.jsx`: the thread, the composer and Hacky's opening card.
+  - `cards.jsx`: text bubbles, answer chips and one card per tool result, chosen by tool name.
+  - `presentation.js`, `reveal.js`, `useReveal.js`: display-only bubble splitting and the pacing of a new reply.
+  - `rich.js`: the small markup replies may use (bold and bullet lists), parsed without injecting HTML.
+- `src/social/`: requests, DMs and mentor help.
+  - `useSocial.js`: the Chats sidebar's data and the one live-updates socket.
+  - `live.js`: the WebSocket client (token refresh, reconnect, polling fallback).
+  - `messages.js`: pure thread helpers. `Lists.jsx`, `Thread.jsx`, `parts.jsx`: the UI.
+- `src/Events.jsx`, `src/event-model.js`, `src/event-data.js`, `src/sponsor-model.js`: the event schedule, reminders and sponsor answers. This data is a static snapshot in the app, by design.
+- `src/HackyFilm.jsx`: Hacky's clips (onboarding, chat intro, thinking) as animated WebP with alpha, the one format that stays transparent in iOS Safari as well as Chrome and Firefox. Reduced motion shows the PNG poster. The clips, their VP9 WebM sources and the posters live in `public/assets/mascots/video/`.
+- `src/ui.jsx`: shared icons, mascot, avatars and dialogs. `src/storage.js`: browser storage and media queries. `src/labels.js`: how skill tags and chips read on screen.
+- `src/Dashboard.jsx`, `src/dashboard-model.js`: the Knight Hacks dashboard clone. Preserved but inactive; nothing mounts or links to it.
 
-## Demo boundaries
+## What is real and what is static
 
-Event information is a curated Knight Hacks IX snapshot with source links, not a live schedule. Source conflicts remain visible in the event details. The repository's `EVENT-DATA.md` records provenance and known conflicts.
+People, teams, mentors, matching, match reasons, requests and messages come from the API and the database. The profiles themselves are seeded demo data (`seed/` at the repo root), and with `DEMO_MODE=true` requests are auto-accepted after about two seconds so a demo works on one device.
 
-People, their synthetic portraits, keyword matching and chat replies are fictional demo fixtures. Messaging and social controls do not establish real connections. No attendee ingestion, personalized ranking, backend or attendee uploads are implemented.
+The event schedule, sponsor info and reminders are a curated Knight Hacks IX snapshot in `src/event-data.js`, not a live feed. Reminders work while the page is open; there are no background notifications.
 
-Preferences, mascot style and guidance settings persist in this browser when storage is available. Reminders operate while the page is open; they do not deliver background notifications. The app preserves the original visible preview disclosures.
+Onboarding answers, the avatar and the chat thread are saved on the server. A few display preferences (hidden chats, whether the welcome was seen) stay in the browser.
 
 ## Validation
 
-Run `npm test` for event-model invariants, then `npm run build` for the production build. Both commands work from the React-only GitHub checkout or a standalone copy of this directory.
+```sh
+npm test         # node --test over tests/*.test.js; no API or database needed
+npm run build
+```
 
-Run `npm run test:asset-parity` separately when the complete, current HTML prototype is present alongside `react/`. This optional check compares asset lists, bytes and styles against the root sources. Those sources are not all included in the React-only branch, so this check is intentionally outside the default test suite. It fails on missing or mismatched sources rather than silently skipping them.
+`npm run test:asset-parity` compares `public/` against the original HTML prototype's assets. Those sources aren't in this repo, so it is outside the default suite and fails here.
 
-Repeatable browser flows are in `verification/`; run them from the repository root with its configured Playwright CLI and the dev server running. These exercise WebKit emulation, not physical devices.
-
-The conversational onboarding check is `verification/conversational-onboarding-check.js`. It covers the persistent character, tappable motivations and the optional intent free response, Back, saved preferences, completion, and viewport fit.
-
-`verification/onboarding-speech-check.js` checks progressive text, delayed answer reveal, reaction sequencing, preserved choices, skip, and reduced-motion behavior.
-
-`verification/hacky-film-check.js` checks muted playback, pause/resume, free response, and reduced motion. `verification/hacky-transparency-check.js` checks decoded alpha throughout the refined clip in Chrome, including both app themes.
+Browser flows live in `verification/`. Run them from the repo root with Playwright and the dev server running; most use fixture API responses, so they don't write to the database. They exercise browser emulation, not physical devices.
