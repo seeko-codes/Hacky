@@ -9,6 +9,10 @@
 A teammate, someone to network with, or a mentor. Hacky learns what you need,<br />
 searches real profile data, and tells you *why* each match fits.
 
+### [Try the live demo → mlhacky.com](https://mlhacky.com)
+
+Pick any demo attendee and start chatting. No sign-up.
+
 Built in 36 hours at [Knight Hacks IX](https://2026.knighthacks.org/) by a team of 3.
 
 ![React](https://img.shields.io/badge/React_19-20232a?logo=react&logoColor=61dafb)
